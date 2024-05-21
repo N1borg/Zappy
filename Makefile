@@ -14,23 +14,23 @@ all: zappy_server zappy_gui zappy_ai
 
 zappy_ai:
 	@echo -e "$(GREEN)Building AI...$(NC)"
-	cd ai && cp ai.py zappy_ai && mv zappy_ai .. && cd ..
+	cd ai && cp ai.py zappy_ai && chmod +x zappy_ai && mv zappy_ai .. && cd ..
 
 zappy_server:
 	@echo -e "$(GREEN)Building server...$(NC)"
 	@cd server && mkdir -p ./build/
 	@cd server/build && cmake --log-level=ERROR ..
-	@cd server/build && make --silent
+	@cd server/build && make --silent && chmod +x zappy_server
 	@cd ../..
-	@cp server/build/zappy_server server/../zappy_server
+	@mv server/build/zappy_server server/../zappy_server
 
 zappy_gui:
 	@echo -e "$(GREEN)Building GUI...$(NC)"
 	@cd gui && mkdir -p ./build/
 	@cd gui/build && cmake --log-level=ERROR ..
-	@cd gui/build && make --silent
+	@cd gui/build && make --silent && chmod +x zappy_gui
 	@cd ../..
-	@cp gui/build/zappy_gui gui/../zappy_gui
+	@mv gui/build/zappy_gui gui/../zappy_gui
 
 .PHONY: all clean zappy_gui zappy_server zappy_ai re
 
