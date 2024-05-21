@@ -1,0 +1,6 @@
+.idea
+cmake-build-debug
+zappy_server
+zappy_gui
+zappy_ai
+venv
