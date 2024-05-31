@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** B-YEP-400-LIL-4-1-zappy-romaric.loevenbruck
 ** File description:
-** parse_args
+** Parse arguments & init stucture
 */
 
 #include "../include/main.h"
@@ -41,7 +41,7 @@ server_t get_param(server_t server, int argc, char *argv[])
         if (strcmp(argv[i], "-f") == 0 && argv[i + 1] != NULL)
             server.freq = atoi(argv[i + 1]);
         if (strcmp(argv[i], "-c") == 0 && argv[i + 1] != NULL)
-            server.max_client = atoi(argv[i + 1]);
+            server.max_client_team = atoi(argv[i + 1]);
         if (strcmp(argv[i], "-n") == 0 && argv[i + 1] != NULL)
             server.team_names = get_team_names(argv, argc, i);
     }
@@ -53,9 +53,10 @@ server_t init_server(server_t server, int argc, char *argv[])
     server.port = 0;
     server.width = 0;
     server.height = 0;
-    server.freq = 0;
-    server.max_client = 0;
+    server.freq = 100;
+    server.max_client_team = 0;
     server.team_names = NULL;
+    server.master_socket = 0;
     for (int i = 0; argv[i]; i++)
         server = get_param(server, argc, argv);
     server.team_nb = tablen(server.team_names);

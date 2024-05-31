@@ -10,6 +10,9 @@ set(SHARED_SRC
     src/main.c
     src/help.c
     src/parse_args.c
+    src/connections.c
+    src/listener.c
+    src/manage_client.c
 )
 
 add_executable(zappy_server ${SHARED_SRC})
