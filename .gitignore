@@ -10,3 +10,5 @@ zappy_server
 zappy_gui
 zappy_ai
 venv
+*.out
+*.log
