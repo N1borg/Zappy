@@ -39,7 +39,7 @@ void client_handler(server_t *s, int *sd, int i)
 }
 
 // Main loop of the server
-int listener_loop(server_t *s, int* sd, int *max_sd)
+int listener_loop(server_t *s, int *sd, int *max_sd)
 {
     FD_ZERO(&s->readfds);
     FD_SET(s->master_socket, &s->readfds);
