@@ -7,6 +7,7 @@
 
 #include "../include/main.h"
 
+// Initialize the listener
 int init_listener(server_t *s)
 {
     s->addr.sin_family = AF_INET;
@@ -24,12 +25,11 @@ int init_listener(server_t *s)
     return 0;
 }
 
+// Initialize the socket
 int init_socket(server_t *s)
 {
     int opt = true;
 
-    for (int i = 0; i < s->max_client_team; i++)
-        s->client_socket[i] = 0;
     s->master_socket = socket(AF_INET, SOCK_STREAM, 0);
     if (s->master_socket == 0) {
         perror("Socket failed");

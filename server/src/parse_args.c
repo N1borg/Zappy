@@ -7,6 +7,7 @@
 
 #include "../include/main.h"
 
+// Get the number of elements in a table
 int tablen(char **tab)
 {
     int i = 0;
@@ -15,9 +16,9 @@ int tablen(char **tab)
     return i;
 }
 
-char **get_team_names(char **argv, int argc, int i)
+// Get the team names from the arguments
+void get_team_names(char **argv, int argc, int i, char **team_names)
 {
-    char **team_names = malloc(sizeof(char *) * (argc - (i + 1)));
     int j = 0;
 
     for (j = 1; argv[i + j]; j++) {
@@ -26,29 +27,31 @@ char **get_team_names(char **argv, int argc, int i)
         team_names[j - 1] = argv[i + j];
     }
     team_names[j - 1] = NULL;
-    return team_names;
 }
 
-server_t get_param(server_t server, int argc, char *argv[])
+// Get the parameters from the arguments
+void get_param(server_t *server, int argc, char *argv[])
 {
     for (int i = 0; argv[i]; i++) {
         if (strcmp(argv[i], "-p") == 0 && argv[i + 1] != NULL)
-            server.port = atoi(argv[i + 1]);
+            server->port = atoi(argv[i + 1]);
         if (strcmp(argv[i], "-x") == 0 && argv[i + 1] != NULL)
-            server.width = atoi(argv[i + 1]);
+            server->width = atoi(argv[i + 1]);
         if (strcmp(argv[i], "-y") == 0 && argv[i + 1] != NULL)
-            server.height = atoi(argv[i + 1]);
+            server->height = atoi(argv[i + 1]);
         if (strcmp(argv[i], "-f") == 0 && argv[i + 1] != NULL)
-            server.freq = atoi(argv[i + 1]);
+            server->freq = atoi(argv[i + 1]);
         if (strcmp(argv[i], "-c") == 0 && argv[i + 1] != NULL)
-            server.max_client_team = atoi(argv[i + 1]);
-        if (strcmp(argv[i], "-n") == 0 && argv[i + 1] != NULL)
-            server.team_names = get_team_names(argv, argc, i);
+            server->max_client_team = atoi(argv[i + 1]);
+        if (strcmp(argv[i], "-n") == 0 && argv[i + 1] != NULL) {
+            server->team_names = malloc(sizeof(char *) * (argc - (i + 1)));
+            get_team_names(argv, argc, i, server->team_names);
+        }
     }
-    return server;
 }
 
-server_t init_server(server_t server, int argc, char *argv[])
+// Parse arguments and fill the server struct
+server_t parse_args(server_t server, int argc, char *argv[])
 {
     server.port = 0;
     server.width = 0;
@@ -56,9 +59,7 @@ server_t init_server(server_t server, int argc, char *argv[])
     server.freq = 100;
     server.max_client_team = 0;
     server.team_names = NULL;
-    server.master_socket = 0;
-    for (int i = 0; argv[i]; i++)
-        server = get_param(server, argc, argv);
+    get_param(&server, argc, argv);
     server.team_nb = tablen(server.team_names);
     return server;
 }
