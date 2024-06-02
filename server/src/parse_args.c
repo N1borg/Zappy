@@ -7,26 +7,22 @@
 
 #include "../include/main.h"
 
-// Get the number of elements in a table
-int tablen(char **tab)
-{
-    int i = 0;
-
-    for (; tab && tab[i]; i++);
-    return i;
-}
-
 // Get the team names from the arguments
 void get_team_names(char **argv, int argc, int i, char **team_names)
 {
     int j = 0;
+    char *graphic_team = malloc(sizeof(char) * strlen("GRAPHIC"));
 
+    graphic_team = "GRAPHIC";
     for (j = 1; argv[i + j]; j++) {
         if (argv[i + j][0] == '-')
             break;
         team_names[j - 1] = argv[i + j];
     }
-    team_names[j - 1] = NULL;
+    team_names[j - 1] = graphic_team;
+    team_names[j] = NULL;
+    for (int k = 0; team_names[k]; k++)
+        printf("Team %d: %s\n", k, team_names[k]);
 }
 
 // Get the parameters from the arguments
@@ -44,7 +40,7 @@ void get_param(server_t *server, int argc, char *argv[])
         if (strcmp(argv[i], "-c") == 0 && argv[i + 1] != NULL)
             server->max_client_team = atoi(argv[i + 1]);
         if (strcmp(argv[i], "-n") == 0 && argv[i + 1] != NULL) {
-            server->team_names = malloc(sizeof(char *) * (argc - (i + 1)));
+            server->team_names = malloc(sizeof(char *) * (argc - (i + 2)));
             get_team_names(argv, argc, i, server->team_names);
         }
     }

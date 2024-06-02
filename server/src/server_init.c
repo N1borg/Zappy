@@ -20,7 +20,8 @@ void set_tile(tile_t *tile, int x, int y)
     tile->phiras = 0;
     tile->thystame = 0;
     tile->egg = 0;
-    tile->players = 0;
+    for (int i = 0; i < MAX_CLIENTS; i++)
+        tile->players[i] = NULL;
 }
 
 // Allocates memory for the map and initializes each tile
@@ -50,13 +51,33 @@ void spawn_eggs(tile_t **map, int width, int height, int num_eggs)
     }
 }
 
-// Initializes the server struct
-void init_server(server_t *server)
+// initialize given client structure
+void set_client(client_t *clients)
 {
-    server->master_socket = 0;
-    for (int i = 0; i < server->max_client_team; i++)
-        server->client_socket[i] = 0;
-    server->map = init_map(server->width, server->height);
-    spawn_eggs(server->map, server->width, server->height,
-        (server->max_client_team * server->team_nb));
+    clients->fd = 0;
+    clients->x = 0;
+    clients->y = 0;
+    clients->level = 0;
+    clients->orientation = 0;
+    clients->food = 0;
+    clients->linemate = 0;
+    clients->deraumere = 0;
+    clients->sibur = 0;
+    clients->mendiane = 0;
+    clients->phiras = 0;
+    clients->thystame = 0;
+    clients->team = 0;
+}
+
+// Initializes the server struct
+void init_server(server_t *s)
+{
+    s->master_socket = 0;
+    for (int i = 0; i < MAX_CLIENTS; i++) {
+        s->clients[i] = malloc(sizeof(client_t));
+        set_client(s->clients[i]);
+    }
+    s->map = init_map(s->width, s->height);
+    spawn_eggs(s->map, s->width, s->height,
+        (s->max_client_team * s->team_nb));
 }

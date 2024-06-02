@@ -21,10 +21,19 @@
 
 #define MAX_CLIENTS 100
 
+typedef enum {
+    NORTH = 1,
+    EAST,
+    SOUTH,
+    WEST
+} Orientation;
+
 typedef struct client_s {
     int fd;
+    int x;
+    int y;
     int level;
-    int orientation;
+    Orientation orientation;
     int food;
     int linemate;
     int deraumere;
@@ -32,8 +41,7 @@ typedef struct client_s {
     int mendiane;
     int phiras;
     int thystame;
-    int egg;
-    int team;
+    char *team;
 } client_t;
 
 typedef struct tile_s {
@@ -47,7 +55,7 @@ typedef struct tile_s {
     int phiras;
     int thystame;
     int egg;
-    int players;
+    client_t *players[MAX_CLIENTS];
 } tile_t;
 
 typedef struct server_s {
@@ -59,9 +67,9 @@ typedef struct server_s {
     int team_nb;
     char **team_names;
     int master_socket;
-    int client_socket[MAX_CLIENTS];
     struct sockaddr_in addr;
     fd_set readfds;
+    client_t *clients[MAX_CLIENTS];
     tile_t **map;
 } server_t;
 
@@ -71,6 +79,31 @@ int start_litener(server_t *server);
 int init_socket(server_t *server);
 int init_listener(server_t *server);
 void accept_client(server_t *s);
-void disconnect_client(server_t *s, int sd);
+void disconnect_client(server_t *s, client_t *client);
 void destroy_map(tile_t **map);
 void init_server(server_t *server);
+void compute_response(server_t *s, client_t *client, char *buffer);
+int is_team(server_t *s, char *team_name);
+int is_player(server_t *s, int socket);
+int tablen(char **tab);
+int create_player(server_t *s, client_t *client, char *team_name);
+void set_client(client_t *clients);
+int wich_player_on_map(server_t *s, client_t *client, int x, int y);
+int move_player(server_t *s, client_t *client, int x, int y);
+
+// client commands
+int command_move_up(server_t *s, client_t *client);
+int command_turn_right(server_t *s, client_t *client);
+int command_turn_left(server_t *s, client_t *client);
+int command_look_around(server_t *s, client_t *client);
+int command_inventory(server_t *s, client_t *client);
+int command_fork(server_t *s, client_t *client);
+int command_take_object(server_t *s, client_t *client);
+int command_set_object(server_t *s, client_t *client);
+
+typedef int(*CommandFunction)(server_t *s, client_t *client);
+
+struct CommandMap {
+    const char *command;
+    CommandFunction function;
+};

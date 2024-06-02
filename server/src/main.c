@@ -7,6 +7,13 @@
 
 #include "../include/main.h"
 
+// free clients memory
+void destroy_clients(client_t *clients[MAX_CLIENTS])
+{
+    for (int i = 0; clients[i]; i++)
+        free(clients[i]);
+}
+
 // free map memory
 void destroy_map(tile_t **map)
 {
@@ -16,17 +23,19 @@ void destroy_map(tile_t **map)
 }
 
 // Close sockets and free memory
-int destroy_server(server_t *server, int ret)
+int destroy_server(server_t *s, int ret)
 {
-    close(server->master_socket);
-    for (int i = 0; i < server->max_client_team; i++)
-        close(server->client_socket[i]);
-    free(server->team_names);
-    destroy_map(server->map);
+    close(s->master_socket);
+    for (int i = 0; i < s->max_client_team; i++)
+        close(s->clients[i]->fd);
+    free(s->team_names);
+    destroy_clients(s->clients);
+    destroy_map(s->map);
     printf("Server closed\n");
     return ret;
 }
 
+// Have I really to explain this ?
 int main(int argc, char *argv[])
 {
     server_t server = parse_args(server, argc, argv);
