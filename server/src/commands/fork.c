@@ -10,6 +10,6 @@
 // create an egg
 int command_fork(server_t *s, client_t *client)
 {
-    s->map[client->y][client->x].egg++;
+    s->map[client->x][client->y].egg++;
     return 0;
 }

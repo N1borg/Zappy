@@ -30,9 +30,11 @@ void client_handler(server_t *s, client_t *client, int i)
         if (valread == 0) {
             disconnect_client(s, client);
             s->clients[i]->fd = 0;
+            display_map(s);
         } else {
             buffer[valread - 1] = '\0';
             compute_response(s, client, buffer);
+            display_map(s);
         }
     }
 }

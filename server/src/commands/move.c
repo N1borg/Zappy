@@ -18,12 +18,6 @@ int command_move_up(server_t *s, client_t *client)
         move_player(s, client, client->x, client->y + 1);
     if (client->orientation == WEST)
         move_player(s, client, client->x - 1, client->y);
-    printf("NEW POSITION: (%d,%d)|(%d,%d)\n", client->x, client->y,
-        s->map[client->x][client->y].players[wich_player_on_map(s, client,
-        client->x, client->y)]->x,
-        s->map[client->x][client->y].players[wich_player_on_map(s,
-        client, client->x, client->y)]->y,
-        wich_player_on_map(s, client, client->x, client->y));
     if (client->orientation < 1 || client->orientation > 4)
         return 1;
     return 0;

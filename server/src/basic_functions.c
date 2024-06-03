@@ -8,7 +8,7 @@
 #include "../include/main.h"
 
 // Get the number of elements in a table
-int tablen(char **tab)
+int tablen(team_t **tab)
 {
     int i = 0;
 
@@ -54,10 +54,10 @@ int move_player(server_t *s, client_t *client, int x, int y)
 // return 1 if team name exists, 0 if not and -1 in case of error
 int is_team(server_t *s, char *team_name)
 {
-    if (s->team_names == NULL)
+    if (s->teams == NULL)
         return -1;
-    for (int i = 0; s->team_names[i]; i++) {
-        if (strcmp(team_name, s->team_names[i]) == 0)
+    for (int i = 0; s->teams[i] && s->teams[i]->name; i++) {
+        if (strcmp(team_name, s->teams[i]->name) == 0)
             return 1;
     }
     return 0;

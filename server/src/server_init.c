@@ -66,7 +66,7 @@ void set_client(client_t *clients)
     clients->mendiane = 0;
     clients->phiras = 0;
     clients->thystame = 0;
-    clients->team = 0;
+    clients->team = NULL;
 }
 
 // Initializes the server struct
@@ -79,5 +79,5 @@ void init_server(server_t *s)
     }
     s->map = init_map(s->width, s->height);
     spawn_eggs(s->map, s->width, s->height,
-        (s->max_client_team * s->team_nb));
+        (s->max_client_team * (s->team_nb - 1)));
 }

@@ -14,6 +14,14 @@ void destroy_clients(client_t *clients[MAX_CLIENTS])
         free(clients[i]);
 }
 
+// free teams memory
+void destroy_teams(team_t **teams)
+{
+    for (int i = 0; teams[i]; i++)
+        free(teams[i]);
+    free(teams);
+}
+
 // free map memory
 void destroy_map(tile_t **map)
 {
@@ -28,7 +36,7 @@ int destroy_server(server_t *s, int ret)
     close(s->master_socket);
     for (int i = 0; i < s->max_client_team; i++)
         close(s->clients[i]->fd);
-    free(s->team_names);
+    free(s->teams);
     destroy_clients(s->clients);
     destroy_map(s->map);
     printf("Server closed\n");

@@ -26,14 +26,14 @@ typedef enum {
     EAST,
     SOUTH,
     WEST
-} Orientation;
+} Orientation_t;
 
 typedef struct client_s {
     int fd;
     int x;
     int y;
     int level;
-    Orientation orientation;
+    Orientation_t orientation;
     int food;
     int linemate;
     int deraumere;
@@ -43,6 +43,12 @@ typedef struct client_s {
     int thystame;
     char *team;
 } client_t;
+
+typedef struct team_s {
+    char *name;
+    int size;
+    client_t *players[MAX_CLIENTS];
+} team_t;
 
 typedef struct tile_s {
     int x;
@@ -65,13 +71,18 @@ typedef struct server_s {
     int freq;
     int max_client_team;
     int team_nb;
-    char **team_names;
+    team_t **teams;
     int master_socket;
     struct sockaddr_in addr;
     fd_set readfds;
     client_t *clients[MAX_CLIENTS];
     tile_t **map;
 } server_t;
+
+struct CommandMap {
+    const char *command;
+    int (*CommandFunction)(server_t *s, client_t *client);
+};
 
 int help(char *binary_name, int ret, server_t *server);
 server_t parse_args(server_t server, int argc, char *argv[]);
@@ -85,7 +96,7 @@ void init_server(server_t *server);
 void compute_response(server_t *s, client_t *client, char *buffer);
 int is_team(server_t *s, char *team_name);
 int is_player(server_t *s, int socket);
-int tablen(char **tab);
+int tablen(team_t **tab);
 int create_player(server_t *s, client_t *client, char *team_name);
 void set_client(client_t *clients);
 int wich_player_on_map(server_t *s, client_t *client, int x, int y);
@@ -100,10 +111,3 @@ int command_inventory(server_t *s, client_t *client);
 int command_fork(server_t *s, client_t *client);
 int command_take_object(server_t *s, client_t *client);
 int command_set_object(server_t *s, client_t *client);
-
-typedef int(*CommandFunction)(server_t *s, client_t *client);
-
-struct CommandMap {
-    const char *command;
-    CommandFunction function;
-};

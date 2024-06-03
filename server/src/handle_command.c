@@ -24,7 +24,7 @@ int handle_command(server_t *s, client_t *client, char *buffer)
 
     for (int i = 0; buffer && command_map[i].command != NULL; i++) {
         if (strcmp(command_map[i].command, buffer) == 0
-            && command_map[i].function(s, client) == 0)
+            && command_map[i].CommandFunction(s, client) == 0)
             return 0;
     }
     return 1;
