@@ -34,7 +34,7 @@ def main():
 
     if name == "GRAPHIC":
         print("Team name not available.")
-        exit()
+        exit(84)
 
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
