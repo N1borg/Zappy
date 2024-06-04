@@ -11,7 +11,7 @@
 void add_child_socket(server_t *s, int *sd, int *max_sd)
 {
     for (int i = 0; i < s->max_client_team; i++) {
-        (*sd) = s->client_socket[i];
+        (*sd) = s->clients[i]->fd;
         if (*sd > 0)
             FD_SET(*sd, &s->readfds);
         if (*sd > *max_sd)
@@ -20,20 +20,19 @@ void add_child_socket(server_t *s, int *sd, int *max_sd)
 }
 
 // Handle the client messages
-void client_handler(server_t *s, int *sd, int i)
+void client_handler(server_t *s, client_t *client, int i)
 {
     char buffer[1024];
     int valread = 0;
 
-    if (FD_ISSET(*sd, &s->readfds)) {
-        valread = read(*sd, buffer, 1024);
+    if (FD_ISSET(client->fd, &s->readfds)) {
+        valread = read(client->fd, buffer, 1024);
         if (valread == 0) {
-            disconnect_client(s, *sd);
-            s->client_socket[i] = 0;
+            disconnect_client(s, client);
+            s->clients[i]->fd = 0;
         } else {
-            buffer[valread] = '\0';
-            send(*sd, buffer, strlen(buffer), 0);
-            printf("[%d] - %s\n", *sd, buffer);
+            buffer[valread - 1] = '\0';
+            compute_response(s, client, buffer);
         }
     }
 }
@@ -50,9 +49,9 @@ int listener_loop(server_t *s, int *sd, int *max_sd)
         printf("Select error");
     if (FD_ISSET(s->master_socket, &s->readfds))
         accept_client(s);
-    for (int i = 0; i < s->max_client_team; i++) {
-        (*sd) = s->client_socket[i];
-        client_handler(s, sd, i);
+    for (int i = 0; i < MAX_CLIENTS; i++) {
+        (*sd) = s->clients[i]->fd;
+        client_handler(s, s->clients[i], i);
     }
     return 0;
 }
@@ -72,3 +71,26 @@ int start_litener(server_t *s)
     }
     return 0;
 }
+
+// void display_map(server_t *s)
+// {
+//     for (int i = 0; i < s->height; i++) {
+//         for (int j = 0; j < s->width; j++) {
+//             printf("Tile (%d,%d) - Food: %d, Linemate: %d, Deraumere: %d,
+// Sibur: %d, Mendiane: %d, Phiras: %d, Thystame: %d, Egg: %d", s->map[i][j].x,
+// s->map[i][j].y, s->map[i][j].food, s->map[i][j].linemate,
+// s->map[i][j].deraumere, s->map[i][j].sibur, s->map[i][j].mendiane,
+// s->map[i][j].phiras, s->map[i][j].thystame, s->map[i][j].egg);
+//             if (s->map[i][j].players[0] || s->map[i][j].players[1]) {
+//                 for (int k = 0; k < MAX_CLIENTS; k++) {
+//                     if (s->map[i][j].players[k])
+//                         printf(" Player %d: x: %d, y: %d, level: %d,
+// orientation: %d, team: %s", k, s->map[i][j].players[k]->x,
+// s->map[i][j].players[k]->y, s->map[i][j].players[k]->level,
+// s->map[i][j].players[k]->orientation, s->map[i][j].players[k]->team);
+//                 }
+//             }
+//             printf("\n");
+//         }
+//     }
+// }

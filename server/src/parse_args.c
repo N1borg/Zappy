@@ -7,26 +7,30 @@
 
 #include "../include/main.h"
 
-// Get the number of elements in a table
-int tablen(char **tab)
+void init_team(team_t *teams, char *name)
 {
-    int i = 0;
-
-    for (; tab && tab[i]; i++);
-    return i;
+    teams->size = 0;
+    teams->name = name;
+    for (int i = 0; i < MAX_CLIENTS; i++)
+        teams->players[i] = NULL;
 }
 
 // Get the team names from the arguments
-void get_team_names(char **argv, int argc, int i, char **team_names)
+void get_team_names(char **argv, int argc, team_t **teams)
 {
-    int j = 0;
+    int i = 0;
+    char *graphic_team = "GRAPHIC";
 
-    for (j = 1; argv[i + j]; j++) {
-        if (argv[i + j][0] == '-')
-            break;
-        team_names[j - 1] = argv[i + j];
+    for (i = 1; argv[i] && argv[i][0] != '-'; i++) {
+        teams[i - 1] = malloc(sizeof(team_t));
+        init_team(teams[i - 1], argv[i]);
     }
-    team_names[j - 1] = NULL;
+    teams[i - 1] = malloc(sizeof(team_t));
+    init_team(teams[i - 1], graphic_team);
+    teams[i] = NULL;
+    printf("TEAM NAMES:\n");
+    for (int k = 0; teams[k]; k++)
+        printf("Team %d: %s\n", k, teams[k]->name);
 }
 
 // Get the parameters from the arguments
@@ -44,8 +48,8 @@ void get_param(server_t *server, int argc, char *argv[])
         if (strcmp(argv[i], "-c") == 0 && argv[i + 1] != NULL)
             server->max_client_team = atoi(argv[i + 1]);
         if (strcmp(argv[i], "-n") == 0 && argv[i + 1] != NULL) {
-            server->team_names = malloc(sizeof(char *) * (argc - (i + 1)));
-            get_team_names(argv, argc, i, server->team_names);
+            server->teams = malloc(sizeof(team_t *) * (argc - i));
+            get_team_names(&argv[i], argc, server->teams);
         }
     }
 }
@@ -58,8 +62,10 @@ server_t parse_args(server_t server, int argc, char *argv[])
     server.height = 0;
     server.freq = 100;
     server.max_client_team = 0;
-    server.team_names = NULL;
+    server.teams = NULL;
     get_param(&server, argc, argv);
-    server.team_nb = tablen(server.team_names);
+    for (int i = 0; server.teams[i + 1]; i++)
+        server.teams[i]->size = server.max_client_team;
+    server.team_nb = tablen(server.teams);
     return server;
 }
