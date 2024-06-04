@@ -38,7 +38,7 @@ void disconnect_client(server_t *s, client_t *client)
     printf("[%d] - Disconnected | ip: %s, port: %d \n", client->fd,
         inet_ntoa(s->addr.sin_addr), ntohs(s->addr.sin_port));
     close(client->fd);
-    s->map[client->x][client->y].players[
+    s->map[client->y][client->x].players[
         wich_player_on_map(s, client, client->x, client->y)] = NULL;
     set_client(client);
 }
@@ -77,10 +77,10 @@ int create_player(server_t *s, client_t *client, char *team_name)
         return 1;
     x = rand() % s->width;
     y = rand() % s->height;
-    for (; i < MAX_CLIENTS && s->map[x][y].players[i]; i++);
+    for (; i < MAX_CLIENTS && s->map[y][x].players[i]; i++);
     if (i == MAX_CLIENTS)
         return 1;
-    s->map[x][y].players[i] = client;
+    s->map[y][x].players[i] = client;
     client->x = x;
     client->y = y;
     client->orientation = (rand() % 4) + 1;

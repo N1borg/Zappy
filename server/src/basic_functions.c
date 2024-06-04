@@ -20,8 +20,8 @@ int tablen(team_t **tab)
 int wich_player_on_map(server_t *s, client_t *client, int x, int y)
 {
     for (int i = 0; i <= MAX_CLIENTS; i++) {
-        if (s->map[x][y].players[i]
-            && s->map[x][y].players[i]->fd == client->fd)
+        if (s->map[y][x].players[i]
+            && s->map[y][x].players[i]->fd == client->fd)
             return i;
     }
     return -1;
@@ -43,9 +43,9 @@ int move_player(server_t *s, client_t *client, int x, int y)
         y = s->height - 1;
     if (y >= s->height)
         y = 0;
-    for (; j < MAX_CLIENTS && s->map[x][y].players[j]; j++);
-    s->map[x][y].players[j] = client;
-    s->map[client->x][client->y].players[i] = NULL;
+    for (; j < MAX_CLIENTS && s->map[y][x].players[j]; j++);
+    s->map[y][x].players[j] = client;
+    s->map[client->y][client->x].players[i] = NULL;
     client->x = x;
     client->y = y;
     return 0;

@@ -26,14 +26,14 @@ typedef enum {
     EAST,
     SOUTH,
     WEST
-} Orientation_t;
+} orientation_t;
 
 typedef struct client_s {
     int fd;
     int x;
     int y;
     int level;
-    Orientation_t orientation;
+    orientation_t orientation;
     int food;
     int linemate;
     int deraumere;

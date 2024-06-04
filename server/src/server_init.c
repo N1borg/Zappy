@@ -27,14 +27,14 @@ void set_tile(tile_t *tile, int x, int y)
 // Allocates memory for the map and initializes each tile
 tile_t **init_map(int width, int height)
 {
-    tile_t **map = malloc(sizeof(tile_t *) * (width + 1));
+    tile_t **map = malloc(sizeof(tile_t *) * (height + 1));
 
-    for (int i = 0; i < width; i++) {
-        map[i] = malloc(sizeof(tile_t) * (height + 1));
-        for (int j = 0; j < height; j++)
+    for (int i = 0; i < height; i++) {
+        map[i] = malloc(sizeof(tile_t) * (width + 1));
+        for (int j = 0; j < width; j++)
             set_tile(&map[i][j], i, j);
     }
-    map[width] = NULL;
+    map[height] = NULL;
     return map;
 }
 
@@ -47,7 +47,7 @@ void spawn_eggs(tile_t **map, int width, int height, int num_eggs)
     for (int i = 0; i < num_eggs; i++) {
         x = rand() % width;
         y = rand() % height;
-        map[x][y].egg++;
+        map[y][x].egg++;
     }
 }
 

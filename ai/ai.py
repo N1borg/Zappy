@@ -53,22 +53,22 @@ def main():
             send_message(s, name)
 
             # Receive the number of available slots
-            response = receive_response(s)
             try:
+                response = receive_response(s)
                 slots = int(response)
                 print(f'Received slots: {slots}')
             except ValueError:
                 print(f'Unexpected response for slots from server: {response}')
                 return
 
-            # Receive the position (X, Y)
+            # Receive the map size (X, Y)
             response = receive_response(s)
             parts = response.split()
             if len(parts) == 2:
                 x, y = parts
-                print(f'Received position: ({x}, {y})')
+                print(f'Received map size: ({x}, {y})')
             else:
-                print(f'Unexpected response for position from server: {response}')
+                print(f'Unexpected response for map size from server: {response}')
 
     except Exception as e:
         print(f'{host}:{port} - {e}')
