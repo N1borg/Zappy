@@ -108,44 +108,125 @@ The first focus for AI is to communicate with the server.
 The second focus is to use the commands to get a basic decision tree.
 The last focus is to make a decision tree to optimize strategy and winning chances.
 
-## Init
+### Short overview
 
-- The player init their life, random starting direction, and position
-- Init a socket to connect to the server
-- First actions will depend on the chosen strategy
+AI do:
+- Occupy 1 tile (several AI can occupy the same tile)
+- Look in a cardinal direction (can't be seen by other AI)
+- Move
+- Turn left or right
+- Look for and collect stones
+- Eject other players (push a tile away in the direction of viewing)
+- Feed themselves (consume stones)
+- Have a FOV (Field Of Vision) which depends on their level
+- Have an inventory
+- Broadcast messages
+- Create eggs (new sockets for new AI on the same team)
+- Initialize incantation
 
-## Characters interactions
+## Connection
+1. Client(AI) opens a socket on server's port
+2. Server and client communicate the following way:<br>
+<ins>server</ins>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<ins>client</ins><br>
+    **WELCOME**\n **-->**<br>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+   **<-- TEAM-NAME**\n<br>
+    **CLIENT-NUM**\n **-->**<br>
+    **X Y**\n **-->**
 
-- They occupy the 1 tile they are on
-- They go through each other, can stand on the same tile
-- They look in a cardinal direction
-- They can't see another player's direction
--> all these informations are important for the *look()* command
+When **a player connects**:
+
+- select a random egg (socket) from available ones on the same team
+- start a new player with a random direction
+
+[//]: # (## Init)
+
+[//]: # ()
+[//]: # (- The player init their life, random starting direction, and position)
+
+[//]: # (- Init a socket to connect to the server)
+
+[//]: # (- First actions will depend on the chosen strategy)
+
+[//]: # (## Characters interactions)
+
+[//]: # ()
+[//]: # (- They occupy the 1 tile they are on)
+
+[//]: # (- They go through each other, can stand on the same tile)
+
+[//]: # (- They look in a cardinal direction)
+
+[//]: # (- They can't see another player's direction)
+
+[//]: # (-> all these informations are important for the *look&#40;&#41;* command)
 
 ## Survival
 
-- Players start with 1260 tick of life
+- Players start with 1260 tick (seconds) or 10 units of life
 - They regain 126 units by eating food
-- If their life hits 0, they inform the server of their death
---> keep count of the life-ticks in the client-side, meaning the python program for AI
+- If their life hits 0, they are dead (server informs them of their death)
+- Life ticks are counted in client (AI)
 
 ## Commands
 
-The commands are a string sent to the server using the socket.
-Implement all these commands in a robust way:
+The commands are a string sent to the server using the socket. The server sends a response as well.
 
-### Forward
+| **Command**    | **Time limit** |                   **Response**                    | **Action**                      |
+|:--------------:|:--------------:|:-------------------------------------------------:|:-------------------------------:|
+| Forward        | 7/f            |                        ok                         | move 1 tile forward             |
+| Right          | 7/f            |                        ok                         | turn 90° right                  |
+| Left           | 7/f            |                        ok                         | turn 90° left                   |
+| Look           | 7/f            |                [tile1, tile2, ...]                | look around                     |
+| Inventory      | 1/f            |            [linemate n, sibur n, ...]             | inventory                       |
+| Broadcast text | 7/f            |                        ok                         | broadcast a message             |
+| Connect_nbr    | -              |                       value                       | num of unused team spots        |
+| Fork           | 42/f           |                        ok                         | create an egg (socket)          |
+| Eject          | 7/f            |                       ok/ko                       | push other players on same tile |
+| -              | -              |                       dead                        | dead                            |
+| Take object    | 7/f            |                       ok/ko                       | take object                     |
+| Set object     | 7/f            |                       ok/ko                       | set down object                 |
+| Incantation    | 300/f          | Elevation underway:\n<br>Current level: k\n<br>/ko | start incantation ritual        |
+
+
+### Inventory
+
+An example of an inventory:<br>
+<i>[food 345, sibur 3, phiras 5, ... deraumere 0]</i>
+### Eject
+- Push other player 1 case forward (in the <b>pusher's</b> perspective, not the pushed)
+- If there are any eggs on a tile where a player calls Eject, eggs get destroyed
 
 ### Incantation
 
-- starts when the player informs the server
-- lasts 300 for ticks
-- Needs the correct amount of players and ressources *at minimum* to be valid
-- every player is informed of a
+A level upgrade called by client (AI).
 
-## Game win condition
+Short facts:
+- Starts when a player informs the server
+- Lasts for 300 ticks
+- Every player is frozen during the procedure (can't do any other actions)
+- Needs the correct amount of players and ressources *at minimum* to be valid
+- Verification of the conditions for incantation is done at the beginning and at the end of it
+- If incantation is successful, stones are removed frm the ground
+
+Table of elements needed to proceed with the ritual:
+
+| elevation | nb players | linemate | deraumere | sibur | mendiane | phiras | thystame |
+|:---------:|:----------:|:--------:|:---------:|:-----:|:--------:|:------:|:--------:|
+| 1->2      | 1          | 1        | 0         | 0     | 0        | 0      | 0        |
+| 2->3      | 2          | 1        | 1         | 1     | 0        | 0      | 0        |
+| 3->4      | 2          | 2        | 0         | 1     | 0        | 2      | 0        |
+| 4->5      | 4          | 1        | 1         | 2     | 0        | 1      | 0        |
+| 5->6      | 4          | 1        | 2         | 1     | 3        | 0      | 0        |
+| 6->7      | 6          | 1        | 2         | 3     | 0        | 1      | 0        |
+| 7->8      | 6          | 2        | 2         | 2     | 2        | 2      | 1        |
+
+
+## Game win condition--> keep count of the life-ticks in the client-side, meaning the python program for AI
 
 There is two ways to win:
+- A member of the team reaches level 8
+- No other teams are left
 
 ### Survival
 
