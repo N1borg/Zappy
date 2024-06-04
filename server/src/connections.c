@@ -71,3 +71,26 @@ int start_litener(server_t *s)
     }
     return 0;
 }
+
+// void display_map(server_t *s)
+// {
+//     for (int i = 0; i < s->height; i++) {
+//         for (int j = 0; j < s->width; j++) {
+//             printf("Tile (%d,%d) - Food: %d, Linemate: %d, Deraumere: %d,
+// Sibur: %d, Mendiane: %d, Phiras: %d, Thystame: %d, Egg: %d", s->map[i][j].x,
+// s->map[i][j].y, s->map[i][j].food, s->map[i][j].linemate,
+// s->map[i][j].deraumere, s->map[i][j].sibur, s->map[i][j].mendiane,
+// s->map[i][j].phiras, s->map[i][j].thystame, s->map[i][j].egg);
+//             if (s->map[i][j].players[0] || s->map[i][j].players[1]) {
+//                 for (int k = 0; k < MAX_CLIENTS; k++) {
+//                     if (s->map[i][j].players[k])
+//                         printf(" Player %d: x: %d, y: %d, level: %d,
+// orientation: %d, team: %s", k, s->map[i][j].players[k]->x,
+// s->map[i][j].players[k]->y, s->map[i][j].players[k]->level,
+// s->map[i][j].players[k]->orientation, s->map[i][j].players[k]->team);
+//                 }
+//             }
+//             printf("\n");
+//         }
+//     }
+// }
