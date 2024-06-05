@@ -19,11 +19,13 @@ set(SHARED_SRC
     src/commands/broadcast.c
     src/commands/eject.c
     src/commands/fork.c
+    src/commands/incantation.c
     src/commands/inventory.c
     src/commands/look.c
     src/commands/move.c
     src/commands/object_interaction.c
     src/commands/rotate.c
+    src/commands/team_slots.c
 )
 
 add_executable(zappy_server ${SHARED_SRC})

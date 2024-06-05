@@ -7,27 +7,33 @@
 
 #include "../include/main.h"
 
-// Function to execute command based on buffer, returns 1 on error
-int handle_command(server_t *s, client_t *client, char *buffer)
+// Function to run command based on buffer, returns 1 on error
+int run_command(server_t *s, client_t *client,
+    char *buffer, struct CommandMap *command_map)
 {
-    struct CommandMap command_map[] = {
-        {"Forward", command_move_up},
-        {"Right", command_turn_right},
-        {"Left", command_turn_left},
-        {"Look", command_look_around},
-        {"Inventory", command_inventory},
-        {"Fork", command_fork},
-        {"Take object", command_take_object},
-        {"Set object", command_set_object},
-        {NULL, NULL}
-    };
-
     for (int i = 0; buffer && command_map[i].command != NULL; i++) {
         if (strcmp(command_map[i].command, buffer) == 0
-            && command_map[i].CommandFunction(s, client) == 0)
+            && command_map[i].CommandFunction(s,
+                client, strchr(buffer, ' ')) == 0)
             return 0;
     }
     return 1;
+}
+
+// Function to execute command based on buffer, returns 1 on error
+int handle_command(server_t *s, client_t *client, char *buffer)
+{
+    struct CommandMap command_map[] = {{"Forward", command_move_up},
+        {"Right", command_turn_right}, {"Left", command_turn_left},
+        {"Look", command_look_around}, {"Inventory", command_inventory},
+        {"Broadcast", command_broadcast}, {"Connect_nbr", command_team_slots},
+        {"Fork", command_fork}, {"Eject", command_eject},
+        {"Take object", command_take_object},
+        {"Set object", command_set_object},
+        {"Incantation", command_incantation},
+        {NULL, NULL}};
+
+    return run_command(s, client, buffer, command_map);
 }
 
 // Compute response based on buffer

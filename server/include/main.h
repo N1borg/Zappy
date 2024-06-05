@@ -46,7 +46,7 @@ typedef struct client_s {
 
 typedef struct team_s {
     char *name;
-    int size;
+    int free_slots;
     client_t *players[MAX_CLIENTS];
 } team_t;
 
@@ -81,7 +81,7 @@ typedef struct server_s {
 
 struct CommandMap {
     const char *command;
-    int (*CommandFunction)(server_t *s, client_t *client);
+    int (*CommandFunction)(server_t *s, client_t *client, char *arg);
 };
 
 int help(char *binary_name, int ret, server_t *server);
@@ -101,13 +101,18 @@ int create_player(server_t *s, client_t *client, char *team_name);
 void set_client(client_t *clients);
 int wich_player_on_map(server_t *s, client_t *client, int x, int y);
 int move_player(server_t *s, client_t *client, int x, int y);
+int wich_team(server_t *s, char *team_name);
 
 // client commands
-int command_move_up(server_t *s, client_t *client);
-int command_turn_right(server_t *s, client_t *client);
-int command_turn_left(server_t *s, client_t *client);
-int command_look_around(server_t *s, client_t *client);
-int command_inventory(server_t *s, client_t *client);
-int command_fork(server_t *s, client_t *client);
-int command_take_object(server_t *s, client_t *client);
-int command_set_object(server_t *s, client_t *client);
+int command_move_up(server_t *s, client_t *client, char *arg);
+int command_turn_right(server_t *s, client_t *client, char *arg);
+int command_turn_left(server_t *s, client_t *client, char *arg);
+int command_look_around(server_t *s, client_t *client, char *arg);
+int command_inventory(server_t *s, client_t *client, char *arg);
+int command_fork(server_t *s, client_t *client, char *arg);
+int command_take_object(server_t *s, client_t *client, char *arg);
+int command_set_object(server_t *s, client_t *client, char *arg);
+int command_eject(server_t *s, client_t *client, char *arg);
+int command_broadcast(server_t *s, client_t *client, char *arg);
+int command_incantation(server_t *s, client_t *client, char *arg);
+int command_team_slots(server_t *s, client_t *client, char *arg);

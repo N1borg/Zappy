@@ -8,7 +8,7 @@
 #include "../../include/main.h"
 
 // sends the content of the map in front of the client
-int command_look_around(server_t *s, client_t *client)
+int command_look_around(server_t *s, client_t *client, char *arg)
 {
     dprintf(client->fd, "AROUND\n");
     return 0;

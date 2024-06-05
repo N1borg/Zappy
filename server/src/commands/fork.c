@@ -8,7 +8,7 @@
 #include "../../include/main.h"
 
 // create an egg
-int command_fork(server_t *s, client_t *client)
+int command_fork(server_t *s, client_t *client, char *arg)
 {
     s->map[client->y][client->x].egg++;
     return 0;
