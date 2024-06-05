@@ -11,6 +11,7 @@ set(SHARED_SRC
     src/help.cpp
     src/Parser.cpp
     src/Socket.cpp
+    src/Window.cpp
 )
 
 add_executable(zappy_gui ${SHARED_SRC})
