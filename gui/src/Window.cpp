@@ -7,10 +7,6 @@
 
 #include "../include/Window.hpp"
 
-Window::Window()
-{
-}
-
 Window::Window(int width, int height, std::string title)
 {
     _width = width;
@@ -19,6 +15,37 @@ Window::Window(int width, int height, std::string title)
     // _camera = {0};
 }
 
-Window::~Window()
+void Window::init()
 {
+    InitWindow(_width, _height, _title.c_str());
+}
+
+void Window::setTargetFPS(int fps)
+{
+    SetTargetFPS(fps);
+}
+
+bool Window::shouldClose()
+{
+    return WindowShouldClose();
+}
+
+void Window::beginDrawing()
+{
+    BeginDrawing();
+}
+
+void Window::clearBackground(Color color)
+{
+    ClearBackground(color);
+}
+
+void Window::endDrawing()
+{
+    EndDrawing();
+}
+
+void Window::close()
+{
+    CloseWindow();
 }

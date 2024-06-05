@@ -12,18 +12,18 @@
 
 class Window {
     public:
-        Window();
+        Window() = default;
         Window(int width, int height, std::string title);
-        ~Window();
+        ~Window() = default;
 
-        // Encapsulation of raylib functions
-        void init() { InitWindow(_width, _height, _title.c_str()); }
-        void setTargetFPS(int fps) { SetTargetFPS(fps); }
-        bool shouldClose() { return WindowShouldClose(); }
-        void beginDrawing() { BeginDrawing(); }
-        void clearBackground(Color color) { ClearBackground(color); }
-        void endDrawing() { EndDrawing(); }
-        void close() { CloseWindow(); }
+        // Raylib functions
+        void init();
+        void setTargetFPS(int fps);
+        bool shouldClose();
+        void beginDrawing();
+        void clearBackground(Color color);
+        void endDrawing();
+        void close();
 
     private:
         int _width;
