@@ -99,9 +99,9 @@ int is_player(server_t *s, int socket);
 int tablen(team_t **tab);
 int create_player(server_t *s, client_t *client, char *team_name);
 void set_client(client_t *clients);
-int wich_player_on_map(server_t *s, client_t *client, int x, int y);
+int which_player_on_map(server_t *s, client_t *client, int x, int y);
 int move_player(server_t *s, client_t *client, int x, int y);
-int wich_team(server_t *s, char *team_name);
+int which_team(server_t *s, char *team_name);
 
 // client commands
 int command_move_up(server_t *s, client_t *client, char *arg);

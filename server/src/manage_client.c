@@ -39,9 +39,9 @@ void disconnect_client(server_t *s, client_t *client)
     close(client->fd);
     client->fd = 0;
     s->map[client->y][client->x].players[
-        wich_player_on_map(s, client, client->x, client->y)] = NULL;
+        which_player_on_map(s, client, client->x, client->y)] = NULL;
     set_client(client);
-    s->teams[wich_team(s, client->team)]->free_slots++;
+    s->teams[which_team(s, client->team)]->free_slots++;
 }
 
 // Add a player to a team based on it's name
@@ -69,7 +69,7 @@ int add_player_to_team(server_t *s, client_t *player, char *team_name)
 }
 
 // Return the index of the team in the server based on it's name
-int wich_team(server_t *s, char *team_name)
+int which_team(server_t *s, char *team_name)
 {
     for (int i = 0; s->teams[i] && s->teams[i]->name; i++) {
         if (strcmp(team_name, s->teams[i]->name) == 0)
@@ -97,7 +97,7 @@ int create_player(server_t *s, client_t *client, char *team_name)
     client->y = y;
     client->orientation = (rand() % 4) + 1;
     dprintf(client->fd, "%d\n",
-        s->teams[wich_team(s, client->team)]->free_slots);
+        s->teams[which_team(s, client->team)]->free_slots);
     dprintf(client->fd, "%d %d\n", s->width, s->height);
     return 0;
 }

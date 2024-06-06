@@ -17,7 +17,7 @@ int tablen(team_t **tab)
 }
 
 // Return the index of the client in the map at the given position
-int wich_player_on_map(server_t *s, client_t *client, int x, int y)
+int which_player_on_map(server_t *s, client_t *client, int x, int y)
 {
     for (int i = 0; i <= MAX_CLIENTS; i++) {
         if (s->map[y][x].players[i]
@@ -30,7 +30,7 @@ int wich_player_on_map(server_t *s, client_t *client, int x, int y)
 // Move the player to the given position based on the circular map
 int move_player(server_t *s, client_t *client, int x, int y)
 {
-    int i = wich_player_on_map(s, client, client->x, client->y);
+    int i = which_player_on_map(s, client, client->x, client->y);
     int j = 0;
 
     if (i == -1)
