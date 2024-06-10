@@ -8,3 +8,18 @@
 #include "../../include/main.h"
 
 // sends a message to all players
+int command_broadcast(server_t *s, client_t *client, char *arg)
+{
+    int x = client->x;
+    int y = client->y;
+
+    if (arg == NULL)
+        return 1;
+    else
+        arg++;
+    for (int i = 0; s->clients[i]; i++) {
+        if (s->clients[i]->fd != client->fd)
+            dprintf(s->clients[i]->fd, "message !!SET TILE!!, %s\n", arg);
+    }
+    return 0;
+}

@@ -9,7 +9,7 @@
 
 void init_team(team_t *teams, char *name)
 {
-    teams->size = 0;
+    teams->free_slots = 0;
     teams->name = name;
     for (int i = 0; i < MAX_CLIENTS; i++)
         teams->players[i] = NULL;
@@ -65,7 +65,7 @@ server_t parse_args(server_t server, int argc, char *argv[])
     server.teams = NULL;
     get_param(&server, argc, argv);
     for (int i = 0; server.teams[i + 1]; i++)
-        server.teams[i]->size = server.max_client_team;
+        server.teams[i]->free_slots = server.max_client_team;
     server.team_nb = tablen(server.teams);
     return server;
 }

@@ -7,6 +7,16 @@
 
 #include "../include/main.h"
 
+// Return the index of the team in the server based on it's name
+int which_team(server_t *s, char *team_name)
+{
+    for (int i = 0; s->teams[i] && s->teams[i]->name; i++) {
+        if (strcmp(team_name, s->teams[i]->name) == 0)
+            return i;
+    }
+    return -1;
+}
+
 /* Accept a new client, print the New connection message and add it to
  the list of sockets */
 void accept_client(server_t *s)
@@ -22,7 +32,6 @@ void accept_client(server_t *s)
     for (int i = 0; i < s->max_client_team; i++) {
         if (s->clients[i]->fd == 0) {
             s->clients[i]->fd = new_socket;
-            printf("[%d] - Adding to list of sockets as %d\n", new_socket, i);
             break;
         }
     }
@@ -38,8 +47,10 @@ void disconnect_client(server_t *s, client_t *client)
     printf("[%d] - Disconnected | ip: %s, port: %d \n", client->fd,
         inet_ntoa(s->addr.sin_addr), ntohs(s->addr.sin_port));
     close(client->fd);
+    client->fd = 0;
     s->map[client->y][client->x].players[
-        wich_player_on_map(s, client, client->x, client->y)] = NULL;
+        which_player_on_map(&s->map[client->y][client->x], client)] = NULL;
+    s->teams[which_team(s, client->team)]->free_slots++;
     set_client(client);
 }
 
@@ -52,13 +63,14 @@ int add_player_to_team(server_t *s, client_t *player, char *team_name)
     if (player == NULL || team_name == NULL)
         return 1;
     for (; s->teams[i] && strcmp(team_name, s->teams[i]->name); i++);
-    if (s->teams[i] && s->teams[i]->size > 1
+    if (s->teams[i] && s->teams[i]->free_slots >= 1
         && strcmp(team_name, s->teams[i]->name) == 0) {
         for (; j < MAX_CLIENTS && s->teams[i]->players[j]; j++);
         if (j < MAX_CLIENTS) {
             s->teams[i]->players[j] = player;
             player->team = s->teams[i]->name;
             player->level = 1;
+            s->teams[i]->free_slots--;
         } else
             return 1;
     } else
@@ -84,8 +96,8 @@ int create_player(server_t *s, client_t *client, char *team_name)
     client->x = x;
     client->y = y;
     client->orientation = (rand() % 4) + 1;
-    printf("[%d] - player created at (%d,%d)\n", client->fd, x, y);
-    dprintf(client->fd, "-1\n");
-    dprintf(client->fd, "%d %d\n", x, y);
+    dprintf(client->fd, "%d\n",
+        s->teams[which_team(s, client->team)]->free_slots);
+    dprintf(client->fd, "%d %d\n", s->width, s->height);
     return 0;
 }
