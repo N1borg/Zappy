@@ -99,15 +99,18 @@ int is_player(server_t *s, int socket);
 int tablen(team_t **tab);
 int create_player(server_t *s, client_t *client, char *team_name);
 void set_client(client_t *clients);
-int wich_player_on_map(server_t *s, client_t *client, int x, int y);
+int which_player_on_map(tile_t *tile, client_t *client);
 int move_player(server_t *s, client_t *client, int x, int y);
-int wich_team(server_t *s, char *team_name);
+int which_team(server_t *s, char *team_name);
+int x_to_map_x(server_t *s, int x);
+int y_to_map_y(server_t *s, int y);
+void display_tile(tile_t *tile, char *buffer);
 
 // client commands
 int command_move_up(server_t *s, client_t *client, char *arg);
 int command_turn_right(server_t *s, client_t *client, char *arg);
 int command_turn_left(server_t *s, client_t *client, char *arg);
-int command_look_around(server_t *s, client_t *client, char *arg);
+int command_look(server_t *s, client_t *client, char *arg);
 int command_inventory(server_t *s, client_t *client, char *arg);
 int command_fork(server_t *s, client_t *client, char *arg);
 int command_take_object(server_t *s, client_t *client, char *arg);

@@ -25,7 +25,7 @@ int handle_command(server_t *s, client_t *client, char *buffer)
 {
     struct CommandMap command_map[] = {{"Forward", command_move_up},
         {"Right", command_turn_right}, {"Left", command_turn_left},
-        {"Look", command_look_around}, {"Inventory", command_inventory},
+        {"Look", command_look}, {"Inventory", command_inventory},
         {"Broadcast", command_broadcast}, {"Connect_nbr", command_team_slots},
         {"Fork", command_fork}, {"Eject", command_eject},
         {"Take object", command_take_object},
