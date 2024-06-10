@@ -22,7 +22,7 @@ int get_players(server_t *s, client_t *client)
     return players;
 }
 
-int incant2(server_t *s, client_t *client, int x, int y)
+int incant_lasts(server_t *s, client_t *client, int x, int y)
 {
     int num_players = get_players(s, client);
 
@@ -58,7 +58,7 @@ int incant(server_t *s, client_t *client, int x, int y)
         dprintf(client->fd, "Elevation underway\n");
         return 0;
     }
-    return incant2(s, client, x, y);
+    return incant_lasts(s, client, x, y);
 }
 
 // check if the player can incant

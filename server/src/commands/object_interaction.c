@@ -8,7 +8,7 @@
 #include "../../include/main.h"
 
 // take object from inventory
-int command_take_object2(server_t *s, client_t *client, char *arg)
+int command_take_objectsmp(server_t *s, client_t *client, char *arg)
 {
     if (!strcmp(arg, "sibur") && s->map[client->y][client->x].sibur > 0) {
         s->map[client->y][client->x].sibur--;
@@ -54,10 +54,10 @@ int command_take_object(server_t *s, client_t *client, char *arg)
         client->deraumere++;
         return 0;
     }
-    return command_take_object2(s, client, arg);
+    return command_take_objectsmp(s, client, arg);
 }
 
-int command_take_object3(server_t *s, client_t *client, char *arg)
+int command_take_objectpt(server_t *s, client_t *client, char *arg)
 {
     if (!strcmp(arg, "phiras") && client->phiras > 0) {
         client->phiras--;
@@ -73,7 +73,7 @@ int command_take_object3(server_t *s, client_t *client, char *arg)
 }
 
 // drop object to inventory
-int command_set_object2(server_t *s, client_t *client, char *arg)
+int command_set_objectsm(server_t *s, client_t *client, char *arg)
 {
     if (!strcmp(arg, "sibur") && client->sibur > 0) {
         client->sibur--;
@@ -85,7 +85,7 @@ int command_set_object2(server_t *s, client_t *client, char *arg)
         s->map[client->y][client->x].mendiane++;
         return 0;
     }
-    return command_take_object3(s, client, arg);
+    return command_take_objectpt(s, client, arg);
 }
 
 // drop object from inventory
@@ -109,5 +109,5 @@ int command_set_object(server_t *s, client_t *client, char *arg)
         s->map[client->y][client->x].deraumere++;
         return 0;
     }
-    return command_set_object2(s, client, arg);
+    return command_set_objectsm(s, client, arg);
 }

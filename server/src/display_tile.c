@@ -7,7 +7,7 @@
 
 #include "../include/main.h"
 
-int write_tile_content3(tile_t *tile, char *buffer)
+int write_tile_contentmpt(tile_t *tile, char *buffer)
 {
     int ret = 0;
 
@@ -26,7 +26,7 @@ int write_tile_content3(tile_t *tile, char *buffer)
     return ret;
 }
 
-int write_tile_content2(tile_t *tile, char *buffer)
+int write_tile_contentlds(tile_t *tile, char *buffer)
 {
     int ret = 0;
 
@@ -42,11 +42,11 @@ int write_tile_content2(tile_t *tile, char *buffer)
         strcat(buffer, "sibur ");
         ret++;
     }
-    return (ret + write_tile_content3(tile, buffer));
+    return (ret + write_tile_contentmpt(tile, buffer));
 }
 
 // return 1 if tile is empty
-int write_tile_content(tile_t *tile, char *buffer)
+int write_tile_contentpef(tile_t *tile, char *buffer)
 {
     int i = 0;
     int ret = 0;
@@ -64,13 +64,13 @@ int write_tile_content(tile_t *tile, char *buffer)
         strcat(buffer, "food ");
         ret++;
     }
-    return (ret + write_tile_content2(tile, buffer));
+    return (ret + write_tile_contentlds(tile, buffer));
 }
 
 // Write the tile's content in thegiven buffer
 void display_tile(tile_t *tile, char *buffer)
 {
-    int elements = write_tile_content(tile, buffer);
+    int elements = write_tile_contentpef(tile, buffer);
 
     buffer[strlen(buffer) - 1] = '\0';
     strcat(buffer, ", ");
