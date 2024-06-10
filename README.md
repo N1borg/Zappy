@@ -36,6 +36,25 @@ Zappy is a multiplayer game where players compete in a virtual world. The projec
 - **Make**: Build automation tool.
 - **Raylib**: Required for the GUI.
 
+### Installing raylib on Fedora
+
+To install raylib on Fedora, follow these steps:
+
+1. Install the required libraries:
+   ```bash
+   sudo dnf install alsa-lib-devel mesa-libGL-devel libX11-devel libXrandr-devel libXi-devel libXcursor-devel libXinerama-devel libatomic
+   ```
+
+2. Install the raylib development package:
+   ```bash
+   sudo dnf install raylib-devel
+   ```
+
+3. (Optional) To install only the runtime library:
+   ```bash
+   sudo dnf install raylib
+   ```
+
 ### Clone the Repository
 
 ```bash
