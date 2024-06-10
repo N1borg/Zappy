@@ -98,7 +98,6 @@ int create_player(server_t *s, client_t *client, char *team_name)
     client->orientation = (rand() % 4) + 1;
     dprintf(client->fd, "%d\n",
         s->teams[which_team(s, client->team)]->free_slots);
-        s->teams[which_team(s, client->team)]->free_slots);
     dprintf(client->fd, "%d %d\n", s->width, s->height);
     return 0;
 }
