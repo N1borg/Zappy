@@ -32,9 +32,12 @@ zappy_gui:
 	@cd ../..
 	@mv gui/build/zappy_gui gui/../zappy_gui
 
-.PHONY: all clean zappy_gui zappy_server zappy_ai re
+.PHONY: all zappy_gui zappy_server zappy_ai clean fclean re
 
 clean:
+	@rm -rf server/build gui/build
+
+fclean:
 	@rm -rf server/build gui/build zappy_server zappy_gui zappy_ai
 
 re:	clean all
