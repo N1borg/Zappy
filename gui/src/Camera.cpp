@@ -15,6 +15,7 @@ GameCamera::GameCamera()
     _up = {0.0f, 1.0f, 0.0f};
     _fovy = 45.0f;
     _projection = CAMERA_PERSPECTIVE;
+    updateCamera();
 }
 
 void GameCamera::setPosition(Vector3 position)
