@@ -20,6 +20,7 @@
 #include <sys/time.h>
 
 #define MAX_CLIENTS 100
+#define RESSOURCE_COUNT 7
 
 typedef enum {
     NORTH = 1,
@@ -79,21 +80,20 @@ typedef struct server_s {
     tile_t **map;
 } server_t;
 
+resource_density_t resources[RESSOURCE_COUNT] = {
+    {"food", 0.5},
+    {"linemate", 0.3,},
+    {"deraumere", 0.15,},
+    {"sibur", 0.1},
+    {"mendiane", 0.1},
+    {"phiras", 0.08},
+    {"thystame", 0.05}
+};
+
 typedef struct {
     char *name;
     double density;
-    int *resource_ptr;
 } resource_density_t;
-
-resource_density_t resources[] = {
-    {"food", 0.5, NULL},
-    {"linemate", 0.3, NULL},
-    {"deraumere", 0.15, NULL},
-    {"sibur", 0.1, NULL},
-    {"mendiane", 0.1, NULL},
-    {"phiras", 0.08, NULL},
-    {"thystame", 0.05, NULL}
-};
 
 struct CommandMap {
     const char *command;
@@ -129,7 +129,4 @@ int command_take_object(server_t *s, client_t *client);
 int command_set_object(server_t *s, client_t *client);
 
 // Resource management functions
-void init_resource_pointers(tile_t *tile);
-void spread_resources(server_t *server, double density, int *resource_ptr);
-void init_resources(server_t *server);
 void generate_resources(server_t *server);
