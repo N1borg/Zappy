@@ -18,6 +18,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/time.h>
+#include <math.h>
 
 #define MAX_CLIENTS 100
 #define RESSOURCE_COUNT 7
