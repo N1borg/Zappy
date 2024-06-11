@@ -16,7 +16,7 @@ void init_team(team_t *teams, char *name)
 }
 
 // Get the team names from the arguments
-void get_team_names(char **argv, int argc, team_t **teams)
+void get_team_names(char **argv, team_t **teams)
 {
     int i = 0;
     char *graphic_team = "GRAPHIC";
@@ -49,14 +49,16 @@ void get_param(server_t *server, int argc, char *argv[])
             server->max_client_team = atoi(argv[i + 1]);
         if (strcmp(argv[i], "-n") == 0 && argv[i + 1] != NULL) {
             server->teams = malloc(sizeof(team_t *) * (argc - i));
-            get_team_names(&argv[i], argc, server->teams);
+            get_team_names(&argv[i], server->teams);
         }
     }
 }
 
 // Parse arguments and fill the server struct
-server_t parse_args(server_t server, int argc, char *argv[])
+server_t parse_args(int argc, char *argv[])
 {
+    server_t server = {0};
+
     server.port = 0;
     server.width = 0;
     server.height = 0;
