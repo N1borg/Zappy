@@ -37,6 +37,12 @@ int main(int argc, char *argv[])
         while (!window.shouldClose()) {
             window.beginDrawing();
             window.clearBackground(RAYWHITE);
+            window.updateCamera();
+            window.beginMode3D();
+            window.drawCube({ 0.0f, 0.0f, 0.0f }, 2.0f, 2.0f, 2.0f, RED);
+            window.drawCubeWires({ 0.0f, 0.0f, 0.0f }, 2.0f, 2.0f, 2.0f, MAROON);
+            window.drawGrid(10, 1.0f);
+            window.endMode3D();
             window.endDrawing();
         }
 
