@@ -60,11 +60,23 @@ int start_litener(server_t *s)
 {
     int sd = 0;
     int max_sd = 0;
+    clock_t last_tick = clock();
+    double tick_interval = 1.0 / server->freq;
+    clock_t current_time = 0;
+    double elapsed_time = 0;
 
     if (init_socket(s) != 0 || init_listener(s) != 0)
         return 84;
     printf("Listening on port %d...\n", s->port);
     while (true) {
+        current_time = clock();
+        elapsed_time = (current_time - last_tick) / CLOCKS_PER_SEC;
+
+        if (elapsed_time >= tick_interval) {
+            handle_events();
+            last_tick = current_time;
+        }
+
         if (listener_loop(s, &sd, &max_sd) != 0)
             return 84;
     }
