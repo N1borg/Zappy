@@ -25,6 +25,42 @@ void eject_players(server_t *s, client_t *client, int x, int y)
         move_player(s, s->map[y][x].players[i], x2, y2);
 }
 
+// remove egg from the list
+void remove_egg(egg_t **head, egg_t *egg)
+{
+    egg_t *current = NULL;
+
+    if (head == NULL || *head == NULL || egg == NULL)
+        return;
+    if (*head == egg)
+        *head = egg->next;
+    else {
+        current = *head;
+        while (current->next != NULL && current->next != egg)
+            current = current->next;
+        if (current->next == egg)
+            current->next = egg->next;
+    }
+}
+
+// destroy eggs from the tile
+void destroy_eggs(server_t *s, int x, int y)
+{
+    tile_t *tile = &s->map[y][x];
+    egg_t *egg = tile->eggs;
+    egg_t *next_egg = NULL;
+
+    while (egg != NULL) {
+        next_egg = egg->next;
+        remove_egg(&s->eggs, egg);
+        remove_egg(&egg->team->eggs, egg);
+        remove_egg(&egg->client->eggs, egg);
+        free(egg);
+        egg = next_egg;
+    }
+    tile->eggs = NULL;
+}
+
 // push clients and break eggs in front of the player
 int command_eject(server_t *s, client_t *client, char *arg)
 {
@@ -40,6 +76,6 @@ int command_eject(server_t *s, client_t *client, char *arg)
     if (client->orientation == WEST)
         x = ((x - 1) < 0) ? s->width - 1 : x - 1;
     eject_players(s, client, x, y);
-    s->map[y][x].egg = 0;
+    if destroy_eggs(s, x, y);
     return 0;
 }

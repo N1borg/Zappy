@@ -8,9 +8,13 @@
 #include "../../include/main.h"
 
 // create an egg
-int command_fork(server_t *s, client_t *client, char *arg)
+int command_fork(server_t *server, client_t *client, char *arg)
 {
-    s->map[client->y][client->x].egg++;
-    s->teams[which_team(s, client->team)]->free_slots++;
+    tile_t *tile = &server->map[client->y][client->x];
+    team_t *team = server->teams[which_team(server, client->team)];
+
+    if (add_egg(server, team, tile, client) == 84)
+        return 84;
+    team->free_slots++;
     return 0;
 }

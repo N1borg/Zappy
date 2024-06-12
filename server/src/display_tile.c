@@ -56,7 +56,7 @@ int write_tile_contentpef(tile_t *tile, char *buffer)
         strcat(buffer, "player ");
         ret++;
     }
-    if (tile->egg) {
+    if (tile->eggs != NULL) {
         strcat(buffer, "egg ");
         ret++;
     }
