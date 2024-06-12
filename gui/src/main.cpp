@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
 
         std::string response = socket.receiveMessage(); // Réception des messages du serveur
         if (parser.parseWelcome(response)) { // On vérifie si c'est "WELCOME"
-            socket.sendMessage("GRAPHIC"); // On envoie "GRAPHIC"
+            socket.sendMessage("GRAPHIC\n"); // On envoie "GRAPHIC"
 
             window = Window(800, 600, "Zappy"); // Ouverture de la fenêtre
             window.init();

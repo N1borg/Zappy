@@ -30,7 +30,7 @@ Parser::Parser(int argc, char *argv[])
 }
 
 bool Parser::parseWelcome(const std::string& message) {
-    return message == "WELCOME";
+    return message == "WELCOME\n";
 }
 
 void Parser::setPort(int port)
