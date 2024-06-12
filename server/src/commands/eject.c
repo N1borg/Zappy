@@ -44,17 +44,14 @@ void remove_egg(egg_t **head, egg_t *egg)
 }
 
 // destroy eggs from the tile
-void destroy_eggs(server_t *s, int x, int y)
+void destroy_eggs(tile_t *tile)
 {
-    tile_t *tile = &s->map[y][x];
     egg_t *egg = tile->eggs;
     egg_t *next_egg = NULL;
 
     while (egg != NULL) {
         next_egg = egg->next;
-        remove_egg(&s->eggs, egg);
         remove_egg(&egg->team->eggs, egg);
-        remove_egg(&egg->client->eggs, egg);
         free(egg);
         egg = next_egg;
     }
@@ -76,6 +73,6 @@ int command_eject(server_t *s, client_t *client, char *arg)
     if (client->orientation == WEST)
         x = ((x - 1) < 0) ? s->width - 1 : x - 1;
     eject_players(s, client, x, y);
-    if destroy_eggs(s, x, y);
+    destroy_eggs(&s->map[y][x])
     return 0;
 }

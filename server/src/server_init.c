@@ -54,11 +54,10 @@ void set_client(client_t *clients)
     clients->phiras = 0;
     clients->thystame = 0;
     clients->team = NULL;
-    clients->eggs = NULL;
 }
 
 // Adds an egg to the server
-void add_egg(server_t *server, team_t *team, tile_t *tile, client_t *client)
+void add_egg(team_t *team, tile_t *tile)
 {
     egg_t *new_egg = malloc(sizeof(egg_t));
 
@@ -66,9 +65,6 @@ void add_egg(server_t *server, team_t *team, tile_t *tile, client_t *client)
         return;
     new_egg->tile = tile;
     new_egg->team = team;
-    new_egg->client = client;
-    new_egg->next = server->eggs;
-    server->eggs = new_egg;
     new_egg->next = team->eggs;
     team->eggs = new_egg;
     new_egg->next = tile->eggs;
@@ -91,8 +87,7 @@ void init_server(server_t *s)
         for (int j = 0; j < server->max_client_team; j++) {
             x = rand() % server->width;
             y = rand() % server->height;
-            add_egg(server_t *server, server->teams[i],
-                &server->map[x][y], server->teams[i]->players[j]);
+            add_egg(server->teams[i], &server->map[x][y]);
         }
     }
 }

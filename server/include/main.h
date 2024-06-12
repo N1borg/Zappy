@@ -31,7 +31,6 @@ typedef enum {
 typedef struct egg_s {
     struct tile_s *tile;
     struct team_s *team;
-    struct client_s *client;
     struct egg_s *next;
 } egg_t;
 
@@ -49,7 +48,6 @@ typedef struct client_s {
     int phiras;
     int thystame;
     char *team;
-    egg_t *eggs;
 } client_t;
 
 typedef struct team_s {
@@ -86,7 +84,6 @@ typedef struct server_s {
     fd_set readfds;
     client_t *clients[MAX_CLIENTS];
     tile_t **map;
-    egg_t *eggs;
 } server_t;
 
 struct CommandMap {
@@ -115,7 +112,7 @@ int which_team(server_t *s, char *team_name);
 int x_to_map_x(server_t *s, int x);
 int y_to_map_y(server_t *s, int y);
 void display_tile(tile_t *tile, char *buffer);
-void add_egg(server_t *server, team_t *team, tile_t *tile, client_t *client);
+void add_egg(team_t *team, tile_t *tile);
 
 // client commands
 int command_move_up(server_t *s, client_t *client, char *arg);
