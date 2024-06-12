@@ -18,19 +18,19 @@
 void place_resource(server_t *server, int x, int y, int resource_type)
 {
     switch (resource_type) {
-        case 0:
+        case FOOD:
             server->map[y][x].food++;
-        case 1:
+        case LINEMATE:
             server->map[y][x].linemate++;
-        case 2:
+        case DERAUMERE:
             server->map[y][x].deraumere++;
-        case 3:
+        case SIBUR:
             server->map[y][x].sibur++;
-        case 4:
+        case MENDIANE:
             server->map[y][x].mendiane++;
-        case 5:
+        case PHIRAS:
             server->map[y][x].phiras++;
-        case 6:
+        case THYSTAME:
             server->map[y][x].thystame++;
         default:
             break;

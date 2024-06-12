@@ -24,6 +24,16 @@
 #define RESSOURCE_COUNT 7
 
 typedef enum {
+    FOOD,
+    LINEMATE,
+    DERAUMERE,
+    SIBUR,
+    MENDIANE,
+    PHIRAS,
+    THYSTAME
+} resource_type_t;
+
+typedef enum {
     NORTH = 1,
     EAST,
     SOUTH,
