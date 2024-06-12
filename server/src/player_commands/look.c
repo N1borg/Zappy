@@ -31,7 +31,8 @@ int send_buffer(char *buffer, client_t *client)
 }
 
 // send the content of the tiles in front of the player
-int command_look(server_t *s, client_t *client, char *arg)
+int command_look(server_t *s, client_t *client,
+    char *arg __attribute__((unused)))
 {
     int vec = 1;
     int loop = (client->orientation % 2);

@@ -8,7 +8,8 @@
 #include "../../include/main.h"
 
 // Increase the orientation of the client by 1
-int command_turn_right(server_t *s, client_t *client, char *arg)
+int command_turn_right(server_t *s __attribute__((unused)), client_t *client,
+    char *arg __attribute__((unused)))
 {
     int temp = client->orientation;
 
@@ -17,7 +18,8 @@ int command_turn_right(server_t *s, client_t *client, char *arg)
 }
 
 // Decrease the orientation of the client by 1
-int command_turn_left(server_t *s, client_t *client, char *arg)
+int command_turn_left(server_t *s __attribute__((unused)), client_t *client,
+    char *arg __attribute__((unused)))
 {
     int temp = client->orientation;
 

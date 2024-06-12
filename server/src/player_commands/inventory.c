@@ -8,7 +8,8 @@
 #include "../../include/main.h"
 
 // sends the content of the client's inventory
-int command_inventory(server_t *s, client_t *client, char *arg)
+int command_inventory(server_t *s __attribute__((unused)), client_t *client,
+    char *arg __attribute__((unused)))
 {
     char buf1[256] = {0};
     char buf2[256] = {0};

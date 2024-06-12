@@ -11,15 +11,15 @@ int write_tile_contentmpt(tile_t *tile, char *buffer)
 {
     int ret = 0;
 
-    if (tile->mendiane) {
+    for (int i = 0; i < tile->mendiane; i++) {
         strcat(buffer, "mendiane ");
         ret++;
     }
-    if (tile->phiras) {
+    for (int i = 0; i < tile->phiras; i++) {
         strcat(buffer, "phiras ");
         ret++;
     }
-    if (tile->thystame) {
+    for (int i = 0; i < tile->thystame; i++) {
         strcat(buffer, "thystame ");
         ret++;
     }
@@ -30,15 +30,15 @@ int write_tile_contentlds(tile_t *tile, char *buffer)
 {
     int ret = 0;
 
-    if (tile->linemate) {
+    for (int i = 0; i < tile->linemate; i++) {
         strcat(buffer, "linemate ");
         ret++;
     }
-    if (tile->deraumere) {
+    for (int i = 0; i < tile->deraumere; i++) {
         strcat(buffer, "deraumere ");
         ret++;
     }
-    if (tile->sibur) {
+    for (int i = 0; i < tile->sibur; i++) {
         strcat(buffer, "sibur ");
         ret++;
     }
@@ -48,19 +48,19 @@ int write_tile_contentlds(tile_t *tile, char *buffer)
 // return 1 if tile is empty
 int write_tile_contentpef(tile_t *tile, char *buffer)
 {
-    int i = 0;
     int ret = 0;
 
-    for (; i < MAX_CLIENTS && !tile->players[i]; i++);
-    if (i < MAX_CLIENTS) {
-        strcat(buffer, "player ");
-        ret++;
+    for (int i = 0; i < MAX_CLIENTS; i++) {
+        if (tile->players[i]) {
+            strcat(buffer, "player ");
+            ret++;
+        }
     }
-    if (tile->egg) {
+    for (int i = 0; i < tile->egg; i++) {
         strcat(buffer, "egg ");
         ret++;
     }
-    if (tile->food) {
+    for (int i = 0; i < tile->food; i++) {
         strcat(buffer, "food ");
         ret++;
     }
@@ -70,8 +70,7 @@ int write_tile_contentpef(tile_t *tile, char *buffer)
 // Write the tile's content in thegiven buffer
 void display_tile(tile_t *tile, char *buffer)
 {
-    int elements = write_tile_contentpef(tile, buffer);
-
+    write_tile_contentpef(tile, buffer);
     buffer[strlen(buffer) - 1] = '\0';
     strcat(buffer, ", ");
 }

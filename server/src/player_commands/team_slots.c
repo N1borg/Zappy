@@ -7,7 +7,8 @@
 
 #include "../../include/main.h"
 
-int command_team_slots(server_t *s, client_t *client, char *arg)
+int command_team_slots(server_t *s, client_t *client,
+    char *arg __attribute__((unused)))
 {
     for (int i = 0; s->teams[i]; i++) {
         if (strcmp(s->teams[i]->name, client->team) == 0) {

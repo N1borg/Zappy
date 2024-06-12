@@ -26,7 +26,8 @@ void eject_players(server_t *s, client_t *client, int x, int y)
 }
 
 // push clients and break eggs in front of the player
-int command_eject(server_t *s, client_t *client, char *arg)
+int command_eject(server_t *s, client_t *client,
+    char *arg __attribute__((unused)))
 {
     int x = client->x;
     int y = client->y;

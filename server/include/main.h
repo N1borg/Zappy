@@ -109,17 +109,36 @@ void destroy_clients(client_t *clients[MAX_CLIENTS]);
 void destroy_teams(team_t **teams);
 void destroy_map(tile_t **map);
 int destroy_server(server_t *s, int ret);
+int which_team(server_t *s, char *team_name);
+int add_player_to_team(server_t *s, client_t *player, char *team_name);
 
-// client commands
-int command_move_up(server_t *s, client_t *client, char *arg);
-int command_turn_right(server_t *s, client_t *client, char *arg);
-int command_turn_left(server_t *s, client_t *client, char *arg);
-int command_look(server_t *s, client_t *client, char *arg);
-int command_inventory(server_t *s, client_t *client, char *arg);
-int command_fork(server_t *s, client_t *client, char *arg);
+// player commands
+int command_move_up(server_t *s,
+    client_t *client, char *arg __attribute__((unused)));
+int command_turn_right(server_t *s __attribute__((unused)),
+    client_t *client, char *arg __attribute__((unused)));
+int command_turn_left(server_t *s __attribute__((unused)),
+    client_t *client, char *arg __attribute__((unused)));
+int command_look(server_t *s, client_t *client,
+    char *arg __attribute__((unused)));
+int command_inventory(server_t *s, client_t *client,
+    char *arg __attribute__((unused)));
+int command_fork(server_t *s, client_t *client,
+    char *arg __attribute__((unused)));
 int command_take_object(server_t *s, client_t *client, char *arg);
 int command_set_object(server_t *s, client_t *client, char *arg);
-int command_eject(server_t *s, client_t *client, char *arg);
+int command_eject(server_t *s, client_t *client,
+    char *arg __attribute__((unused)));
 int command_broadcast(server_t *s, client_t *client, char *arg);
-int command_incantation(server_t *s, client_t *client, char *arg);
-int command_team_slots(server_t *s, client_t *client, char *arg);
+int command_incantation(server_t *s, client_t *client,
+    char *arg __attribute__((unused)));
+int command_team_slots(server_t *s, client_t *client,
+    char *arg __attribute__((unused)));
+
+// graphic commands
+int command_map_size(server_t *s, client_t *client,
+    char *arg __attribute__((unused)));
+int command_tile_content(server_t *s, client_t *client, char *arg);
+void send_tile_content(server_t *s, client_t *client, int x, int y);
+int command_map_content(server_t *s, client_t *client,
+    char *arg __attribute__((unused)));

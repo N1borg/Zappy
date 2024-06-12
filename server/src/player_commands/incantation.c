@@ -62,7 +62,8 @@ int incant(server_t *s, client_t *client, int x, int y)
 }
 
 // check if the player can incant
-int command_incantation(server_t *s, client_t *client, char *arg)
+int command_incantation(server_t *s, client_t *client,
+    char *arg __attribute__((unused)))
 {
     int x = client->x;
     int y = client->y;

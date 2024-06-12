@@ -10,9 +10,6 @@
 // sends a message to all players
 int command_broadcast(server_t *s, client_t *client, char *arg)
 {
-    int x = client->x;
-    int y = client->y;
-
     if (arg == NULL)
         return 1;
     else
