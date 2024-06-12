@@ -85,7 +85,7 @@ struct CommandMap {
 };
 
 int help(char *binary_name, int ret, server_t *server);
-server_t parse_args(server_t server, int argc, char *argv[]);
+server_t parse_args(int argc, char *argv[]);
 int start_litener(server_t *server);
 int init_socket(server_t *server);
 int init_listener(server_t *server);
@@ -105,6 +105,10 @@ int which_team(server_t *s, char *team_name);
 int x_to_map_x(server_t *s, int x);
 int y_to_map_y(server_t *s, int y);
 void display_tile(tile_t *tile, char *buffer);
+void destroy_clients(client_t *clients[MAX_CLIENTS]);
+void destroy_teams(team_t **teams);
+void destroy_map(tile_t **map);
+int destroy_server(server_t *s, int ret);
 
 // client commands
 int command_move_up(server_t *s, client_t *client, char *arg);

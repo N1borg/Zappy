@@ -31,17 +31,13 @@ int init_socket(server_t *s)
     int opt = true;
 
     s->master_socket = socket(AF_INET, SOCK_STREAM, 0);
-    if (s->master_socket == 0) {
+    if (s->master_socket == -1) {
         perror("Socket failed");
         return 84;
     }
     if (setsockopt(s->master_socket, SOL_SOCKET, SO_REUSEADDR,
         (char *)&opt, sizeof(opt)) < 0) {
         perror("setsockopt");
-        return 84;
-    }
-    if (s->master_socket == 0) {
-        perror("Socket failed");
         return 84;
     }
     return 0;
