@@ -21,22 +21,14 @@ resources = ["linemate", "deraumere", "sibur", "mendiane", "phiras", "thystame"]
 cmd_noarg = ["Forward", "Right", "Left", "Look"]
 
 class AI:
-    def __init__(self, teamname):
+    def __init__(self, teamname, socket):
+        self.socket = socket
         self.level = 1
         self.team = teamname
         self.inventory = {"food": 0,"linemate": 0, "deraumere": 0, "sibur": 0, "mendiane": 0, "phiras": 0, "thystame": 0}
         self.command_queue = []
         self.connect_nbr = 0
         self.look = []
-
-    def append_cmd(self, cmd, arg):
-        if len(self.command_queue) == 10:
-            print("Queue is full, wait for a couple of instants...")
-        else:
-            if cmd == "Broadcast" or cmd == "Take" or cmd == "Set":
-                self.command_queue.insert(0, [cmd, arg])
-            else:
-                self.command_queue.insert(0, cmd)
 
     def parse_look(self, look_str):
         look_str = look_str.strip('[]')
@@ -54,6 +46,15 @@ class AI:
             result.append(tile_dict)
         return result
 
+    def append_cmd(self, cmd, arg):
+        if len(self.command_queue) == 10:
+            print("Queue is full, wait for a couple of instants...")
+        else:
+            if cmd == "Broadcast" or cmd == "Take" or cmd == "Set":
+                self.command_queue.insert(0, [cmd, arg])
+            else:
+                self.command_queue.insert(0, cmd)
+
     def parse_inventory(self, inv_str):
         pairs = re.findall(r'(\w+)\s(\d+)', inv_str)
 
@@ -64,8 +65,8 @@ class AI:
         cmd_arr = self.command_queue.pop()
         cmd = cmd_arr[0]
 
-        send_message(cmd if len(cmd_arr) == 1 else cmd + cmd_arr[1])
-        response = receive_response()
+        send_message(self.socket, cmd if len(cmd_arr) == 1 else cmd + cmd_arr[1])
+        response = receive_response(self.socket)
 
         if response == "dead":
             # TODO: implement death mechanism
@@ -122,10 +123,8 @@ class AI:
     def launch_loop(self):
         # response = receive_response()
         while True:
-            self.append_cmd("Forward")
-            print("here")
+            self.append_cmd("Forward", "arg")
             self.manage_queue()
-            print("Here 2")
 
 
 
@@ -157,10 +156,18 @@ def receive_response(sock):
         raise ValueError("Received 'ko' from server")
     return response
 
+def parse_slots_and_map(str):
+    parts = str.split('\n')
+
+    numbers = []
+    for part in parts:
+        numbers.extend(part.split())
+
+    integers = [int(num) for num in numbers]
+    return integers
 
 def main():
     args = parse_arguments()
-    print(type(args))
 
     host = args.host
     port = args.port
@@ -173,46 +180,44 @@ def main():
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect((host, port))
-            print("test 1")
             print(f'Connected to {host}:{port}')
 
             # Wait for "WELCOME\n" from the server
             welcome_message = receive_response(s)
-            print("test 1.5")
             if welcome_message != "WELCOME":
                 print(f'Unexpected message from server: {welcome_message}')
                 return
 
             print(f'Received: {welcome_message}')
-            print("test 2")
 
             # Send the name to the server
             send_message(s, name)
 
             # Receive the number of available slots
-            try:
-                response = receive_response(s)
-                slots = int(response)
-                print(f'Received slots: {slots}')
-            except ValueError:
-                print(f'Unexpected response for slots from server: {response}')
-                return
+            # try:
+            #     response = receive_response(s)
+            #     slots = int(response)
+            #     print(f'Received slots: {slots}')
+            # except ValueError:
+            #     print(f'Unexpected response for slots from server: {response}')
+            #     return
 
             # Receive the position (X, Y)
             response = receive_response(s)
-            parts = response.split()
-            if len(parts) == 2:
-                x, y = parts
-                print(f'Received position: ({x}, {y})')
+            print(response)
+            parts = parse_slots_and_map(response)
+            print(parts)
+            if len(parts) == 3:
+                print(f'Received position: ({parts[0]}, {parts[1]}, {parts[2]})')
             else:
-                print(f'Unexpected response for position from server: {response}')
+                print(f'Unexpected response for position from server: "{response}"')
 
-            # AI()
+            ai = AI(name, s)
+            ai.launch_loop()
 
     except Exception as e:
         print(f'{host}:{port} - {e}')
 
-    AI.launch_loop()
 
 
 if __name__ == "__main__":
