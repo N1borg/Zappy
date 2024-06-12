@@ -28,6 +28,13 @@ typedef enum {
     WEST
 } orientation_t;
 
+typedef struct egg_s {
+    struct tile_s *tile;
+    struct team_s *team;
+    struct client_s *client;
+    struct egg_s *next;
+} egg_t;
+
 typedef struct client_s {
     int fd;
     int x;
@@ -42,12 +49,14 @@ typedef struct client_s {
     int phiras;
     int thystame;
     char *team;
+    egg_t *eggs;
 } client_t;
 
 typedef struct team_s {
     char *name;
     int free_slots;
     client_t *players[MAX_CLIENTS];
+    egg_t *eggs;
 } team_t;
 
 typedef struct tile_s {
@@ -60,7 +69,7 @@ typedef struct tile_s {
     int mendiane;
     int phiras;
     int thystame;
-    int egg;
+    egg_t *eggs;
     client_t *players[MAX_CLIENTS];
 } tile_t;
 
@@ -77,6 +86,7 @@ typedef struct server_s {
     fd_set readfds;
     client_t *clients[MAX_CLIENTS];
     tile_t **map;
+    egg_t *eggs;
 } server_t;
 
 struct CommandMap {
