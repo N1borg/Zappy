@@ -55,11 +55,6 @@ Camera3D Window::getCamera() const
     return _camera.getCamera();
 }
 
-void Window::updateCamera()
-{
-    _camera.updateCamera();
-}
-
 void Window::beginMode3D()
 {
     BeginMode3D(_camera.getCamera());

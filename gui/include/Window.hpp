@@ -20,7 +20,6 @@ class Window {
 
         // Raylib Camera functions
         Camera3D getCamera() const;
-        void updateCamera();
 
         // Raylib window functions
         void init();
