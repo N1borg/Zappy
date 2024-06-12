@@ -56,6 +56,9 @@ void compute_response(server_t *s, client_t *client, char *buffer)
     printf("[%d] - sent: %s\n", client->fd, buffer);
     if (is_team(s, buffer) != 0) {
         if (create_player(s, client, buffer) == 0) {
+            dprintf(client->fd, "%d\n",
+                s->teams[which_team(s, client->team)]->free_slots);
+            dprintf(client->fd, "%d %d\n", s->width, s->height);
             return;
         } else {
             dprintf(client->fd, "ko\n");

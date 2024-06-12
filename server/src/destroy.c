@@ -31,13 +31,14 @@ void destroy_map(tile_t **map)
 }
 
 // Close sockets and free memory
-int destroy_server(server_t *s, int ret)
+int destroy_server(server_t *s, int ret, bool is_clients)
 {
     close(s->master_socket);
     for (int i = 0; i < s->max_client_team; i++)
         close(s->clients[i]->fd);
     free(s->teams);
-    destroy_clients(s->clients);
+    if (is_clients)
+        destroy_clients(s->clients);
     destroy_map(s->map);
     printf("Server closed\n");
     return ret;
