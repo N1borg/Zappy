@@ -113,6 +113,7 @@ int x_to_map_x(server_t *s, int x);
 int y_to_map_y(server_t *s, int y);
 void display_tile(tile_t *tile, char *buffer);
 void add_egg(team_t *team, tile_t *tile);
+void remove_egg(egg_t **head, egg_t *egg);
 
 // client commands
 int command_move_up(server_t *s, client_t *client, char *arg);

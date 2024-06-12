@@ -96,6 +96,28 @@ egg_t *get_random_egg(team_t *team)
     return current;
 }
 
+void destroy_eggs_tile(tile_t *tile)
+{
+    egg_t *egg = tile->eggs;
+    egg_t *next_egg = NULL;
+
+    while (egg != NULL) {
+        next_egg = egg->next;
+        remove_egg(&egg->team->eggs, egg);
+        free(egg);
+        egg = next_egg;
+    }
+    tile->eggs = NULL;
+}
+
+void destroy_egg(egg_t *egg)
+{
+    remove_egg(&egg->team->eggs, egg);
+    remove_egg(&egg->tile->eggs, egg);
+    free(egg);
+}
+
+// Set the position of a client based on the position of an egg
 void set_client_pos(server_t *s, int *x, int *y, client_t *client)
 {
     team_t *team = (*s)->teams[which_team(*s, (*client)->team)];
@@ -103,6 +125,7 @@ void set_client_pos(server_t *s, int *x, int *y, client_t *client)
 
     *x = egg->tile->x;
     *y = egg->tile->y;
+    destroy_egg(team, egg);
 }
 
 // create player if team_name exists else return 1
