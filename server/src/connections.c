@@ -56,13 +56,11 @@ int listener_loop(server_t *s, int *sd, int *max_sd)
 }
 
 // Start the server and listen for incoming connections
-int start_litener(server_t *s)
+int start_listener(server_t *s)
 {
     int sd = 0;
     int max_sd = 0;
 
-    if (init_socket(s) != 0 || init_listener(s) != 0)
-        return 84;
     printf("Listening on port %d...\n", s->port);
     while (true) {
         if (listener_loop(s, &sd, &max_sd) != 0)
