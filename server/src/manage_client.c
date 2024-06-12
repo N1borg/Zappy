@@ -78,6 +78,33 @@ int add_player_to_team(server_t *s, client_t *player, char *team_name)
     return 0;
 }
 
+// Get a random egg from a team
+egg_t *get_random_egg(team_t *team)
+{
+    int count = 0;
+    egg_t *current = team->eggs;
+    int random_index = 0;
+
+    for (; current != NULL; count++)
+        current = current->next;
+    if (count == 0)
+        return NULL;
+    random_index = rand() % count;
+    current = team->eggs;
+    for (int i = 0; i < random_index; i++)
+        current = current->next;
+    return current;
+}
+
+void set_client_pos(server_t *s, int *x, int *y, client_t *client)
+{
+    team_t *team = (*s)->teams[which_team(*s, (*client)->team)];
+    egg_t *egg = get_random_egg(team);
+
+    *x = egg->tile->x;
+    *y = egg->tile->y;
+}
+
 // create player if team_name exists else return 1
 int create_player(server_t *s, client_t *client, char *team_name)
 {
@@ -87,8 +114,7 @@ int create_player(server_t *s, client_t *client, char *team_name)
 
     if (client->team != NULL || add_player_to_team(s, client, team_name))
         return 1;
-    x = rand() % s->width;
-    y = rand() % s->height;
+    set_client_pos(s, &x, &y, client);
     for (; i < MAX_CLIENTS && s->map[y][x].players[i]; i++);
     if (i == MAX_CLIENTS)
         return 1;
