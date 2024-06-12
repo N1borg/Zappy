@@ -123,6 +123,7 @@ AI do:
 - Broadcast messages
 - Create eggs (new sockets for new AI on the same team)
 - Initialize incantation
+- One client launches incantation
 
 ## Connection
 1. Client(AI) opens a socket on server's port
@@ -172,21 +173,21 @@ When **a player connects**:
 
 The commands are a string sent to the server using the socket. The server sends a response as well.
 
-| **Command**    | **Time limit** |                   **Response**                    | **Action**                      |
-|:--------------:|:--------------:|:-------------------------------------------------:|:-------------------------------:|
-| Forward        | 7/f            |                        ok                         | move 1 tile forward             |
-| Right          | 7/f            |                        ok                         | turn 90° right                  |
-| Left           | 7/f            |                        ok                         | turn 90° left                   |
-| Look           | 7/f            |                [tile1, tile2, ...]                | look around                     |
-| Inventory      | 1/f            |            [linemate n, sibur n, ...]             | inventory                       |
-| Broadcast text | 7/f            |                        ok                         | broadcast a message             |
-| Connect_nbr    | -              |                       value                       | num of unused team spots        |
-| Fork           | 42/f           |                        ok                         | create an egg (socket)          |
-| Eject          | 7/f            |                       ok/ko                       | push other players on same tile |
-| -              | -              |                       dead                        | dead                            |
-| Take object    | 7/f            |                       ok/ko                       | take object                     |
-| Set object     | 7/f            |                       ok/ko                       | set down object                 |
-| Incantation    | 300/f          | Elevation underway:\n<br>Current level: k\n<br>/ko | start incantation ritual        |
+|      **Command**      | **Time limit** |                   **Response**                    | **Action**                      |
+|:---------------------:|:--------------:|:-------------------------------------------------:|:-------------------------------:|
+|        Forward        | 7/f            |                        ok                         | move 1 tile forward             |
+|         Right         | 7/f            |                        ok                         | turn 90° right                  |
+|         Left          | 7/f            |                        ok                         | turn 90° left                   |
+|         Look          | 7/f            |                [tile1, tile2, ...]                | look around                     |
+|       Inventory       | 1/f            |            [linemate n, sibur n, ...]             | inventory                       |
+| Broadcast <i>text</i> | 7/f            |                        ok                         | broadcast a message             |
+|      Connect_nbr      | -              |                       value                       | num of unused team spots        |
+|         Fork          | 42/f           |                        ok                         | create an egg (socket)          |
+|         Eject         | 7/f            |                       ok/ko                       | push other players on same tile |
+|           -           | -              |                       dead                        | dead                            |
+|  Take <i>object</i>   | 7/f            |                       ok/ko                       | take object                     |
+|   Set <i>object</i>   | 7/f            |                       ok/ko                       | set down object                 |
+|      Incantation      | 300/f          | Elevation underway:\n<br>Current level: k\n<br>/ko | start incantation ritual        |
 
 
 ### Inventory
@@ -204,6 +205,8 @@ A level upgrade called by client (AI).
 Short facts:
 - Starts when a player informs the server
 - Lasts for 300 ticks
+- Eject cancels incantation
+- Stones should be on the ground
 - Every player is frozen during the procedure (can't do any other actions)
 - Needs the correct amount of players and ressources *at minimum* to be valid
 - Verification of the conditions for incantation is done at the beginning and at the end of it

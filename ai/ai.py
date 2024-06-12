@@ -39,12 +39,18 @@ class AI:
                 self.command_queue.insert(0, cmd)
 
     def parse_look(self, look_str):
-        tile_strings = look_str.split(', ')
+        look_str = look_str.strip('[]')
+        tile_strings = re.split(r',\s*', look_str)
 
         result = []
         for tile in tile_strings:
-            pairs = re.findall(r'(\w+)\s(\d+)', tile)
-            tile_dict = {key: int(value) for key, value in pairs}
+            elements = tile.split()
+            tile_dict = {}
+            for element in elements:
+                if element in tile_dict:
+                    tile_dict[element] += 1
+                else:
+                    tile_dict[element] = 1
             result.append(tile_dict)
         return result
 
@@ -113,10 +119,13 @@ class AI:
                 print(f"Couldn't set {cmd_arr[1]}")
 
 
-    # def launch_loop(self):
-    #     # response = receive_response()
-    #     while response != "dead":
-    #         response = receive_response()
+    def launch_loop(self):
+        # response = receive_response()
+        while True:
+            self.append_cmd("Forward")
+            print("here")
+            self.manage_queue()
+            print("Here 2")
 
 
 
@@ -164,15 +173,18 @@ def main():
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect((host, port))
+            print("test 1")
             print(f'Connected to {host}:{port}')
 
             # Wait for "WELCOME\n" from the server
             welcome_message = receive_response(s)
+            print("test 1.5")
             if welcome_message != "WELCOME":
                 print(f'Unexpected message from server: {welcome_message}')
                 return
 
             print(f'Received: {welcome_message}')
+            print("test 2")
 
             # Send the name to the server
             send_message(s, name)
@@ -195,9 +207,12 @@ def main():
             else:
                 print(f'Unexpected response for position from server: {response}')
 
+            # AI()
+
     except Exception as e:
         print(f'{host}:{port} - {e}')
 
+    AI.launch_loop()
 
 
 if __name__ == "__main__":
