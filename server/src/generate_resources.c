@@ -38,21 +38,20 @@ void place_resource(server_t *server, int x, int y, int resource_type)
 }
 
 /**
- * @brief Distribute resources in a grid to be evenly spread across the map.
+ * @brief Distribute resources across the map.
  * 
  * @param server A pointer to the server structure.
  * @param resource_type The type of resource to distribute.
  * @param total_resources The total number of resources to distribute.
  */
-void distribute_resources_in_grid(server_t *server, int resource_type, int total_resources)
+void distribute_resources(server_t *server, int resource_type, int total_resources)
 {
-    int grid_size = sqrt(server->width * server->height / RESSOURCE_COUNT);
     int x = 0;
     int y = 0;
 
     for (int j = 0; j < total_resources; j++) {
-        x = (j % (server->width / grid_size)) * grid_size + rand() % grid_size;
-        y = (j / (server->width / grid_size)) * grid_size + rand() % grid_size;
+        x = rand() % server->width;
+        y = rand() % server->height;
         place_resource(server, x, y, resource_type);
     }
 }
@@ -68,6 +67,6 @@ void generate_resources(server_t *server)
 
     for (int i = 0; i < RESSOURCE_COUNT; i++) {
         total_resources = server->width * server->height * resources[i].density;
-        distribute_resources_in_grid(server, i, total_resources);
+        distribute_resources(server, i, total_resources);
     }
 }
