@@ -4,6 +4,7 @@ import socket
 import sys
 import argparse
 import re
+import time
 
 """
 ## AI
@@ -34,6 +35,7 @@ class AI:
         self.look = []
 
         self.command_queue = []
+        self.sent_queue = []
 
     def parse_look(self, look_str):
         look_str = look_str.strip('[]')
@@ -51,93 +53,122 @@ class AI:
             result.append(tile_dict)
         return result
 
-    def append_cmd(self, cmd, arg):
-        if len(self.command_queue) == 10:
-            print("Queue is full, wait for a couple of instants...")
-        else:
-            if cmd == "Broadcast" or cmd == "Take" or cmd == "Set":
-                self.command_queue.insert(0, [cmd, arg])
-            else:
-                self.command_queue.insert(0, cmd)
-
     def parse_inventory(self, inv_str):
         pairs = re.findall(r'(\w+)\s(\d+)', inv_str)
 
         result_dict = {key: int(value) for key, value in pairs}
         return result_dict
 
-    def manage_queue(self):
-        cmd_arr = self.command_queue.pop()
-
-        if isinstance(cmd_arr, list):
-            cmd = cmd_arr[0]
+    def append_command(self, cmd, arg):
+        if cmd == "Broadcast" or cmd == "Take" or cmd == "Set":
+            self.command_queue.insert(0, cmd + " " + arg)
         else:
-            cmd = cmd_arr
+            self.command_queue.insert(0, cmd)
 
-        # print(f"What is cmd? {cmd}")
-        send_message(self.socket, cmd + " " + cmd_arr[1] if isinstance(cmd_arr, list) else cmd)
+    def append_sent(self, cmd):
+        self.sent_queue.insert(0, cmd)
+
+    def send_command(self):
+        # take a command from the command queue
+        if len(self.command_queue) != 0:
+            cmd = self.command_queue.pop()
+
+            # send this command to server
+            send_message(self.socket, cmd)
+
+            # add sent action to the sent queue
+            self.append_sent(cmd)
+        else:
+            print("Command queue: no more commands left")
+            time.sleep(5)
+
+    def receive_command(self):
         response = receive_response(self.socket)
-        print("Response received:", response)
-
         if response == "dead":
             # TODO: implement death mechanism
             return
-        if cmd == "Forward" or cmd == "Right" or cmd == "Left" or cmd == "Fork" or cmd == "Broadcast":
+        print(f"        Received response   [<-]: {response}")
+        cmd = self.sent_queue.pop()
+        cmd_name, cmd_arg = "", ""
+        if len(cmd.split(" ")) == 2:
+            cmd_name, cmd_arg = cmd.split(" ")
+            # print(f"Received a: {cmd_name} {cmd_arg}")
+        else:
+            cmd_name = cmd
+            # print(f"Received a: {cmd_name}")
+
+        if cmd_name == "Forward" or cmd_name == "Right" or cmd_name == "Left" or cmd_name == "Fork" or cmd_name == "Broadcast":
             if response == "ok":
-                print(cmd + ": OK")
+                print(cmd_name + ": OK")
             else:
-                print(f"Received an unexpected response from {cmd} command: ", response)
+                print(f"Received an unexpected response from {cmd_name} command: ", response)
 
-
-        elif cmd == "Look":
+        elif cmd_name == "Look":
             if response[0] != '[':
-                print(f"Received an unexpected response from {cmd} command: ", response)
+                print(f"Received an unexpected response from {cmd_name} command: ", response)
             self.look = self.parse_look(response)
+            # print(self.look)
 
-        elif cmd == "Inventory":
+        elif cmd_name == "Inventory":
             if response[0] != '[':
-                print(f"Received an unexpected response from {cmd} command: ", response)
+                print(f"Received an unexpected response from {cmd_name} command: ", response)
             self.inventory = self.parse_inventory(response)
+            # print(self.inventory)
 
-        elif cmd == "Connect_nbr":
+        elif cmd_name == "Connect_nbr":
             try:
                 self.connect_nbr = int(response)
             except ValueError:
-                print(f"Received an unexpected response from {cmd} command: ", response)
+                print(f"Received an unexpected response from {cmd_name} command: ", response)
                 self.connect_nbr = 0
 
-        elif cmd == "Eject":
+        elif cmd_name == "Eject":
             if response == "ko":
                 print("Failed to eject")
             elif response == "ok":
                 print("Eject successful")
 
-        elif cmd == "incantation":
+        elif cmd_name == "Incantation":
             if response == "ko":
                 print("Incantation failed")
             else:
                 print(response)
 
-        elif cmd == "Take":
+        elif cmd_name == "Take":
             if response == "ok":
-                self.inventory[cmd_arr[1]] += 1
+                self.inventory[cmd_arg] += 1
             elif response == "ko":
-                print(f"Couldn't take {cmd_arr[1]}")
+                print(f"Couldn't take {cmd_arg}")
 
-        elif cmd == "Set":
+        elif cmd_name == "Set":
             if response == "ok":
-                self.inventory[cmd_arr[1]] -= 1
+                self.inventory[cmd_arg] -= 1
             elif response == "ko":
-                print(f"Couldn't set {cmd_arr[1]}")
+                print(f"Couldn't set {cmd_arg}")
 
+    def manage_queue(self):
+        while len(self.sent_queue) < 2:
+            self.send_command()
 
     def launch_loop(self):
-        # response = receive_response()
+        i = 0
         while True:
-            self.append_cmd("Look", "arg")
-            self.append_cmd("Inventory", "arg")
-            self.append_cmd("Right", "arg")
+            if i == 0:
+                self.append_command("Look", "")
+                self.append_command("Inventory", "")
+                self.append_command("Broadcast", "A1")
+                self.append_command("Look", "")
+                self.append_command("Inventory", "")
+                self.append_command("Broadcast", "AA2")
+                self.append_command("Look", "")
+                self.append_command("Inventory", "")
+                self.append_command("Broadcast", "AAA3")
+                i += 1
             self.manage_queue()
+            self.receive_command()
+            self.manage_queue()
+            print(f"[SENT] Queue: {self.sent_queue}")
+            print(f"[CMD] Queue: {self.command_queue}")
 
 
 
@@ -159,7 +190,7 @@ def parse_arguments():
 def send_message(sock, message):
     message_with_newline = message + '\n'
     sock.sendall(message_with_newline.encode())
-    print(f'Sent message: {message}')
+    print(f'[->]    Sent message: {message}')
 
 
 # Receive a response from the server and throw an error if the response is 'ko\n'.
