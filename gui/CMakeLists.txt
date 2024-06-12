@@ -41,7 +41,6 @@ set(SHARED_SRC
 
 add_executable(zappy_gui ${SHARED_SRC})
 
-<<<<<<< gui-cmake
 # Ensure Raylib is built before your project
 add_dependencies(zappy_gui raylib)
 
@@ -50,6 +49,3 @@ find_library(RAYLIB_LIB NAMES raylib HINTS ${RAYLIB_INSTALL_DIR}/lib)
 
 # Link Raylib
 target_link_libraries(zappy_gui ${RAYLIB_LIB} m)
-=======
-target_link_libraries(zappy_gui raylib m)
->>>>>>> main
