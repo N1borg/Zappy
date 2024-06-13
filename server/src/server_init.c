@@ -57,18 +57,28 @@ void set_client(client_t *clients)
 }
 
 // Adds an egg to the server
-void add_egg(team_t *team, tile_t *tile)
+int add_egg(team_t *team, tile_t *tile)
 {
     egg_t *new_egg = malloc(sizeof(egg_t));
+    egg_t *tile_egg = NULL;
 
     if (new_egg == NULL)
-        return;
+        return 84;
     new_egg->tile = tile;
     new_egg->team = team;
+    new_egg->next = NULL;
     new_egg->next = team->eggs;
     team->eggs = new_egg;
-    new_egg->next = tile->eggs;
-    tile->eggs = new_egg;
+    tile_egg = tile->eggs;
+    if (tile_egg == NULL) {
+        tile->eggs = new_egg;
+    } else {
+        while (tile_egg->next != NULL) {
+            tile_egg = tile_egg->next;
+        }
+        tile_egg->next = new_egg;
+    }
+    return 0;
 }
 
 // Initializes the server struct
@@ -83,11 +93,11 @@ void init_server(server_t *s)
         set_client(s->clients[i]);
     }
     s->map = init_map(s->width, s->height);
-    for (int i = 0; i < server->team_nb; i++) {
-        for (int j = 0; j < server->max_client_team; j++) {
-            x = rand() % server->width;
-            y = rand() % server->height;
-            add_egg(server->teams[i], &server->map[x][y]);
+    for (int i = 0; i < s->team_nb - 1; i++) {
+        for (int j = 0; j < s->max_client_team; j++) {
+            x = rand() % s->width;
+            y = rand() % s->height;
+            add_egg(s->teams[i], &s->map[x][y]);
         }
     }
 }

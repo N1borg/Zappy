@@ -73,6 +73,6 @@ int command_eject(server_t *s, client_t *client, char *arg)
     if (client->orientation == WEST)
         x = ((x - 1) < 0) ? s->width - 1 : x - 1;
     eject_players(s, client, x, y);
-    destroy_eggs(&s->map[y][x])
+    destroy_eggs(&s->map[y][x]);
     return 0;
 }

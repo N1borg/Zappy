@@ -52,7 +52,7 @@ void disconnect_client(server_t *s, client_t *client)
         which_player_on_map(&s->map[client->y][client->x], client)] = NULL;
     s->teams[which_team(s, client->team)]->free_slots++;
     set_client(client);
-    add_egg(client->team, s->map[client->y][client->x]);
+    add_egg(s->teams[which_team(s, client->team)], &s->map[client->y][client->x]);
 }
 
 // Add a player to a team based on it's name
@@ -121,12 +121,12 @@ void destroy_egg(egg_t *egg)
 // Set the position of a client based on the position of an egg
 void set_client_pos(server_t *s, int *x, int *y, client_t *client)
 {
-    team_t *team = (*s)->teams[which_team(*s, (*client)->team)];
+    team_t *team = (*s).teams[which_team(s, (*client).team)];
     egg_t *egg = get_random_egg(team);
 
     *x = egg->tile->x;
     *y = egg->tile->y;
-    destroy_egg(team, egg);
+    destroy_egg(egg);
 }
 
 // create player if team_name exists else return 1
