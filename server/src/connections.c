@@ -10,7 +10,7 @@
 // Add the child sockets to the readfds set
 void add_child_socket(server_t *s, int *sd, int *max_sd)
 {
-    for (int i = 0; i < s->max_client_team; i++) {
+    for (int i = 0; i < s->max_client_team * s->team_nb; i++) {
         (*sd) = s->clients[i]->fd;
         if (*sd > 0)
             FD_SET(*sd, &s->readfds);
@@ -31,6 +31,7 @@ void client_handler(server_t *s, client_t *client)
             disconnect_client(s, client);
         } else {
             buffer[valread - 1] = '\0';
+            printf("[%d] - sent: %s\n", client->fd, buffer);
             compute_response(s, client, buffer);
         }
     }
@@ -56,13 +57,11 @@ int listener_loop(server_t *s, int *sd, int *max_sd)
 }
 
 // Start the server and listen for incoming connections
-int start_litener(server_t *s)
+int start_listener(server_t *s)
 {
     int sd = 0;
     int max_sd = 0;
 
-    if (init_socket(s) != 0 || init_listener(s) != 0)
-        return 84;
     printf("Listening on port %d...\n", s->port);
     while (true) {
         if (listener_loop(s, &sd, &max_sd) != 0)

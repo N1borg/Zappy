@@ -19,7 +19,9 @@ int main(int argc, char *argv[])
         || server.team_nb <= 0)
         return help(argv[0], 84, &server);
     init_server(&server);
-    if (start_litener(&server) != 0)
+    if (init_socket(&server) != 0 || init_listener(&server) != 0)
+        return destroy_server(&server, 84);
+    if (start_listener(&server) != 0)
         return destroy_server(&server, 84);
     return destroy_server(&server, 0);
 }
