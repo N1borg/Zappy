@@ -15,7 +15,9 @@ import time
 
 """
 
-# 10 requests max
+# inventaire partage
+# team name
+# 
 
 resources = ["linemate", "deraumere", "sibur", "mendiane", "phiras", "thystame"]
 
@@ -237,6 +239,7 @@ def main():
             # Send the name to the server
             send_message(s, name)
 
+            already_parced = False
             # Receive the number of available slots
             try:
                 response = receive_response(s)
@@ -244,16 +247,21 @@ def main():
                 print(f'Received slots: {slots}')
             except ValueError:
                 print(f'Unexpected response for slots from server: {response}')
-                return
+                parced = parse_slots_and_map(response)
+                slots = parced[0]
+                x, y = parced[1], parced[2]
+                already_parced = True
 
             # Receive the position (X, Y)
-            response = receive_response(s)
-            parts = response.split()
-            if len(parts) == 2:
-                x, y = parts
-                print(f'Received map size: ({x}, {y})')
-            else:
-                print(f'Unexpected response for map size from server: {response}')
+            if not already_parced:
+                response = receive_response(s)
+                parts = response.split()
+                if len(parts) == 2:
+                    x, y = parts
+                    print(f'Received map size: ({x}, {y})')
+                else:
+                    print(f'Unexpected response for map size from server: {response}')
+
             ai = AI(name, s, slots, x, y)
             ai.launch_loop()
 
