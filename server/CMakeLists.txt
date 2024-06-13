@@ -3,7 +3,7 @@ project(zappy_server)
 
 set(CMAKE_C_STANDARD 17)
 
-set(CMAKE_C_FLAGS "-W -Wall -Wextra -Wpedantic -g")
+set(CMAKE_C_FLAGS "-W -Wall -Wextra -Wpedantic")
 
 include_directories(include)
 
@@ -27,6 +27,7 @@ set(SHARED_SRC
     src/player_commands/incantation.c
     src/player_commands/inventory.c
     src/player_commands/look.c
+    src/player_commands/look_buffer_len.c
     src/player_commands/move.c
     src/player_commands/object_interaction.c
     src/player_commands/rotate.c

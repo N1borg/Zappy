@@ -10,13 +10,23 @@
 // Convert the x position to the circular map
 int x_to_map_x(server_t *s, int x)
 {
-    return (x + s->width) % s->width;
+    int map_width = s->width;
+
+    x = x % map_width;
+    if (x < 0)
+        x += map_width;
+    return x;
 }
 
 // Convert the y position to the circular map
 int y_to_map_y(server_t *s, int y)
 {
-    return (y + s->height) % s->height;
+    int map_height = s->height;
+
+    y = y % map_height;
+    if (y < 0)
+        y += map_height;
+    return y;
 }
 
 // Move the player to the given position based on the circular map

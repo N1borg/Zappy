@@ -31,6 +31,7 @@ void client_handler(server_t *s, client_t *client)
             disconnect_client(s, client);
         } else {
             buffer[valread - 1] = '\0';
+            printf("[%d] - sent: %s\n", client->fd, buffer);
             compute_response(s, client, buffer);
         }
     }
