@@ -52,6 +52,7 @@ void disconnect_client(server_t *s, client_t *client)
         which_player_on_map(&s->map[client->y][client->x], client)] = NULL;
     s->teams[which_team(s, client->team)]->free_slots++;
     set_client(client);
+    add_egg(client->team, s->map[client->y][client->x]);
 }
 
 // Add a player to a team based on it's name
