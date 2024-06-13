@@ -8,9 +8,10 @@
 #include "../../include/main.h"
 
 // Function to send the map size to the client
-int command_map_size(server_t *s, client_t *client,
-    char *arg __attribute__((unused)))
+int command_map_size(server_t *s, client_t *client, char *arg)
 {
+    if (arg != NULL)
+        return 1;
     dprintf(client->fd, "msz %d %d\n", s->width, s->height);
     return 0;
 }

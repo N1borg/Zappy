@@ -7,7 +7,7 @@
 
 #include "../../include/main.h"
 
-// return 1 if tile is empty
+// Return the number of chars to init the look buffer
 int tile_size(tile_t *tile)
 {
     int ret = 0;
@@ -22,6 +22,7 @@ int tile_size(tile_t *tile)
     return (ret + 1);
 }
 
+// Return the number of chars to init the look buffer
 int buffer_len(server_t *s, client_t *client)
 {
     int n_char = 2;

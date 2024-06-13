@@ -7,6 +7,7 @@
 
 #include "../include/main.h"
 
+// Write the tile's stones in the given buffer
 void write_tile_stones(tile_t *tile, char *buffer)
 {
     for (int i = 0; i < tile->linemate; i++)
@@ -23,7 +24,7 @@ void write_tile_stones(tile_t *tile, char *buffer)
         strcat(buffer, "thystame ");
 }
 
-// return 1 if tile is empty
+// Write the tile's objects in the given buffer
 void write_tile_objects(tile_t *tile, char *buffer)
 {
     for (int i = 0; i < MAX_CLIENTS; i++) {
