@@ -17,7 +17,6 @@ import time
 
 # inventaire partage
 # team name
-# 
 
 resources = ["linemate", "deraumere", "sibur", "mendiane", "phiras", "thystame"]
 
