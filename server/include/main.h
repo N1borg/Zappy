@@ -94,6 +94,7 @@ typedef struct server_s {
 struct command_map {
     const char *command;
     int (*command_function)(server_t *s, client_t *client, char *arg);
+    int time_limit;
 };
 
 int help(char *binary_name, int ret, server_t *server);
@@ -124,7 +125,8 @@ int destroy_server(server_t *s, int ret);
 int add_player_to_team(server_t *s, client_t *player, char *team_name);
 void init_command_queue(client_t *client);
 int enqueue_command(client_t *client, char *command_str);
-char *dequeue_command(command_queue_t *queue)
+char *dequeue_command(command_queue_t *queue);
+void free_command_queue(command_queue_t *queue);
 
 // player commands
 int success_response(client_t *client);

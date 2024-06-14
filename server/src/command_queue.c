@@ -66,3 +66,20 @@ char *dequeue_command(command_queue_t *queue)
     queue->size--;
     return command_str;
 }
+
+void free_command_queue(command_queue_t *queue)
+{
+    command_t *command_node = NULL;
+    command_t *next = NULL;
+
+    if (queue == NULL)
+        return;
+    command_node = queue->front;
+    while (command_node != NULL) {
+        next = command_node->next;
+        free(command_node->command);
+        free(command_node);
+        command_node = next;
+    }
+    free(queue);
+}

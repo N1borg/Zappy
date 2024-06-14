@@ -34,15 +34,21 @@ int run_command(server_t *s, client_t *client,
 // Function to execute player command based on buffer, returns 1 on error
 int handle_command_player(server_t *s, client_t *client, char *buffer)
 {
-    struct command_map command_map[] = {{"Forward", command_forward},
-        {"Right", command_turn_right}, {"Left", command_turn_left},
-        {"Look", command_look}, {"Inventory", command_inventory},
-        {"Broadcast", command_broadcast}, {"Connect_nbr", command_team_slots},
-        {"Fork", command_fork}, {"Eject", command_eject},
-        {"Take object", command_take_object},
-        {"Set object", command_set_object},
-        {"Incantation", command_incantation},
-        {NULL, NULL}};
+    struct command_map command_map[] = {
+        {"Forward", command_forward, 7},
+        {"Right", command_turn_right, 7},
+        {"Left", command_turn_left, 7},
+        {"Look", command_look, 7},
+        {"Inventory", command_inventory, 1},
+        {"Broadcast", command_broadcast, 7},
+        {"Connect_nbr", command_team_slots, 0},
+        {"Fork", command_fork, 42},
+        {"Eject", command_eject, 7},
+        {"Take object", command_take_object, 7},
+        {"Set object", command_set_object, 7},
+        {"Incantation", command_incantation, 300},
+        {NULL, NULL, 0}
+    };
 
     return run_command(s, client, buffer, command_map);
 }
@@ -50,12 +56,16 @@ int handle_command_player(server_t *s, client_t *client, char *buffer)
 // Function to execute graphic command based on buffer, returns 1 on error
 int handle_command_graphic(server_t *s, client_t *client, char *buffer)
 {
-    struct command_map command_map[] = {{"msz", command_map_size},
-        {"bct", command_tile_content}, {"mct", command_map_content},
-        {NULL, NULL}};
+    struct command_map command_map[] = {
+        {"msz", command_map_size, 0},
+        {"bct", command_tile_content, 0},
+        {"mct", command_map_content, 0},
+        {NULL, NULL, 0}
+    };
 
     return run_command(s, client, buffer, command_map);
 }
+
 
 // Compute response based on buffer
 void compute_response(server_t *s, client_t *client, char *buffer)
