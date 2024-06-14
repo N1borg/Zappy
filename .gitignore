@@ -12,3 +12,4 @@ zappy_ai
 venv
 *.out
 *.log
+*.pdf
