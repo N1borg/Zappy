@@ -55,7 +55,7 @@ int parse_command_args(server_t *s, client_t *client,
 }
 
 // Function to send the tile content
-int command_tile_content(server_t *s, client_t *client, char *arg)
+int command_bct(server_t *s, client_t *client, char *arg)
 {
     char *token = NULL;
     char *endptr = NULL;

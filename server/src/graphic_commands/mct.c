@@ -8,7 +8,7 @@
 #include "../../include/main.h"
 
 // Function to send the map content
-int command_map_content(server_t *s, client_t *client, char *arg)
+int command_mct(server_t *s, client_t *client, char *arg)
 {
     if (arg != NULL)
         return 1;

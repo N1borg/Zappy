@@ -20,7 +20,6 @@ int run_command(server_t *s, client_t *client,
     }
     if (command == NULL)
         command = buffer;
-    printf("buffer: |%s|, command: |%s|, args: |%s|\n", buffer, command, args);
     for (int i = 0; command_map[i].command != NULL; i++) {
         if (strcmp(command_map[i].command, command) == 0) {
             return command_map[i].command_function(s,
@@ -70,7 +69,6 @@ void compute_response(server_t *s, client_t *client, char *buffer)
         dprintf(client->fd, "ko\n");
         return;
     }
-    printf("buffer: %s\n", buffer);
     if (strcmp(client->team, "GRAPHIC") != 0) {
         if (handle_command_player(s, client, buffer) != 0)
             dprintf(client->fd, "ko\n");
