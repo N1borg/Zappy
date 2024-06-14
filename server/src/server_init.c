@@ -67,6 +67,7 @@ void set_client(client_t *clients)
     clients->phiras = 0;
     clients->thystame = 0;
     clients->team = NULL;
+    clients->command_queue = NULL;
 }
 
 // Initializes the server struct

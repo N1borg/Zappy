@@ -28,6 +28,17 @@ typedef enum {
     WEST
 } orientation_t;
 
+typedef struct command_s {
+    char *command;
+    struct command_s *next;
+} command_t;
+
+typedef struct command_queue_s {
+    command_t *front;
+    command_t *back;
+    int size;
+} command_queue_t;
+
 typedef struct client_s {
     int fd;
     int x;
@@ -42,6 +53,7 @@ typedef struct client_s {
     int phiras;
     int thystame;
     char *team;
+    command_queue_t *command_queue;
 } client_t;
 
 typedef struct team_s {
@@ -110,6 +122,9 @@ void destroy_teams(team_t **teams);
 void destroy_map(tile_t **map);
 int destroy_server(server_t *s, int ret);
 int add_player_to_team(server_t *s, client_t *player, char *team_name);
+void init_command_queue(client_t *client);
+int enqueue_command(client_t *client, char *command_str);
+char *dequeue_command(command_queue_t *queue)
 
 // player commands
 int success_response(client_t *client);

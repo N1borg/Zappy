@@ -22,6 +22,7 @@ void accept_client(server_t *s)
     for (int i = 0; i < s->max_client_team * s->team_nb; i++) {
         if (s->clients[i]->fd == 0) {
             s->clients[i]->fd = new_socket;
+            init_command_queue(s->clients[i]);
             break;
         }
     }

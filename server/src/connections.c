@@ -32,12 +32,37 @@ void client_handler(server_t *s, client_t *client)
         } else {
             buffer[valread - 1] = '\0';
             printf("[%d] - sent: %s\n", client->fd, buffer);
-            compute_response(s, client, buffer);
+            if (enqueue_command(client, buffer) == 1)   
+                dprintf(client->fd, "Command queue is full\n");
+            else
+                dprintf(client->fd, "Command %s enqueued\n", buffer);
+            printf("Command queue is full\n");
         }
     }
 }
 
-// Main loop of the server
+// Execute command from the client's command queue
+void execute_client_commands(server_t *s, client_t *client)
+{
+    char *command = dequeue_command(client->command_queue);
+
+    compute_response(s, client, command);
+    free(command);
+}
+
+// Handle all client commands
+void handle_client_commands(server_t *s, int *sd)
+{
+    for (int i = 0; i < MAX_CLIENTS; i++) {
+        (*sd) = s->clients[i]->fd;
+        if (s->clients[i] != NULL) {
+            client_handler(s, s->clients[i]);
+            execute_client_commands(s, s->clients[i]);
+        }
+    }
+}
+
+// Handle the client commands
 int listener_loop(server_t *s, int *sd, int *max_sd)
 {
     FD_ZERO(&s->readfds);
@@ -49,10 +74,7 @@ int listener_loop(server_t *s, int *sd, int *max_sd)
         printf("Select error");
     if (FD_ISSET(s->master_socket, &s->readfds))
         accept_client(s);
-    for (int i = 0; i < MAX_CLIENTS; i++) {
-        (*sd) = s->clients[i]->fd;
-        client_handler(s, s->clients[i]);
-    }
+    handle_client_commands(s, sd);
     return 0;
 }
 
