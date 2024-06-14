@@ -37,6 +37,7 @@ int destroy_server(server_t *s, int ret)
     for (int i = 0; i < s->max_client_team; i++)
         close(s->clients[i]->fd);
     free(s->teams);
+    destroy_eggs(s);
     destroy_clients(s->clients);
     destroy_map(s->map);
     printf("Server closed\n");

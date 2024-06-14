@@ -116,6 +116,7 @@ void display_tile(tile_t *tile, char *buffer);
 int add_egg(team_t *team, tile_t *tile);
 int remove_egg(egg_t *egg);
 void destroy_eggs_from_tiles(tile_t *tile);
+void destroy_eggs(server_t *server);
 
 // client commands
 int command_move_up(server_t *s, client_t *client, char *arg);
