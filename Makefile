@@ -14,7 +14,7 @@ all: zappy_server zappy_gui zappy_ai
 
 zappy_ai:
 	@echo -e "$(GREEN)Building AI...$(NC)"
-	cp ai/ai.py zappy_ai && chmod +x zappy_ai
+	@rm -f zappy_ai && ln -s ai/main.py zappy_ai
 
 zappy_server:
 	@echo -e "$(GREEN)Building server...$(NC)"
