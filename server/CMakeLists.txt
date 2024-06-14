@@ -15,6 +15,7 @@ set(SHARED_SRC
     src/server_init.c
     src/connections.c
     src/listener.c
+    src/generate_resources.c
     src/manage_client.c
     src/manage_team.c
     src/handle_command.c
