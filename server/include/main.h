@@ -132,7 +132,14 @@ int command_incantation(server_t *s, client_t *client, char *arg);
 int command_team_slots(server_t *s, client_t *client, char *arg);
 
 // graphic commands
-int command_map_size(server_t *s, client_t *client, char *arg);
-int command_tile_content(server_t *s, client_t *client, char *arg);
+int command_msz(server_t *s, client_t *client, char *arg);
+int command_bct(server_t *s, client_t *client, char *arg);
 void send_tile_content(server_t *s, client_t *client, int x, int y);
-int command_map_content(server_t *s, client_t *client, char *arg);
+int command_mct(server_t *s, client_t *client, char *arg);
+int command_tna(server_t *server, client_t *client, char *arg);
+
+// graphic events
+void event_sbp(client_t *client);
+void event_seg(server_t *server, char *team);
+void event_smg(server_t *server, char *msg);
+void event_suc(client_t *client);

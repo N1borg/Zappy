@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** B-YEP-400-LIL-4-1-zappy-romaric.loevenbruck
 ** File description:
-** mct
+** content of the map (all the tiles)
 */
 
 #include "../../include/main.h"

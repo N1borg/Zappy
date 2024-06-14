@@ -50,8 +50,9 @@ int handle_command_player(server_t *s, client_t *client, char *buffer)
 // Function to execute graphic command based on buffer, returns 1 on error
 int handle_command_graphic(server_t *s, client_t *client, char *buffer)
 {
-    struct command_map command_map[] = {{"msz", command_map_size},
-        {"bct", command_tile_content}, {"mct", command_map_content},
+    struct command_map command_map[] = {{"msz", command_msz},
+        {"bct", command_bct}, {"mct", command_mct},
+        {"tna", command_tna},
         {NULL, NULL}};
 
     return run_command(s, client, buffer, command_map);
