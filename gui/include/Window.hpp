@@ -10,8 +10,6 @@
 #include <raylib.h>
 #include <string>
 
-#include "Camera.hpp"
-
 class Window {
     public:
         Window() = default;
@@ -19,27 +17,42 @@ class Window {
         ~Window() = default;
 
         // Raylib Camera functions
-        Camera3D getCamera() const;
+        Camera getCamera() const;
+        int getCameraMode() const;
+        void updateCamera();
+        void setCameraPosition(Vector3 position);
+        void setCameraTarget(Vector3 target);
+        void setCameraUp(Vector3 up);
+        void setCameraFovy(float fovy);
+        void setCameraProjection(int projection);
+        void setCameraMode(int mode);
+        void parseCameraInputs();
 
         // Raylib window functions
         void init();
-        void setTargetFPS(int fps);
+        void close();
         bool shouldClose();
         void beginDrawing();
-        void clearBackground(Color color);
         void endDrawing();
-        void close();
+        void setTargetFPS(int fps);
+        void disableCursor();
+        void clearBackground(Color color);
+        int getScreenWidth();
+        int getScreenHeight();
+        bool isKeyPressed(int key);
 
         // Raylib drawing functions
         void beginMode3D();
         void drawCube(Vector3 position, float width, float height, float length, Color color);
         void drawCubeWires(Vector3 position, float width, float height, float length, Color color);
         void drawGrid(int slices, float spacing);
+        void drawPlane(Vector3 center, Vector2 size, Color color);
         void endMode3D();
 
     private:
         int _width;
         int _height;
         std::string _title;
-        GameCamera _camera;
+        Camera _camera;
+        int _cameraMode;
 };
