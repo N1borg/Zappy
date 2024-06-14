@@ -10,12 +10,14 @@
 // Create the node for the new egg
 egg_t *create_egg(team_t *team, tile_t *tile)
 {
+    static int next_id = 0;
     egg_t *new_egg = malloc(sizeof(egg_t));
 
     if (new_egg == NULL)
         return NULL;
     new_egg->tile = tile;
     new_egg->team = team;
+    new_egg->id = next_id++;
     new_egg->next_team = NULL;
     new_egg->next_tile = NULL;
     return new_egg;
