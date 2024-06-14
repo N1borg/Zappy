@@ -60,20 +60,10 @@ int main(int argc, char *argv[])
                 window.drawCube({ 0.0f, 0.0f, 0.0f }, 2.0f, 2.0f, 2.0f, RED);
                 window.drawCubeWires({ 0.0f, 0.0f, 0.0f }, 2.0f, 2.0f, 2.0f, MAROON);
                 window.endMode3D();
-                DrawText("Camera status:", 610, 15, 10, BLACK);
-                DrawText(TextFormat("- Mode: %s", (window.getCameraMode() == CAMERA_FREE) ? "FREE" :
-                                                (window.getCameraMode() == CAMERA_FIRST_PERSON) ? "FIRST_PERSON" :
-                                                (window.getCameraMode() == CAMERA_THIRD_PERSON) ? "THIRD_PERSON" :
-                                                (window.getCameraMode() == CAMERA_ORBITAL) ? "ORBITAL" : "CUSTOM"), 610, 30, 10, BLACK);
-                DrawText(TextFormat("- Projection: %s", (window.getCamera().projection == CAMERA_PERSPECTIVE) ? "PERSPECTIVE" :
-                                                        (window.getCamera().projection == CAMERA_ORTHOGRAPHIC) ? "ORTHOGRAPHIC" : "CUSTOM"), 610, 45, 10, BLACK);
-                DrawText(TextFormat("- Position: (%06.3f, %06.3f, %06.3f)", window.getCamera().position.x, window.getCamera().position.y, window.getCamera().position.z), 610, 60, 10, BLACK);
-                DrawText(TextFormat("- Target: (%06.3f, %06.3f, %06.3f)", window.getCamera().target.x, window.getCamera().target.y, window.getCamera().target.z), 610, 75, 10, BLACK);
-                DrawText(TextFormat("- Up: (%06.3f, %06.3f, %06.3f)", window.getCamera().up.x, window.getCamera().up.y, window.getCamera().up.z), 610, 90, 10, BLACK);
                 window.endDrawing();
 
-                // std::string serverResponse = socket.receiveMessage();
-                // printf("Server response: %s\n", serverResponse.c_str());
+                std::string serverResponse = socket.receiveMessage();
+                printf("Server response: %s\n", serverResponse.c_str());
             }
 
             window.close();
