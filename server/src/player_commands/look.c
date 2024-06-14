@@ -7,11 +7,13 @@
 
 #include "../../include/main.h"
 
-// initialize the look command
+// Initialize the look command
 int init_look(client_t *client, char *buffer)
 {
-    buffer[0] = '\0';
-    buffer = strcpy(buffer, "[");
+    if (buffer != NULL) {
+        buffer[0] = '\0';
+        buffer = strcpy(buffer, "[");
+    }
     if (client->orientation == NORTH)
         return -1;
     if (client->orientation == WEST)
@@ -19,7 +21,7 @@ int init_look(client_t *client, char *buffer)
     return 1;
 }
 
-// format and send the buffer to the client
+// Format and send the buffer to the client
 int send_buffer(char *buffer, client_t *client)
 {
     if (strlen(buffer) > 2)
@@ -30,15 +32,15 @@ int send_buffer(char *buffer, client_t *client)
     return 0;
 }
 
-// send the content of the tiles in front of the player
+// Send the content of the tiles in front of the player
 int command_look(server_t *s, client_t *client, char *arg)
 {
-    int vec = 1;
     int loop = (client->orientation % 2);
-    char *buffer = malloc(sizeof(char) * 100 *
-        (client->level + 1) * (client->level + 1) + 3);
+    char *buffer = malloc(sizeof(char) * buffer_len(s, client));
+    int vec = init_look(client, buffer);
 
-    vec = init_look(client, buffer);
+    if (arg != NULL)
+        return 1;
     for (int i = 0; loop && i <= client->level; i++) {
         for (int j = 0; j < (i * 2 + 1); j++)
             display_tile(&s->map[y_to_map_y(s, client->y + i * vec)]

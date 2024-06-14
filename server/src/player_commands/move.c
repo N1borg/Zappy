@@ -8,8 +8,10 @@
 #include "../../include/main.h"
 
 // Move the client in the direction he is facing
-int command_move_up(server_t *s, client_t *client, char *arg)
+int command_forward(server_t *s, client_t *client, char *arg)
 {
+    if (arg != NULL)
+        return 1;
     if (client->orientation == NORTH)
         move_player(s, client, client->x, client->y - 1);
     if (client->orientation == EAST)
@@ -20,5 +22,5 @@ int command_move_up(server_t *s, client_t *client, char *arg)
         move_player(s, client, client->x - 1, client->y);
     if (client->orientation < 1 || client->orientation > 4)
         return 1;
-    return 0;
+    return success_response(client);
 }

@@ -79,14 +79,14 @@ typedef struct server_s {
     tile_t **map;
 } server_t;
 
-struct CommandMap {
+struct command_map {
     const char *command;
-    int (*CommandFunction)(server_t *s, client_t *client, char *arg);
+    int (*command_function)(server_t *s, client_t *client, char *arg);
 };
 
 int help(char *binary_name, int ret, server_t *server);
-server_t parse_args(server_t server, int argc, char *argv[]);
-int start_litener(server_t *server);
+server_t parse_args(int argc, char *argv[]);
+int start_listener(server_t *server);
 int init_socket(server_t *server);
 int init_listener(server_t *server);
 void accept_client(server_t *s);
@@ -99,18 +99,29 @@ int is_player(server_t *s, int socket);
 int tablen(team_t **tab);
 int create_player(server_t *s, client_t *client, char *team_name);
 void set_client(client_t *clients);
-int which_player_on_map(tile_t *tile, client_t *client);
+int get_player_id_on_map(tile_t *tile, client_t *client);
 int move_player(server_t *s, client_t *client, int x, int y);
-int which_team(server_t *s, char *team_name);
+int get_team_id(server_t *s, char *team_name);
 int x_to_map_x(server_t *s, int x);
 int y_to_map_y(server_t *s, int y);
 void display_tile(tile_t *tile, char *buffer);
+void destroy_clients(server_t *s);
+void destroy_teams(team_t **teams);
+void destroy_map(tile_t **map);
+int destroy_server(server_t *s, int ret);
+int add_player_to_team(server_t *s, client_t *player, char *team_name);
 
-// client commands
-int command_move_up(server_t *s, client_t *client, char *arg);
-int command_turn_right(server_t *s, client_t *client, char *arg);
-int command_turn_left(server_t *s, client_t *client, char *arg);
+// player commands
+int success_response(client_t *client);
+int error_response(client_t *client);
+int command_forward(server_t *s, client_t *client, char *arg);
+int command_turn_right(server_t *s __attribute__((unused)),
+    client_t *client, char *arg);
+int command_turn_left(server_t *s __attribute__((unused)),
+    client_t *client, char *arg);
+int init_look(client_t *client, char *buffer);
 int command_look(server_t *s, client_t *client, char *arg);
+int buffer_len(server_t *s, client_t *client);
 int command_inventory(server_t *s, client_t *client, char *arg);
 int command_fork(server_t *s, client_t *client, char *arg);
 int command_take_object(server_t *s, client_t *client, char *arg);
@@ -119,3 +130,9 @@ int command_eject(server_t *s, client_t *client, char *arg);
 int command_broadcast(server_t *s, client_t *client, char *arg);
 int command_incantation(server_t *s, client_t *client, char *arg);
 int command_team_slots(server_t *s, client_t *client, char *arg);
+
+// graphic commands
+int command_map_size(server_t *s, client_t *client, char *arg);
+int command_tile_content(server_t *s, client_t *client, char *arg);
+void send_tile_content(server_t *s, client_t *client, int x, int y);
+int command_map_content(server_t *s, client_t *client, char *arg);

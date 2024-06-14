@@ -9,21 +9,32 @@
 
 // Function to run command based on buffer, returns 1 on error
 int run_command(server_t *s, client_t *client,
-    char *buffer, struct CommandMap *command_map)
+    char *buffer, struct command_map *command_map)
 {
-    for (int i = 0; buffer && command_map[i].command != NULL; i++) {
-        if (strcmp(command_map[i].command, buffer) == 0
-            && command_map[i].CommandFunction(s,
-                client, strchr(buffer, ' ')) == 0)
-            return 0;
+    char *args = strchr(buffer, ' ');
+    char *command = NULL;
+
+    if (args != NULL) {
+        args = strdup(args + 1);
+        command = strtok(buffer, " ");
     }
+    if (command == NULL)
+        command = buffer;
+    printf("buffer: |%s|, command: |%s|, args: |%s|\n", buffer, command, args);
+    for (int i = 0; command_map[i].command != NULL; i++) {
+        if (strcmp(command_map[i].command, command) == 0) {
+            return command_map[i].command_function(s,
+                client, args);
+        }
+    }
+    free(command);
     return 1;
 }
 
-// Function to execute command based on buffer, returns 1 on error
-int handle_command(server_t *s, client_t *client, char *buffer)
+// Function to execute player command based on buffer, returns 1 on error
+int handle_command_player(server_t *s, client_t *client, char *buffer)
 {
-    struct CommandMap command_map[] = {{"Forward", command_move_up},
+    struct command_map command_map[] = {{"Forward", command_forward},
         {"Right", command_turn_right}, {"Left", command_turn_left},
         {"Look", command_look}, {"Inventory", command_inventory},
         {"Broadcast", command_broadcast}, {"Connect_nbr", command_team_slots},
@@ -36,16 +47,35 @@ int handle_command(server_t *s, client_t *client, char *buffer)
     return run_command(s, client, buffer, command_map);
 }
 
+// Function to execute graphic command based on buffer, returns 1 on error
+int handle_command_graphic(server_t *s, client_t *client, char *buffer)
+{
+    struct command_map command_map[] = {{"msz", command_map_size},
+        {"bct", command_tile_content}, {"mct", command_map_content},
+        {NULL, NULL}};
+
+    return run_command(s, client, buffer, command_map);
+}
+
 // Compute response based on buffer
 void compute_response(server_t *s, client_t *client, char *buffer)
 {
-    printf("[%d] - sent: %s\n", client->fd, buffer);
-    if (is_team(s, buffer) != 0) {
-        if (create_player(s, client, buffer) == 0) {
-            return;
-        } else
+    if (is_team(s, buffer) == 1) {
+        if (create_player(s, client, buffer) != 0)
+            dprintf(client->fd, "ko\n");
+        return;
+    }
+    if (client->team == NULL) {
+        dprintf(client->fd, "ko\n");
+        return;
+    }
+    printf("buffer: %s\n", buffer);
+    if (strcmp(client->team, "GRAPHIC") != 0) {
+        if (handle_command_player(s, client, buffer) != 0)
             dprintf(client->fd, "ko\n");
     }
-    if (client->team == NULL || handle_command(s, client, buffer))
-        dprintf(client->fd, "ko\n");
+    if (strcmp(client->team, "GRAPHIC") == 0) {
+        if (handle_command_graphic(s, client, buffer) != 0)
+            dprintf(client->fd, "ko\n");
+    }
 }

@@ -51,7 +51,7 @@ void spawn_eggs(tile_t **map, int width, int height, int num_eggs)
     }
 }
 
-// initialize given client structure
+// Initialize given client structure
 void set_client(client_t *clients)
 {
     clients->fd = 0;
