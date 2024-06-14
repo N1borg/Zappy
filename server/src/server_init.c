@@ -56,31 +56,6 @@ void set_client(client_t *clients)
     clients->team = NULL;
 }
 
-// Adds an egg to the server
-int add_egg(team_t *team, tile_t *tile)
-{
-    egg_t *new_egg = malloc(sizeof(egg_t));
-    egg_t *tile_egg = NULL;
-
-    if (new_egg == NULL)
-        return 84;
-    new_egg->tile = tile;
-    new_egg->team = team;
-    new_egg->next = NULL;
-    new_egg->next = team->eggs;
-    team->eggs = new_egg;
-    tile_egg = tile->eggs;
-    if (tile_egg == NULL) {
-        tile->eggs = new_egg;
-    } else {
-        while (tile_egg->next != NULL) {
-            tile_egg = tile_egg->next;
-        }
-        tile_egg->next = new_egg;
-    }
-    return 0;
-}
-
 // Initializes the server struct
 void init_server(server_t *s)
 {

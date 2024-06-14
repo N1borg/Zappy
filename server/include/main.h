@@ -31,7 +31,8 @@ typedef enum {
 typedef struct egg_s {
     struct tile_s *tile;
     struct team_s *team;
-    struct egg_s *next;
+    struct egg_s *next_team;
+    struct egg_s *next_tile;
 } egg_t;
 
 typedef struct client_s {
@@ -113,7 +114,8 @@ int x_to_map_x(server_t *s, int x);
 int y_to_map_y(server_t *s, int y);
 void display_tile(tile_t *tile, char *buffer);
 int add_egg(team_t *team, tile_t *tile);
-void remove_egg(egg_t **head, egg_t *egg);
+int remove_egg(egg_t *egg);
+void destroy_eggs_from_tiles(tile_t *tile);
 
 // client commands
 int command_move_up(server_t *s, client_t *client, char *arg);

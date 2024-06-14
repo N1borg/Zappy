@@ -47,12 +47,9 @@ void disconnect_client(server_t *s, client_t *client)
     printf("[%d] - Disconnected | ip: %s, port: %d \n", client->fd,
         inet_ntoa(s->addr.sin_addr), ntohs(s->addr.sin_port));
     close(client->fd);
-    client->fd = 0;
     s->map[client->y][client->x].players[
         which_player_on_map(&s->map[client->y][client->x], client)] = NULL;
-    s->teams[which_team(s, client->team)]->free_slots++;
     set_client(client);
-    add_egg(s->teams[which_team(s, client->team)], &s->map[client->y][client->x]);
 }
 
 // Add a player to a team based on it's name
@@ -87,64 +84,37 @@ egg_t *get_random_egg(team_t *team)
     int random_index = 0;
 
     for (; current != NULL; count++)
-        current = current->next;
-    if (count == 0)
-        return NULL;
+        current = current->next_team;
     random_index = rand() % count;
     current = team->eggs;
     for (int i = 0; i < random_index; i++)
-        current = current->next;
+        current = current->next_team;
     return current;
 }
 
-void destroy_eggs_tile(tile_t *tile)
-{
-    egg_t *egg = tile->eggs;
-    egg_t *next_egg = NULL;
-
-    while (egg != NULL) {
-        next_egg = egg->next;
-        remove_egg(&egg->team->eggs, egg);
-        free(egg);
-        egg = next_egg;
-    }
-    tile->eggs = NULL;
-}
-
-void destroy_egg(egg_t *egg)
-{
-    remove_egg(&egg->team->eggs, egg);
-    remove_egg(&egg->tile->eggs, egg);
-    free(egg);
-}
-
 // Set the position of a client based on the position of an egg
-void set_client_pos(server_t *s, int *x, int *y, client_t *client)
+void set_client_pos(server_t *s, client_t *client)
 {
     team_t *team = (*s).teams[which_team(s, (*client).team)];
     egg_t *egg = get_random_egg(team);
 
-    *x = egg->tile->x;
-    *y = egg->tile->y;
-    destroy_egg(egg);
+    client->x = egg->tile->x;
+    client->y = egg->tile->y;
+    remove_egg(egg);
 }
 
 // create player if team_name exists else return 1
 int create_player(server_t *s, client_t *client, char *team_name)
 {
-    int x = 0;
-    int y = 0;
     int i = 0;
 
     if (client->team != NULL || add_player_to_team(s, client, team_name))
         return 1;
-    set_client_pos(s, &x, &y, client);
-    for (; i < MAX_CLIENTS && s->map[y][x].players[i]; i++);
+    for (; i < MAX_CLIENTS && s->map[client->y][client->x].players[i]; i++);
     if (i == MAX_CLIENTS)
         return 1;
-    s->map[y][x].players[i] = client;
-    client->x = x;
-    client->y = y;
+    set_client_pos(s, client);
+    s->map[client->y][client->x].players[i] = client;
     client->orientation = (rand() % 4) + 1;
     dprintf(client->fd, "%d\n",
         s->teams[which_team(s, client->team)]->free_slots);

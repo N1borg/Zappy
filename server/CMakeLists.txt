@@ -28,6 +28,8 @@ set(SHARED_SRC
     src/commands/object_interaction.c
     src/commands/rotate.c
     src/commands/team_slots.c
+    src/add_egg.c
+    src/remove_egg.c
 )
 
 add_executable(zappy_server ${SHARED_SRC})
