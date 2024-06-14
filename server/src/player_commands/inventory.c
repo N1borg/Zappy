@@ -7,13 +7,15 @@
 
 #include "../../include/main.h"
 
-// sends the content of the client's inventory
-int command_inventory(server_t *s __attribute__((unused)), client_t *client,
-    char *arg __attribute__((unused)))
+// Sends the content of the client's inventory
+int command_inventory(server_t *s __attribute__((unused)),
+    client_t *client, char *arg)
 {
     char buf1[256] = {0};
     char buf2[256] = {0};
 
+    if (arg != NULL)
+        return 1;
     snprintf(buf1, sizeof(buf1),
         "[food %d, linemate %d, deraumere %d, ",
         client->food, client->linemate, client->deraumere);

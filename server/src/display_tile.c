@@ -7,70 +7,41 @@
 
 #include "../include/main.h"
 
-int write_tile_contentmpt(tile_t *tile, char *buffer)
+// Write the tile's stones in the given buffer
+void write_tile_stones(tile_t *tile, char *buffer)
 {
-    int ret = 0;
-
-    for (int i = 0; i < tile->mendiane; i++) {
-        strcat(buffer, "mendiane ");
-        ret++;
-    }
-    for (int i = 0; i < tile->phiras; i++) {
-        strcat(buffer, "phiras ");
-        ret++;
-    }
-    for (int i = 0; i < tile->thystame; i++) {
-        strcat(buffer, "thystame ");
-        ret++;
-    }
-    return ret;
-}
-
-int write_tile_contentlds(tile_t *tile, char *buffer)
-{
-    int ret = 0;
-
-    for (int i = 0; i < tile->linemate; i++) {
+    for (int i = 0; i < tile->linemate; i++)
         strcat(buffer, "linemate ");
-        ret++;
-    }
-    for (int i = 0; i < tile->deraumere; i++) {
+    for (int i = 0; i < tile->deraumere; i++)
         strcat(buffer, "deraumere ");
-        ret++;
-    }
-    for (int i = 0; i < tile->sibur; i++) {
+    for (int i = 0; i < tile->sibur; i++)
         strcat(buffer, "sibur ");
-        ret++;
-    }
-    return (ret + write_tile_contentmpt(tile, buffer));
+    for (int i = 0; i < tile->mendiane; i++)
+        strcat(buffer, "mendiane ");
+    for (int i = 0; i < tile->phiras; i++)
+        strcat(buffer, "phiras ");
+    for (int i = 0; i < tile->thystame; i++)
+        strcat(buffer, "thystame ");
 }
 
-// return 1 if tile is empty
-int write_tile_contentpef(tile_t *tile, char *buffer)
+// Write the tile's objects in the given buffer
+void write_tile_objects(tile_t *tile, char *buffer)
 {
-    int ret = 0;
-
     for (int i = 0; i < MAX_CLIENTS; i++) {
-        if (tile->players[i]) {
+        if (tile->players[i])
             strcat(buffer, "player ");
-            ret++;
-        }
     }
-    for (int i = 0; i < tile->egg; i++) {
+    for (int i = 0; i < tile->egg; i++)
         strcat(buffer, "egg ");
-        ret++;
-    }
-    for (int i = 0; i < tile->food; i++) {
+    for (int i = 0; i < tile->food; i++)
         strcat(buffer, "food ");
-        ret++;
-    }
-    return (ret + write_tile_contentlds(tile, buffer));
 }
 
 // Write the tile's content in thegiven buffer
 void display_tile(tile_t *tile, char *buffer)
 {
-    write_tile_contentpef(tile, buffer);
+    write_tile_objects(tile, buffer);
+    write_tile_stones(tile, buffer);
     buffer[strlen(buffer) - 1] = '\0';
     strcat(buffer, ", ");
 }

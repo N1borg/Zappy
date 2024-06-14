@@ -7,11 +7,12 @@
 
 #include "../../include/main.h"
 
-// create an egg
-int command_fork(server_t *s, client_t *client,
-    char *arg __attribute__((unused)))
+// Create an egg
+int command_fork(server_t *s, client_t *client, char *arg)
 {
+    if (arg != NULL)
+        return 1;
     s->map[client->y][client->x].egg++;
-    s->teams[which_team(s, client->team)]->free_slots++;
-    return 0;
+    s->teams[get_team_id(s, client->team)]->free_slots++;
+    return success_response(client);
 }

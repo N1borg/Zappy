@@ -8,7 +8,7 @@
 #include "../include/main.h"
 
 // Return the index of the team in the server based on it's name
-int which_team(server_t *s, char *team_name)
+int get_team_id(server_t *s, char *team_name)
 {
     for (int i = 0; s->teams[i] && s->teams[i]->name; i++) {
         if (strcmp(team_name, s->teams[i]->name) == 0)

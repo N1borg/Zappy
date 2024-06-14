@@ -12,6 +12,6 @@ int help(char *binary_name, int ret, server_t *server)
 {
     printf("USAGE: %s -p port -x width -y height -n name1 name2", binary_name);
     printf(" ... -c clientsNb -f freq\n");
-    free(server->team_names);
+    free(server->teams);
     return ret;
 }
