@@ -5,4 +5,4 @@
 ** an egg was laid by a player
 */
 
-#include "../../include/main.h"
+#include "server.h"

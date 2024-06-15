@@ -5,23 +5,23 @@
 ** manage_client
 */
 
-#include "../include/main.h"
+#include "server.h"
 
 /* Accept a new client, print the New connection message and add it to
  the list of sockets */
-void accept_client(server_t *s)
+void accept_client(server_t *serv)
 {
-    int addrlen = sizeof(s->addr);
-    int new_socket = accept(s->master_socket,
-    (struct sockaddr *)&s->addr, (socklen_t *)&addrlen);
+    int addrlen = sizeof(serv->addr);
+    int new_socket = accept(serv->master_socket,
+    (struct sockaddr *)&serv->addr, (socklen_t *)&addrlen);
 
     if (new_socket < 0)
         perror("Accept");
     printf("[%d] - New connection | fd: %d, ip: %s, port: %d\n", new_socket,
-    new_socket, inet_ntoa(s->addr.sin_addr), ntohs(s->addr.sin_port));
-    for (int i = 0; i < s->max_client_team * s->team_nb; i++) {
-        if (s->clients[i]->fd == 0) {
-            s->clients[i]->fd = new_socket;
+    new_socket, inet_ntoa(serv->addr.sin_addr), ntohs(serv->addr.sin_port));
+    for (int i = 0; i < serv->max_client_team * serv->team_nb; i++) {
+        if (serv->clients[i]->fd == 0) {
+            serv->clients[i]->fd = new_socket;
             break;
         }
     }
@@ -47,26 +47,37 @@ void disconnect_client(server_t *s, client_t *client)
     set_client(client);
 }
 
-// Create player if team_name exists else return 1
-int create_player(server_t *s, client_t *client, char *team_name)
+// Initialize the client and send the map size and free slots
+void init_player(server_t *serv, client_t *player)
 {
-    int x = rand() % s->width;
-    int y = rand() % s->height;
+    static int temp_id = 0;
+    int team_id = get_team_id(serv, player->team);
+
+    temp_id++;
+    player->id = temp_id;
+    dprintf(player->fd, "%d\n", serv->teams[team_id]->free_slots);
+    dprintf(player->fd, "%d %d\n", serv->width, serv->height);
+    event_pnw(serv, player);
+}
+
+// Create player if team_name exists else return 1
+int create_player(server_t *serv, client_t *client, char *team_name)
+{
+    int x = rand() % serv->width;
+    int y = rand() % serv->height;
     int i = 0;
 
-    if (client->team != NULL || add_player_to_team(s, client, team_name))
+    if (client->team != NULL || add_player_to_team(serv, client, team_name))
         return 1;
-    for (; i < MAX_CLIENTS && s->map[y][x].players[i]; i++);
+    for (; i < MAX_CLIENTS && serv->map[y][x].players[i]; i++);
     if (i == MAX_CLIENTS)
         return 1;
-    s->map[y][x].players[i] = client;
+    client->id = 0;
+    serv->map[y][x].players[i] = client;
     client->x = x;
     client->y = y;
     client->orientation = (rand() % 4) + 1;
-    if (strcmp(team_name, "GRAPHIC") != 0) {
-        dprintf(client->fd, "%d\n",
-            s->teams[get_team_id(s, client->team)]->free_slots);
-        dprintf(client->fd, "%d %d\n", s->width, s->height);
-    }
+    if (strcmp(team_name, "GRAPHIC") != 0)
+        init_player(serv, client);
     return 0;
 }

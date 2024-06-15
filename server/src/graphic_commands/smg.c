@@ -5,13 +5,15 @@
 ** message from the server
 */
 
-#include "../../include/main.h"
+#include "server.h"
 
-void event_smg(server_t *server, char *msg)
+// Send a message to GRAPHIC clients
+void event_smg(server_t *serv, char *msg)
 {
-    for (int i = 0; server->clients[i] != NULL; i++) {
-        if (strcmp(server->clients[i]->team, "GRAPHIC") == 0) {
-            dprintf(server->clients[i]->fd, "smg %s\n", msg);
+    for (int i = 0; i < MAX_CLIENTS; i++) {
+        if (serv->clients[i] && serv->clients[i]->team &&
+            strcmp(serv->clients[i]->team, "GRAPHIC") == 0) {
+            dprintf(serv->clients[i]->fd, "smg %s\n", msg);
         }
     }
 }

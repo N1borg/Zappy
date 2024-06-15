@@ -5,84 +5,84 @@
 ** incantation
 */
 
-#include "../../include/main.h"
+#include "server.h"
 
 // Gives the number of players on the tile with the same level
-int get_players(server_t *s, client_t *client)
+int get_players(server_t *serv, client_t *player)
 {
-    int x = client->x;
-    int y = client->y;
-    int level = client->level;
+    int x = player->x;
+    int y = player->y;
+    int level = player->level;
     int players = 0;
 
-    for (int i = 0; i < MAX_CLIENTS && s->map[y][x].players[i]; i++) {
-        if (s->map[y][x].players[i]->level == level)
+    for (int i = 0; i < MAX_CLIENTS && serv->map[y][x].players[i]; i++) {
+        if (serv->map[y][x].players[i]->level == level)
             players++;
     }
     return players;
 }
 
 // Check if the player can incant for the last levels
-int incant_lasts(server_t *s, client_t *client, tile_t *tile)
+int incant_lasts(server_t *serv, client_t *player, tile_t *tile)
 {
-    int num_players = get_players(s, client);
+    int num_players = get_players(serv, player);
 
-    if (client->level == 6 && tile->linemate >= 1 &&
+    if (player->level == 6 && tile->linemate >= 1 &&
         tile->deraumere >= 2 && tile->sibur >= 3 &&
         tile->phiras >= 1 && num_players == 6) {
-        dprintf(client->fd, "Current level: %d\n", client->level);
+        dprintf(player->fd, "Current level: %d\n", player->level);
         return 0;
     }
-    if (client->level == 7 && tile->linemate >= 2 && tile->deraumere >= 2
+    if (player->level == 7 && tile->linemate >= 2 && tile->deraumere >= 2
         && tile->sibur >= 2 && tile->mendiane >= 2 && tile->phiras >= 2 &&
         tile->mendiane >= 1 && num_players == 6) {
-        dprintf(client->fd, "Current level: %d\n", client->level);
+        dprintf(player->fd, "Current level: %d\n", player->level);
         return 0;
     }
     return 1;
 }
 
 // Check if the player can incant for the first levels
-int incant_first(server_t *s, client_t *client, tile_t *tile)
+int incant_first(server_t *serv, client_t *player, tile_t *tile)
 {
-    int num_players = get_players(s, client);
+    int num_players = get_players(serv, player);
 
-    if (client->level == 3 && tile->linemate >= 2 &&
+    if (player->level == 3 && tile->linemate >= 2 &&
         tile->sibur >= 1 && tile->phiras >= 2 &&
         num_players == 2) {
-        dprintf(client->fd, "Current level: %d\n", client->level);
+        dprintf(player->fd, "Current level: %d\n", player->level);
         return 0;
     }
-    if (client->level == 4 && tile->linemate >= 1 && tile->deraumere >= 1
+    if (player->level == 4 && tile->linemate >= 1 && tile->deraumere >= 1
         && tile->sibur >= 2 && tile->phiras >= 1 && num_players == 4) {
-        dprintf(client->fd, "Current level: %d\n", client->level);
+        dprintf(player->fd, "Current level: %d\n", player->level);
         return 0;
     }
-    if (client->level == 5 && tile->linemate >= 1 && tile->deraumere >= 2
+    if (player->level == 5 && tile->linemate >= 1 && tile->deraumere >= 2
         && tile->sibur >= 1 && tile->mendiane >= 3 && num_players == 4) {
-        dprintf(client->fd, "Current level: %d\n", client->level);
+        dprintf(player->fd, "Current level: %d\n", player->level);
         return 0;
     }
-    return incant_lasts(s, client, tile);
+    return incant_lasts(serv, player, tile);
 }
 
 // Check if the player can incant
-int command_incantation(server_t *s, client_t *client, char *arg)
+int command_incantation(server_t *serv, client_t *player, char *arg)
 {
-    int x = client->x;
-    int y = client->y;
-    int num_players = get_players(s, client);
+    int x = player->x;
+    int y = player->y;
+    int num_players = get_players(serv, player);
 
     if (arg != NULL)
         return 1;
-    if (client->level == 1 && s->map[y][x].linemate >= 1) {
-        dprintf(client->fd, "Current level: %d\n", client->level);
+    if (player->level == 1 && serv->map[y][x].linemate >= 1) {
+        dprintf(player->fd, "Current level: %d\n", player->level);
         return 0;
-    } else if (client->level == 2 && s->map[y][x].linemate >= 1 &&
-        s->map[y][x].deraumere >= 1 && s->map[y][x].sibur >= 1
+    } else if (player->level == 2 && serv->map[y][x].linemate >= 1 &&
+        serv->map[y][x].deraumere >= 1 && serv->map[y][x].sibur >= 1
         && num_players == 2) {
-        dprintf(client->fd, "Current level: %d\n", client->level);
+        dprintf(player->fd, "Current level: %d\n", player->level);
         return 0;
     }
-    return incant_first(s, client, &s->map[y][x]);
+    return incant_first(serv, player, &serv->map[y][x]);
 }

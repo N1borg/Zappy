@@ -5,4 +5,19 @@
 ** time unit modification
 */
 
-#include "../../include/main.h"
+#include "server.h"
+
+// Send the time unit modification
+int command_sst(server_t *serv, client_t *client, char *arg)
+{
+    int temp_freq = 0;
+
+    if (arg == NULL)
+        return 1;
+    temp_freq = atoi(arg);
+    if (temp_freq < 0 || (temp_freq == 0 && strcmp(arg, "0") != 0))
+        return 1;
+    serv->freq = temp_freq;
+    dprintf(client->fd, "sst %d\n", serv->freq);
+    return 0;
+}

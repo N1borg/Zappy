@@ -5,4 +5,4 @@
 ** death of an egg
 */
 
-#include "../../include/main.h"
+#include "server.h"

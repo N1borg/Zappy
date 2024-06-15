@@ -5,8 +5,9 @@
 ** unknown command
 */
 
-#include "../../include/main.h"
+#include "server.h"
 
+// jsp
 void event_suc(client_t *client)
 {
     dprintf(client->fd, "suc\n");

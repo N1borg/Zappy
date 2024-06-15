@@ -5,4 +5,4 @@
 ** player connection for an egg
 */
 
-#include "../../include/main.h"
+#include "server.h"

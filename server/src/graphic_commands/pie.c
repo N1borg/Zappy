@@ -5,4 +5,4 @@
 ** end of an incantation
 */
 
-#include "../../include/main.h"
+#include "server.h"

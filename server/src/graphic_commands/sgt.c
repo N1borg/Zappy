@@ -5,4 +5,13 @@
 ** time unit request
 */
 
-#include "../../include/main.h"
+#include "server.h"
+
+// Send the time unit request
+int command_sgt(server_t *serv, client_t *client, char *arg)
+{
+    if (arg != NULL)
+        return 1;
+    dprintf(client->fd, "sgt %d\n", serv->freq);
+    return 0;
+}

@@ -5,14 +5,14 @@
 ** forking
 */
 
-#include "../../include/main.h"
+#include "server.h"
 
 // Create an egg
-int command_fork(server_t *s, client_t *client, char *arg)
+int command_fork(server_t *serv, client_t *player, char *arg)
 {
     if (arg != NULL)
         return 1;
-    s->map[client->y][client->x].egg++;
-    s->teams[get_team_id(s, client->team)]->free_slots++;
-    return success_response(client);
+    serv->map[player->y][player->x].egg++;
+    serv->teams[get_team_id(serv, player->team)]->free_slots++;
+    return success_response(player);
 }

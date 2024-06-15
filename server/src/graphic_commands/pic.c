@@ -5,4 +5,4 @@
 ** start of an incantation (by the first player)
 */
 
-#include "../../include/main.h"
+#include "server.h"

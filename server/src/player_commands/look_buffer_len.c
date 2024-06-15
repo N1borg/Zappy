@@ -5,7 +5,7 @@
 ** look_buffer_len
 */
 
-#include "../../include/main.h"
+#include "server.h"
 
 // Return the number of chars to init the look buffer
 int tile_size(tile_t *tile)

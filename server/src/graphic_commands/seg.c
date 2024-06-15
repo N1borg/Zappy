@@ -5,13 +5,15 @@
 ** end of game
 */
 
-#include "../../include/main.h"
+#include "server.h"
 
-void event_seg(server_t *server, char *team)
+// Send end game signal
+void event_seg(server_t *serv, char *team)
 {
-    for (int i = 0; server->clients[i] != NULL; i++) {
-        if (strcmp(server->clients[i]->team, "GRAPHIC") == 0) {
-            dprintf(server->clients[i]->fd, "seg %s\n", team);
+    for (int i = 0; i < MAX_CLIENTS; i++) {
+        if (serv->clients[i] && serv->clients[i]->team &&
+            strcmp(serv->clients[i]->team, "GRAPHIC") == 0) {
+            dprintf(serv->clients[i]->fd, "seg %s\n", team);
         }
     }
 }

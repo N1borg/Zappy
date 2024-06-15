@@ -5,8 +5,9 @@
 ** command parameter
 */
 
-#include "../../include/main.h"
+#include "server.h"
 
+// jsp
 void event_sbp(client_t *client)
 {
     dprintf(client->fd, "sbp\n");

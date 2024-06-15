@@ -5,4 +5,4 @@
 ** egg laying by the player
 */
 
-#include "../../include/main.h"
+#include "server.h"
