@@ -5,8 +5,7 @@
 ** Camera
 */
 
-#ifndef CAMERA_HPP_
-#define CAMERA_HPP_
+#pragma once
 
 #include <raylib.h>
 
@@ -24,6 +23,7 @@ class GameCamera {
         void setUp(Vector3 up);
         void setFovy(float fovy);
         void setProjection(int projection);
+        void setMode(CameraMode mode);
 
     private:
         Camera3D _camera;
@@ -32,6 +32,5 @@ class GameCamera {
         Vector3 _up;
         float _fovy;
         int _projection;
+        CameraMode _mode;
 };
-
-#endif /* !CAMERA_HPP_ */

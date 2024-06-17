@@ -5,7 +5,7 @@
 ** help
 */
 
-#include "../include/main.hpp"
+#include "Gui.hpp"
 
 void help(std::string binary)
 {

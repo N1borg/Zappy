@@ -10,17 +10,19 @@
 #include <iostream>
 
 class Parser {
-    public:
-        Parser() = default;
-        Parser(int argc, char *argv[]);
-        ~Parser() = default;
+public:
+    Parser(int argc, char *argv[]);
+    ~Parser() = default;
 
-        void setPort(int port);
-        int getPort() const;
-        void setMachine(std::string machine);
-        std::string getMachine() const;
+    void parseArguments();
+    void setPort(int port);
+    int getPort() const;
+    void setMachine(std::string machine);
+    std::string getMachine() const;
 
-    private:
-        int _port;
-        std::string _machine;
+private:
+    int _argc;
+    char **_argv;
+    int _port;
+    std::string _machine;
 };
