@@ -18,13 +18,19 @@ Parser::Parser(int argc, char *argv[])
             _port = std::stoi(argv[2]);
             _machine = std::string(argv[4]);
         }
-        if (std::string(argv[1]) == "-h" && std::string(argv[3]) == "-p") {
+        else if (std::string(argv[1]) == "-h" && std::string(argv[3]) == "-p") {
             _port = std::stoi(argv[4]);
             _machine = std::string(argv[2]);
+        } else {
+            throw std::runtime_error("Error: Invalid arguments");
         }
     } catch (const std::exception &e) {
         throw std::runtime_error("Error: Invalid arguments");
     }
+}
+
+bool Parser::parseWelcome(const std::string& message) {
+    return message == "WELCOME\n";
 }
 
 void Parser::setPort(int port)

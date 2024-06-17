@@ -8,6 +8,8 @@
 #pragma once
 
 #include <iostream>
+#include <string>
+#include <stdexcept>
 
 class Parser {
     public:
@@ -19,6 +21,7 @@ class Parser {
         int getPort() const;
         void setMachine(std::string machine);
         std::string getMachine() const;
+        bool parseWelcome(const std::string& message);
 
     private:
         int _port;

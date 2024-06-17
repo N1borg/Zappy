@@ -25,6 +25,7 @@ class Socket {
 
         void connectSocket();
         void sendMessage(const std::string &message);
+        std::string receiveMessage();
 
     private:
         int _port;

@@ -67,3 +67,14 @@ void Socket::sendMessage(const std::string &message)
         throw std::runtime_error("Failed to send message: " + std::string(strerror(errno)));
     }
 }
+
+std::string Socket::receiveMessage()
+{
+    char buffer[1024];
+    std::memset(buffer, 0, sizeof(buffer));
+    ssize_t bytesRead = recv(_clientSocket, buffer, sizeof(buffer) - 1, 0);
+    if (bytesRead == -1) {
+        throw std::runtime_error("Failed to receive message: " + std::string(strerror(errno)));
+    }
+    return std::string(buffer, bytesRead);
+}
