@@ -19,9 +19,6 @@ from outils import send_message
 
 """
 
-# inventaire partage
-# team name
-
 resources = ["linemate", "deraumere", "sibur", "mendiane", "phiras", "thystame"]
 
 # vision_levels = {
@@ -57,11 +54,13 @@ class AI:
         self.map_y = map_y
 
         self.level = 1
-        self.inventory = {"food": 10,"linemate": 0, "deraumere": 0, "sibur": 0, "mendiane": 0, "phiras": 0, "thystame": 0}
+        self.inventory = {"food": 10, "linemate": 0, "deraumere": 0, "sibur": 0, "mendiane": 0, "phiras": 0, "thystame": 0}
         self.look = []
 
         self.command_queue = []
         self.sent_queue = []
+
+        self.incantation_done = False
 
     def parse_look(self, look_str):
         look_str = look_str.strip('[]')
@@ -80,9 +79,11 @@ class AI:
         return result
 
     def parse_inventory(self, inv_str):
+        print("_____STR INV", inv_str)
         pairs = re.findall(r'(\w+)\s(\d+)', inv_str)
 
         result_dict = {key: int(value) for key, value in pairs}
+        print("_____PARSED INV", result_dict)
         return result_dict
 
     def reset_commands(self):
@@ -147,12 +148,14 @@ class AI:
         elif cmd_name == "Look":
             if response[0] != '[':
                 print(f"Received an unexpected response from {cmd_name} command: ", response)
-            self.look = self.parse_look(response)
+            else:
+                self.look = self.parse_look(response)
 
         elif cmd_name == "Inventory":
             if response[0] != '[':
                 print(f"Received an unexpected response from {cmd_name} command: ", response)
-            self.inventory = self.parse_inventory(response)
+            else:
+                self.inventory = self.parse_inventory(response)
 
         elif cmd_name == "Connect_nbr":
             try:
@@ -171,6 +174,8 @@ class AI:
             if response == "ko":
                 print("Incantation failed")
             else:
+                self.level += 1
+                self.incantation_done = True
                 print(response)
 
         elif cmd_name == "Take":
@@ -235,12 +240,12 @@ class AI:
             self.urgent_command("Forward", "", forward_lvl)
         else:
             self.append_command("Forward", "", forward_lvl)
-        print(f"______________{self.command_queue}")
         
         if tile_nb in medianes:
             return
 
         left_or_right = tile_nb - medianes[forward_lvl]
+        # print(f"____TILE NB: {tile_nb} and FORWARD LVL {forward_lvl} and LEFT OR RIGHT {abs(left_or_right)}")
         
         if left_or_right > 0:
             if urgent:
@@ -270,52 +275,81 @@ class AI:
                 return i, self.look[i][obj_string]
         return "UNKNOWN", "UNKNOWN"
 
-    def manage_food(self):
-        self.do_inventory(False)
-        self.do_look(False)
-        food = "food"
-        if self.inventory[food] < 4:
-            # self.do_inventory()
-            tile_nb, quantity = self.search_object(food)
-            self.reset_commands()
-            if tile_nb == "UNKNOWN" or quantity == "UNKNOWN":
-                print("Food not found in the look() range. Need to move...")
-                self.urgent_command("Forward", "", 1)
+    def do_incantation(self):
+        # if inventory has at least the same amount of items as incantation_levels[self.level] has,
+        # for level 1 drop needed objects and start incantation
+        if self.level == 1:
+            conditions_dict = incantation_levels[self.level + 1]
+            if "player" in self.look[0] and self.inventory["linemate"] >= 1:
+                self.urgent_command("Set", "linemate", 1)
+                self.send_command()
+                self.urgent_command("Incantation", "", 1)
+                self.send_command()
+            
+    def get_linemate(self):
+        curr_forward = 0
+        if self.inventory["linemate"] == 0:
+            tile_nb, obj_nb = self.search_object("linemate")
+            if tile_nb == "UNKNOWN" or obj_nb == "UNKNOWN":
+                if curr_forward % 3 == 0 and curr_forward % 2 != 0:
+                    self.urgent_command("Right", "", 1)
+                    self.send_command()
+                    self.urgent_command("Forward", "", 1)
+                else:
+                    self.urgent_command("Forward", "", 1)
+                curr_forward += 1
+                self.send_command()
+                self.receive_command()
                 return
-            # print("__________________________________________", tile_nb, quantity)
-            self.do_walk(tile_nb, True)
-            self.do_take(food, quantity, False)
+            else:
+                # print("_RESET")
+                self.reset_commands()
+                self.do_walk(tile_nb, False)
+                self.manage_queue()
+                self.receive_command()
+                time.sleep(3)
+                self.do_take("linemate", 1, True)
+                self.send_command()
+                self.receive_command()
+                self.do_inventory(False)
+                return
+                # print(f"AAAA[CMD] Queue: {self.command_queue}")
+                # self.manage_queue()
+                # self.receive_command()
+            # print("_LOOPING")
+
+    def lvl2(self):
+        self.do_look(False)
+        self.do_look(False)
+        while True:
+            self.do_look(False)
+            self.get_linemate()
+            # if self.inventory["linemate"] >= 1:
+            self.manage_queue()
+            self.receive_command()
+            print(f"[SENT] Queue: {self.sent_queue}")
+            print(f"[CMD] Queue: {self.command_queue}")
+            self.do_incantation()
+            if self.incantation_done:
+                self.level += 1
+                return
 
     def launch_loop(self):
         i = 0
-        self.do_look(False)
+        # self.append_command("Forward", "", 1)
         while True:
+            self.do_look(False)
             self.do_inventory(False)
-            if i == 0:
-                self.do_walk(3, False)
-                self.do_walk(1, True)
+            # if i == 0:
+            #     self.do_walk(3, False)
+            #     self.do_walk(1, False)
 
-            i += 1
-            self.manage_queue()
-            self.receive_command()
-
-            # if self.inventory["food"] < 8:
-            #     self.reset_commands()
-            #     tile_nb, quantity = self.search_object("food")
-            #     if tile_nb == "UNKNOWN" or quantity == "UNKNOWN":
-            #         # self.urgent_command("Forward", "", 1)
-            #         self.manage_queue()
-            #         self.receive_command()
-            #     else:
-            #         self.do_walk(tile_nb, True)
-            #         self.manage_queue()
-            #         self.receive_command()
-            #         self.manage_queue()
-            #         self.receive_command()
-            #         self.manage_queue()
-            #         self.receive_command()
-            #         self.do_take("food", quantity, False)
-            self.manage_food()
+            # i += 1
+            # self.manage_queue()
+            # self.receive_command()
+            # time.sleep(3)
+            # self.manage_food()
+            # time.sleep(3)
             self.manage_queue()
             self.receive_command()
             print(f"[SENT] Queue: {self.sent_queue}")
