@@ -5,6 +5,10 @@ import sys
 import argparse
 import re
 import time
+import outils
+
+from outils import receive_response
+from outils import send_message
 
 """
 ## AI
@@ -20,7 +24,28 @@ import time
 
 resources = ["linemate", "deraumere", "sibur", "mendiane", "phiras", "thystame"]
 
-cmd_noarg = ["Forward", "Right", "Left", "Look"]
+# vision_levels = {
+#     1: [[0], [1, 2, 3]],
+#     2: [[0], [1, 2, 3], [4, 5, 6, 7, 8]],
+#     3: [[0], [1, 2, 3], [4, 5, 6, 7, 8], [9, 10, 11, 12, 13, 14, 15]]
+#     4: [[0], [1, 2, 3], [4, 5, 6, 7, 8], [9, 10, 11, 12, 13, 14, 15]]
+#     5: [[0], [1, 2, 3], [4, 5, 6, 7, 8], [9, 10, 11, 12, 13, 14, 15]]
+#     6: [[0], [1, 2, 3], [4, 5, 6, 7, 8], [9, 10, 11, 12, 13, 14, 15]]
+#     7: [[0], [1, 2, 3], [4, 5, 6, 7, 8], [9, 10, 11, 12, 13, 14, 15]]
+#     8: [[0], [1, 2, 3], [4, 5, 6, 7, 8], [9, 10, 11, 12, 13, 14, 15]]
+#     }
+
+medianes = [0, 2, 6, 12, 20, 30, 42, 56, 72]
+
+incantation_levels = {
+    2: {"players": 1, "linemate": 1, "sibur": 0, "mendiane": 0, "phiras": 0, "thystame": 0},
+    3: {"players": 2, "linemate": 1, "sibur": 1, "mendiane": 0, "phiras": 0, "thystame": 0},
+    4: {"players": 2, "linemate": 2, "sibur": 0, "mendiane": 0, "phiras": 2, "thystame": 0},
+    5: {"players": 4, "linemate": 1, "sibur": 1, "mendiane": 0, "phiras": 1, "thystame": 0},
+    6: {"players": 4, "linemate": 1, "sibur": 2, "mendiane": 3, "phiras": 0, "thystame": 0},
+    7: {"players": 6, "linemate": 1, "sibur": 2, "mendiane": 0, "phiras": 1, "thystame": 0},
+    8: {"players": 6, "linemate": 2, "sibur": 2, "mendiane": 2, "phiras": 2, "thystame": 1}
+}
 
 class AI:
     def __init__(self, teamname, socket, c_nbr, map_x, map_y):
@@ -32,7 +57,7 @@ class AI:
         self.map_y = map_y
 
         self.level = 1
-        self.inventory = {"food": 0,"linemate": 0, "deraumere": 0, "sibur": 0, "mendiane": 0, "phiras": 0, "thystame": 0}
+        self.inventory = {"food": 10,"linemate": 0, "deraumere": 0, "sibur": 0, "mendiane": 0, "phiras": 0, "thystame": 0}
         self.look = []
 
         self.command_queue = []
@@ -60,12 +85,25 @@ class AI:
         result_dict = {key: int(value) for key, value in pairs}
         return result_dict
 
-    def append_command(self, cmd, arg):
-        if cmd == "Broadcast" or cmd == "Take" or cmd == "Set":
-            self.command_queue.insert(0, cmd + " " + arg)
-        else:
-            self.command_queue.insert(0, cmd)
+    def reset_commands(self):
+        self.command_queue = []
 
+    def append_command(self, cmd, arg, multiplier):
+        if cmd == "Broadcast" or cmd == "Take" or cmd == "Set":
+            for i in range(multiplier):
+                self.command_queue.insert(0, cmd + " " + arg)
+        else:
+            for i in range(multiplier):
+                self.command_queue.insert(0, cmd)
+
+    def urgent_command(self, cmd, arg, multiplier):
+        if cmd == "Broadcast" or cmd == "Take" or cmd == "Set":
+            for i in range(multiplier):
+                self.command_queue.append(cmd + " " + arg)
+        else:
+            for i in range(multiplier):
+                self.command_queue.append(cmd)
+    
     def append_sent(self, cmd):
         self.sent_queue.insert(0, cmd)
 
@@ -79,24 +117,26 @@ class AI:
 
             # add sent action to the sent queue
             self.append_sent(cmd)
+            return 0
         else:
             print("Command queue: no more commands left")
-            time.sleep(5)
+            time.sleep(2)
+            return 1
 
     def receive_command(self):
         response = receive_response(self.socket)
-        if response == "dead":
+        if response == "dead" or not response:
             # TODO: implement death mechanism
+            print("We are dead")
+            exit()
             return
         print(f"        Received response   [<-]: {response}")
         cmd = self.sent_queue.pop()
         cmd_name, cmd_arg = "", ""
         if len(cmd.split(" ")) == 2:
             cmd_name, cmd_arg = cmd.split(" ")
-            # print(f"Received a: {cmd_name} {cmd_arg}")
         else:
             cmd_name = cmd
-            # print(f"Received a: {cmd_name}")
 
         if cmd_name == "Forward" or cmd_name == "Right" or cmd_name == "Left" or cmd_name == "Fork" or cmd_name == "Broadcast":
             if response == "ok":
@@ -108,13 +148,11 @@ class AI:
             if response[0] != '[':
                 print(f"Received an unexpected response from {cmd_name} command: ", response)
             self.look = self.parse_look(response)
-            # print(self.look)
 
         elif cmd_name == "Inventory":
             if response[0] != '[':
                 print(f"Received an unexpected response from {cmd_name} command: ", response)
             self.inventory = self.parse_inventory(response)
-            # print(self.inventory)
 
         elif cmd_name == "Connect_nbr":
             try:
@@ -148,129 +186,138 @@ class AI:
                 print(f"Couldn't set {cmd_arg}")
 
     def manage_queue(self):
-        while len(self.sent_queue) < 2:
-            self.send_command()
+        while len(self.sent_queue) < 3:
+            if self.send_command() == 1:
+                break
+
+    def look_strategy(self):
+        for el in self.look:
+            if "thystame" in el:
+                print("hehe")
+
+    def do_inventory(self, urgent):
+        if urgent:
+            self.urgent_command("Inventory", "", 1)
+        else:
+            self.append_command("Inventory", "", 1)
+
+    def do_look(self, urgent):
+        if urgent:
+            self.urgent_command("Look", "", 1)
+        else:
+            self.append_command("Look", "", 1)
+        
+    @staticmethod
+    def get_tile_lvl(tile_nb):
+        if tile_nb == 0:
+            return 0
+        if tile_nb <= 3:
+            return 1
+        if tile_nb <= 8:
+            return 2
+        if tile_nb <= 15:
+            return 3
+        if tile_nb <= 24:
+            return 4
+        if tile_nb <= 35:
+            return 5
+        if tile_nb <= 48:
+            return 6
+        if tile_nb <= 63:
+            return 7
+        if tile_nb <= 80:
+            return 8
+        
+    def do_walk(self, tile_nb, urgent):
+        forward_lvl = self.get_tile_lvl(tile_nb)
+       
+        if urgent:
+            self.urgent_command("Forward", "", forward_lvl)
+        else:
+            self.append_command("Forward", "", forward_lvl)
+        print(f"______________{self.command_queue}")
+        
+        if tile_nb in medianes:
+            return
+
+        left_or_right = tile_nb - medianes[forward_lvl]
+        
+        if left_or_right > 0:
+            if urgent:
+                self.urgent_command("Right", "", 1)
+            else:
+                self.append_command("Right", "", 1)
+        elif left_or_right < 0:
+            if urgent:
+                self.urgent_command("Left", "", 1)
+            else:
+                self.append_command("Left", "", 1)
+        if urgent:
+            self.urgent_command("Forward", "", abs(left_or_right))
+        else:
+            self.append_command("Forward", "", abs(left_or_right))
+    
+    def do_take(self, obj_string, obj_nb, urgent):
+        if urgent:
+            self.urgent_command("Take", obj_string, obj_nb)
+        else:
+            self.append_command("Take", obj_string, obj_nb)
+
+    def search_object(self, obj_string):
+        for i in range(0, len(self.look)):
+            if obj_string in self.look[i].keys():
+                # returns a tile and quantity
+                return i, self.look[i][obj_string]
+        return "UNKNOWN", "UNKNOWN"
+
+    def manage_food(self):
+        self.do_inventory(False)
+        self.do_look(False)
+        food = "food"
+        if self.inventory[food] < 4:
+            # self.do_inventory()
+            tile_nb, quantity = self.search_object(food)
+            self.reset_commands()
+            if tile_nb == "UNKNOWN" or quantity == "UNKNOWN":
+                print("Food not found in the look() range. Need to move...")
+                self.urgent_command("Forward", "", 1)
+                return
+            # print("__________________________________________", tile_nb, quantity)
+            self.do_walk(tile_nb, True)
+            self.do_take(food, quantity, False)
 
     def launch_loop(self):
         i = 0
+        self.do_look(False)
         while True:
+            self.do_inventory(False)
             if i == 0:
-                self.append_command("Look", "")
-                self.append_command("Inventory", "")
-                self.append_command("Broadcast", "A1")
-                self.append_command("Look", "")
-                self.append_command("Inventory", "")
-                self.append_command("Broadcast", "AA2")
-                self.append_command("Look", "")
-                self.append_command("Inventory", "")
-                self.append_command("Broadcast", "AAA3")
-                i += 1
+                self.do_walk(3, False)
+                self.do_walk(1, True)
+
+            i += 1
             self.manage_queue()
             self.receive_command()
+
+            # if self.inventory["food"] < 8:
+            #     self.reset_commands()
+            #     tile_nb, quantity = self.search_object("food")
+            #     if tile_nb == "UNKNOWN" or quantity == "UNKNOWN":
+            #         # self.urgent_command("Forward", "", 1)
+            #         self.manage_queue()
+            #         self.receive_command()
+            #     else:
+            #         self.do_walk(tile_nb, True)
+            #         self.manage_queue()
+            #         self.receive_command()
+            #         self.manage_queue()
+            #         self.receive_command()
+            #         self.manage_queue()
+            #         self.receive_command()
+            #         self.do_take("food", quantity, False)
+            self.manage_food()
             self.manage_queue()
+            self.receive_command()
             print(f"[SENT] Queue: {self.sent_queue}")
             print(f"[CMD] Queue: {self.command_queue}")
-
-
-
-def parse_arguments():
-    """
-    A function which takes the arguments from the command line.
-
-    Returns:
-        A namespace argparse from which information can be easily taken.
-    """
-    parser = argparse.ArgumentParser(add_help=False)
-    parser.add_argument('-p', '--port', type=int, required=True)
-    parser.add_argument('-n', '--name', type=str, required=True)
-    parser.add_argument('-h', '--host', type=str, default='localhost')
-    return parser.parse_args()
-
-
-# Send a given string followed by a newline to the server.
-def send_message(sock, message):
-    message_with_newline = message + '\n'
-    sock.sendall(message_with_newline.encode())
-    print(f'[->]    Sent message: {message}')
-
-
-# Receive a response from the server and throw an error if the response is 'ko\n'.
-def receive_response(sock):
-    response = sock.recv(1024).decode().strip()
-    if response == "ko":
-        raise ValueError("Received 'ko' from server")
-    return response
-
-def parse_slots_and_map(str):
-    parts = str.split('\n')
-
-    numbers = []
-    for part in parts:
-        numbers.extend(part.split())
-
-    integers = [int(num) for num in numbers]
-    return integers
-
-def main():
-    args = parse_arguments()
-
-    host = args.host
-    port = args.port
-    name = args.name
-
-    if name == "GRAPHIC":
-        print("Team name not available.")
-        exit(84)
-
-    try:
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.connect((host, port))
-            print(f'Connected to {host}:{port}')
-
-            # Wait for "WELCOME\n" from the server
-            welcome_message = receive_response(s)
-            if welcome_message != "WELCOME":
-                print(f'Unexpected message from server: {welcome_message}')
-                return
-
-            print(f'Received: {welcome_message}')
-
-            # Send the name to the server
-            send_message(s, name)
-
-            already_parced = False
-            # Receive the number of available slots
-            try:
-                response = receive_response(s)
-                slots = int(response)
-                print(f'Received slots: {slots}')
-            except ValueError:
-                print(f'Unexpected response for slots from server: {response}')
-                parced = parse_slots_and_map(response)
-                slots = parced[0]
-                x, y = parced[1], parced[2]
-                already_parced = True
-
-            # Receive the position (X, Y)
-            if not already_parced:
-                response = receive_response(s)
-                parts = response.split()
-                if len(parts) == 2:
-                    x, y = parts
-                    print(f'Received map size: ({x}, {y})')
-                else:
-                    print(f'Unexpected response for map size from server: {response}')
-
-            ai = AI(name, s, slots, x, y)
-            ai.launch_loop()
-
-    except Exception as e:
-        print(f'{host}:{port} - {e}')
-
-
-
-if __name__ == "__main__":
-    if len(sys.argv) == 1 or sys.argv[1] == '-help':
-        print(f"USAGE: {sys.argv[0]} -p port -n name -h machine")
-    else:
-        main()
+            # self.reset_commands()

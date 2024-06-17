@@ -5,8 +5,11 @@ import sys
 import argparse
 import re
 import time
+import traceback
 
 from ai import AI
+from outils import receive_response
+from outils import send_message
 
 def parse_arguments():
     """
@@ -20,21 +23,6 @@ def parse_arguments():
     parser.add_argument('-n', '--name', type=str, required=True)
     parser.add_argument('-h', '--host', type=str, default='localhost')
     return parser.parse_args()
-
-
-# Send a given string followed by a newline to the server.
-def send_message(sock, message):
-    message_with_newline = message + '\n'
-    sock.sendall(message_with_newline.encode())
-    print(f'[->]    Sent message: {message}')
-
-
-# Receive a response from the server and throw an error if the response is 'ko\n'.
-def receive_response(sock):
-    response = sock.recv(1024).decode().strip()
-    if response == "ko":
-        raise ValueError("Received 'ko' from server")
-    return response
 
 def parse_slots_and_map(str):
     parts = str.split('\n')
@@ -101,6 +89,7 @@ def main():
 
     except Exception as e:
         print(f'{host}:{port} - {e}')
+        print(traceback.format_exc())
 
 
 
