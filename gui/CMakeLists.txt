@@ -46,23 +46,35 @@ else()
 endif()
 
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_FLAGS "-W -Wall -Wextra -Wpedantic")
+set(CMAKE_CXX_FLAGS "-W -Wall -Wextra -Wpedantic -I./include/")
 
 include_directories(include)
 
 set(SHARED_SRC
-    src/main.cpp
-    src/help.cpp
-    src/Parser.cpp
+    src/Main.cpp
+    src/Help.cpp
     src/Socket.cpp
+    src/Parser.cpp
     src/Window.cpp
-    src/Camera.cpp
+    src/Map.cpp
+    src/Player.cpp
+    src/Egg.cpp
+    src/Food.cpp
+    src/Linemate.cpp
+    src/Deraumere.cpp
+    src/Sibur.cpp
+    src/Mendiane.cpp
+    src/Phiras.cpp
+    src/Thystame.cpp
+    src/SmallIsland.cpp
+    src/MediumIsland.cpp
+    src/BigIsland.cpp
 )
 
 add_executable(zappy_gui ${SHARED_SRC})
 
 # Link Raylib
-target_link_libraries(zappy_gui ${RAYLIB_LIB} m)
+target_link_libraries(zappy_gui ${RAYLIB_LIB} GL m pthread dl rt X11)
 
 # Ensure Raylib is built before your project
 if (NOT raylib_FOUND)

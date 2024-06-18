@@ -5,11 +5,9 @@
 ** Socket
 */
 
-#include "../include/Socket.hpp"
+#include "Socket.hpp"
 
-Socket::Socket() : _port(0), _machine(""), _clientSocket(0) {}
-
-Socket::Socket(int port, const std::string machine) : _port(port), _machine(machine), _clientSocket(0) {}
+Socket::Socket(int port, const std::string machine) : _port(port), _machine(machine), _clientSocket(0), _connected(false) {}
 
 Socket::~Socket()
 {
@@ -38,7 +36,12 @@ std::string Socket::getMachine() const
     return _machine;
 }
 
-void Socket::connectSocket()
+bool Socket::isConnected() const
+{
+    return _connected.load();
+}
+
+bool Socket::connectSocket()
 {
     sockaddr_in serverAddress;
     serverAddress.sin_family = AF_INET;
@@ -46,15 +49,15 @@ void Socket::connectSocket()
 
     _clientSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (_clientSocket == -1) {
-        throw std::runtime_error("Failed to create socket: " + std::string(strerror(errno)));
+        return false;
     }
     if (inet_pton(AF_INET, _machine.c_str(), &serverAddress.sin_addr) <= 0) {
-        throw std::runtime_error("Invalid IP address: " + _machine + ": " + std::string(strerror(errno)));
-    }
-    
+        return false;
+    }    
     if (connect(_clientSocket, (struct sockaddr*)(&serverAddress), sizeof(serverAddress)) == -1) {
-        throw std::runtime_error("Failed to connect to server: " + std::string(strerror(errno)));
+        return false;
     }
+    return true;
 }
 
 void Socket::sendMessage(const std::string &message)
@@ -77,4 +80,14 @@ std::string Socket::receiveMessage()
         throw std::runtime_error("Failed to receive message: " + std::string(strerror(errno)));
     }
     return std::string(buffer, bytesRead);
+}
+
+void Socket::attemptConnection()
+{
+    while (!_connected) {
+        _connected = connectSocket();
+        if (!_connected) {
+            std::this_thread::sleep_for(std::chrono::seconds(2));
+        }
+    }
 }

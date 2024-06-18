@@ -5,7 +5,7 @@
 ** Window
 */
 
-#include "../include/Window.hpp"
+#include "Window.hpp"
 
 Window::Window(int width, int height, std::string title)
 {
@@ -24,6 +24,8 @@ Window::Window(int width, int height, std::string title)
 
 void Window::init()
 {
+    SetTargetFPS(60);
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_MSAA_4X_HINT | FLAG_VSYNC_HINT);
     InitWindow(_width, _height, _title.c_str());
 }
 
@@ -32,14 +34,9 @@ void Window::close()
     CloseWindow();
 }
 
-int Window::getScreenWidth()
+bool Window::shouldClose()
 {
-    return GetScreenWidth();
-}
-
-int Window::getScreenHeight()
-{
-    return GetScreenHeight();
+    return WindowShouldClose();
 }
 
 void Window::setTargetFPS(int fps)
@@ -52,24 +49,19 @@ void Window::disableCursor()
     DisableCursor();
 }
 
-bool Window::shouldClose()
+int Window::getScreenWidth()
 {
-    return WindowShouldClose();
+    return GetScreenWidth();
 }
 
-void Window::beginDrawing()
+int Window::getScreenHeight()
 {
-    BeginDrawing();
+    return GetScreenHeight();
 }
 
-void Window::endDrawing()
+bool Window::isKeyPressed(int key)
 {
-    EndDrawing();
-}
-
-void Window::clearBackground(Color color)
-{
-    ClearBackground(color);
+    return IsKeyPressed(key);
 }
 
 Camera Window::getCamera() const
@@ -119,28 +111,35 @@ void Window::setCameraMode(int mode)
 
 void Window::parseCameraInputs()
 {
-    switch (GetKeyPressed()) {
-        case KEY_ONE:
-            printf("Camera mode: FREE\n");
-            setCameraMode(CAMERA_FREE);
-            setCameraUp({ 0.0f, 1.0f, 0.0f });
-            break;
-        case KEY_TWO:
-            printf("Camera mode: FIRST PERSON\n");
-            setCameraMode(CAMERA_FIRST_PERSON);
-            setCameraUp({ 0.0f, 1.0f, 0.0f });
-            break;
-        case KEY_THREE:
-            setCameraMode(CAMERA_THIRD_PERSON);
-            setCameraUp({ 0.0f, 1.0f, 0.0f });
-            break;
-        case KEY_FOUR:
-            setCameraMode(CAMERA_ORBITAL);
-            setCameraUp({ 0.0f, 1.0f, 0.0f });
-            break;
-        default:
-            break;
+    switch (GetKeyPressed())
+    {
+    case KEY_ONE:
+        setCameraMode(CAMERA_FIRST_PERSON);
+        setCameraUp({ 0.0f, 1.0f, 0.0f });
+        break;
+    case KEY_TWO:
+        setCameraMode(CAMERA_THIRD_PERSON);
+        setCameraUp({ 0.0f, 1.0f, 0.0f });
+        break;
+    case KEY_THREE:
+        setCameraMode(CAMERA_FREE);
+        setCameraUp({ 0.0f, 1.0f, 0.0f });
+        break;
+    case KEY_FOUR:
+        setCameraMode(CAMERA_ORBITAL);
+        setCameraUp({ 0.0f, 1.0f, 0.0f });
+        break;
     }
+}
+
+void Window::beginDrawing()
+{
+    BeginDrawing();
+}
+
+void Window::endDrawing()
+{
+    EndDrawing();
 }
 
 void Window::beginMode3D()
@@ -153,14 +152,9 @@ void Window::endMode3D()
     EndMode3D();
 }
 
-void Window::drawCube(Vector3 position, float width, float height, float length, Color color)
+void Window::clearBackground(Color color)
 {
-    DrawCube(position, width, height, length, color);
-}
-
-void Window::drawCubeWires(Vector3 position, float width, float height, float length, Color color)
-{
-    DrawCubeWires(position, width, height, length, color);
+    ClearBackground(color);
 }
 
 void Window::drawGrid(int slices, float spacing)
@@ -173,7 +167,19 @@ void Window::drawPlane(Vector3 center, Vector2 size, Color color)
     DrawPlane(center, size, color);
 }
 
-bool Window::isKeyPressed(int key)
+void Window::drawText(const char *text, int posX, int posY, int fontSize, Color color)
 {
-    return IsKeyPressed(key);
+    DrawText(text, posX, posY, fontSize, color);
+}
+
+void Window::drawFPS(int posX, int posY)
+{
+    DrawFPS(posX, posY);
+}
+
+std::string Window::animateTextDots(const std::string &string, float elapsedTime)
+{
+    int dots = static_cast<int>(floor(elapsedTime * 4.0f)) % 4;
+    std::string dotsStr(dots, '.');
+    return string + dotsStr;
 }
