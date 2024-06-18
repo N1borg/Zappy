@@ -8,51 +8,51 @@
 #pragma once
 
 #include <raylib.h>
+#include <math.h>
 #include <string>
 
 class Window {
-    public:
-        Window() = default;
-        Window(int width, int height, std::string title);
-        ~Window() = default;
+public:
+    Window(int width, int height, std::string title);
+    ~Window() = default;
 
-        // Raylib Camera functions
-        Camera getCamera() const;
-        int getCameraMode() const;
-        void updateCamera();
-        void setCameraPosition(Vector3 position);
-        void setCameraTarget(Vector3 target);
-        void setCameraUp(Vector3 up);
-        void setCameraFovy(float fovy);
-        void setCameraProjection(int projection);
-        void setCameraMode(int mode);
-        void parseCameraInputs();
+    // Raylib window functions
+    void init();
+    void close();
+    bool shouldClose();
+    void setTargetFPS(int fps);
+    int getScreenWidth() const;
+    int getScreenHeight() const;
+    void disableCursor();
 
-        // Raylib window functions
-        void init();
-        void close();
-        bool shouldClose();
-        void beginDrawing();
-        void endDrawing();
-        void setTargetFPS(int fps);
-        void disableCursor();
-        void clearBackground(Color color);
-        int getScreenWidth();
-        int getScreenHeight();
-        bool isKeyPressed(int key);
+    // Raylib Camera functions
+    Camera3D getCamera() const;
+    int getCameraMode();
+    void setCameraMode(int mode);
+    void setCameraPosition(Vector3 position);
+    void setCameraTarget(Vector3 target);
+    void setCameraUp(Vector3 up);
+    void setCameraFovy(float fovy);
+    void setCameraProjection(int projection);
+    void updateCamera();
+    void parseCameraInput();
 
-        // Raylib drawing functions
-        void beginMode3D();
-        void drawCube(Vector3 position, float width, float height, float length, Color color);
-        void drawCubeWires(Vector3 position, float width, float height, float length, Color color);
-        void drawGrid(int slices, float spacing);
-        void drawPlane(Vector3 center, Vector2 size, Color color);
-        void endMode3D();
+    // Raylib drawing functions
+    void beginDrawing();
+    void endDrawing();
+    void beginMode3D();
+    void endMode3D();
+    void clearBackground(Color color);
+    void drawGrid(int slices, float spacing);
+    void drawText(const char *text, int posX, int posY, int fontSize, Color color);
+    void drawFPS(int posX, int posY);
 
-    private:
-        int _width;
-        int _height;
-        std::string _title;
-        Camera _camera;
-        int _cameraMode;
+    std::string animateTextDots(const std::string &string, float elapsedTime);
+
+private:
+    int _width;
+    int _height;
+    std::string _title;
+    Camera _camera;
+    int _cameraMode;
 };

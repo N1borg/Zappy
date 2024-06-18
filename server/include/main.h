@@ -18,8 +18,20 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/time.h>
+#include <math.h>
 
 #define MAX_CLIENTS 100
+#define RESSOURCE_COUNT 7
+
+typedef enum {
+    FOOD,
+    LINEMATE,
+    DERAUMERE,
+    SIBUR,
+    MENDIANE,
+    PHIRAS,
+    THYSTAME
+} resource_type_t;
 
 typedef enum {
     NORTH = 1,
@@ -79,10 +91,15 @@ typedef struct server_s {
     tile_t **map;
 } server_t;
 
-struct command_map {
+typedef struct {
+    char *name;
+    double density;
+} resource_density_t;
+
+typedef struct command_map_s {
     const char *command;
     int (*command_function)(server_t *s, client_t *client, char *arg);
-};
+} command_map_t;
 
 int help(char *binary_name, int ret, server_t *server);
 server_t parse_args(int argc, char *argv[]);
@@ -136,3 +153,6 @@ int command_map_size(server_t *s, client_t *client, char *arg);
 int command_tile_content(server_t *s, client_t *client, char *arg);
 void send_tile_content(server_t *s, client_t *client, int x, int y);
 int command_map_content(server_t *s, client_t *client, char *arg);
+
+// Resource management functions
+void generate_resources(server_t *server);

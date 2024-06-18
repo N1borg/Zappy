@@ -9,7 +9,7 @@
 
 // Function to run command based on buffer, returns 1 on error
 int run_command(server_t *s, client_t *client,
-    char *buffer, struct command_map *command_map)
+    char *buffer, command_map_t *command_map)
 {
     char *args = strchr(buffer, ' ');
     char *command = NULL;
@@ -34,7 +34,7 @@ int run_command(server_t *s, client_t *client,
 // Function to execute player command based on buffer, returns 1 on error
 int handle_command_player(server_t *s, client_t *client, char *buffer)
 {
-    struct command_map command_map[] = {{"Forward", command_forward},
+    command_map_t command_map[] = {{"Forward", command_forward},
         {"Right", command_turn_right}, {"Left", command_turn_left},
         {"Look", command_look}, {"Inventory", command_inventory},
         {"Broadcast", command_broadcast}, {"Connect_nbr", command_team_slots},
@@ -50,7 +50,7 @@ int handle_command_player(server_t *s, client_t *client, char *buffer)
 // Function to execute graphic command based on buffer, returns 1 on error
 int handle_command_graphic(server_t *s, client_t *client, char *buffer)
 {
-    struct command_map command_map[] = {{"msz", command_map_size},
+    command_map_t command_map[] = {{"msz", command_map_size},
         {"bct", command_tile_content}, {"mct", command_map_content},
         {NULL, NULL}};
 

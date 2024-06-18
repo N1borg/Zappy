@@ -3,7 +3,7 @@ project(zappy_server)
 
 set(CMAKE_C_STANDARD 17)
 
-set(CMAKE_C_FLAGS "-W -Wall -Wextra -Wpedantic -g")
+set(CMAKE_C_FLAGS "-W -Wall -Wextra -Wpedantic")
 
 include_directories(include)
 
@@ -15,6 +15,7 @@ set(SHARED_SRC
     src/server_init.c
     src/connections.c
     src/listener.c
+    src/generate_resources.c
     src/manage_client.c
     src/manage_team.c
     src/handle_command.c
