@@ -13,6 +13,7 @@ void init_team(team_t *teams, char *name)
     teams->name = name;
     for (int i = 0; i < MAX_CLIENTS; i++)
         teams->players[i] = NULL;
+    teams->eggs = NULL;
 }
 
 // Get the team names from the arguments

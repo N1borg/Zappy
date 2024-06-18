@@ -69,6 +69,11 @@ void destroy_map(tile_t **map);
 int destroy_server(server_t *serv, int ret);
 int add_player_to_team(server_t *serv, client_t *player, char *team_name);
 client_t *get_client_by_id(server_t *serv, int id);
+int get_nbr_eggs_on_tiles(tile_t *tile);
+int add_egg(team_t *team, tile_t *tile);
+int remove_egg(egg_t *egg);
+int destroy_eggs_from_tiles(tile_t *tile);
+void destroy_eggs(server_t *server);
 
 // player commands
 int success_response(client_t *client);

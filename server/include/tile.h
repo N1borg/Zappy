@@ -7,6 +7,9 @@
 
 #pragma once
 
+#include "egg.h"
+#include "player.h"
+
 #define RESSOURCE_COUNT 7
 
 typedef enum {
@@ -34,7 +37,7 @@ typedef struct tile_s {
     int mendiane;
     int phiras;
     int thystame;
-    int egg;
+    egg_t *eggs;
     client_t *players[MAX_CLIENTS];
 } tile_t;
 
