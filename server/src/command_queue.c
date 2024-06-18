@@ -24,8 +24,6 @@ int enqueue_command(client_t *client, char *command_str)
 {
     command_t *new_command = NULL;
 
-    if (client->size >= 10)
-        return 1;
     new_command = malloc(sizeof(command_t));
     if (new_command == NULL)
         return 84;
@@ -82,4 +80,20 @@ void free_command_queue(command_queue_t *queue)
         command_node = next;
     }
     free(queue);
+}
+
+void manage_queue(server_t *server, client_t *client, char *buffer)
+{
+    char *first_command = NULL;
+    
+    if (client->command_queue->size >= 10)
+        return;
+    enqueue_command(client, buffer);
+    if (client->size > 0) {
+        first_command = dequeue_command(client->command_queue);
+        if (first_command != NULL) {
+            compute_response(server, client, first_command->command);
+            free(first_command);
+        }
+    }
 }

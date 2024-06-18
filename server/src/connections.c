@@ -27,12 +27,12 @@ void client_handler(server_t *s, client_t *client)
 
     if (FD_ISSET(client->fd, &s->readfds)) {
         valread = read(client->fd, buffer, 1024);
-        if (valread == 0) {
+        if (valread == 0)
             disconnect_client(s, client);
-        } else {
+        else {
             buffer[valread - 1] = '\0';
             printf("[%d] - sent: %s\n", client->fd, buffer);
-            compute_response(s, client, buffer);
+            manage_queue(s, client, buffer)
         }
     }
 }
