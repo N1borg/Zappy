@@ -32,7 +32,21 @@ void client_handler(server_t *serv, client_t *client)
         } else {
             buffer[valread - 1] = '\0';
             printf("[%d] - sent: %s\n", client->fd, buffer);
-            compute_response(serv, client, buffer);
+            manage_queue(client, buffer);
+        }
+    }
+}
+
+// Execute the commands in the queue of the clients
+void execute_queue(server_t *server)
+{
+    char *command = NULL;
+
+    for (int i = 0; i < MAX_CLIENTS; i++) {
+        command = dequeue_command(server->clients[i]->command_queue);
+        if (command != NULL) {
+            compute_response(server, server->clients[i], command);
+            free(command);
         }
     }
 }

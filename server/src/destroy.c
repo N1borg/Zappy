@@ -10,8 +10,10 @@
 // Free clients memory
 void destroy_clients(server_t *serv)
 {
-    for (int i = 0; i < MAX_CLIENTS; i++)
+    for (int i = 0; i < MAX_CLIENTS; i++) {
+        free_command_queue(serv->clients[i]->command_queue);
         free(serv->clients[i]);
+    }
 }
 
 // Free teams memory
@@ -34,8 +36,9 @@ void destroy_map(tile_t **map)
 int destroy_server(server_t *serv, int ret)
 {
     close(serv->master_socket);
-    for (int i = 0; i < serv->max_client_team * serv->team_nb; i++)
+    for (int i = 0; i < serv->max_client_team * serv->team_nb; i++) {
         close(serv->clients[i]->fd);
+    }
     for (int i = 0; serv->teams[i]; i++)
         free(serv->teams[i]);
     free(serv->teams);

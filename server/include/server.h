@@ -41,6 +41,7 @@ typedef struct server_s {
 typedef struct command_map {
     const char *command;
     int (*command_function)(server_t *serv, client_t *client, char *arg);
+    int time_limit;
 } command_map_t;
 
 int help(char *binary_name, int ret, server_t *serv);
@@ -69,11 +70,16 @@ void destroy_map(tile_t **map);
 int destroy_server(server_t *serv, int ret);
 int add_player_to_team(server_t *serv, client_t *player, char *team_name);
 client_t *get_client_by_id(server_t *serv, int id);
-int get_nbr_eggs_on_tiles(tile_t *tile);
+int get_nbr_eggs_on_tile(tile_t *tile);
 int add_egg(team_t *team, tile_t *tile);
 int remove_egg(egg_t *egg);
 int destroy_eggs_from_tiles(tile_t *tile);
 void destroy_eggs(server_t *server);
+void init_command_queue(client_t *client);
+int enqueue_command(client_t *client, char *command_str);
+char *dequeue_command(command_queue_t *queue);
+void free_command_queue(command_queue_t *queue);
+void manage_queue(client_t *client, char *buffer);
 
 // player commands
 int success_response(client_t *client);

@@ -25,6 +25,17 @@ typedef enum {
     WEST
 } orientation_t;
 
+typedef struct command_s {
+    char *command;
+    struct command_s *next;
+} command_t;
+
+typedef struct command_queue_s {
+    command_t *front;
+    command_t *back;
+    int size;
+} command_queue_t;
+
 typedef struct client_s {
     int fd;
     int id;
@@ -40,6 +51,7 @@ typedef struct client_s {
     int phiras;
     int thystame;
     char *team;
+    command_queue_t *command_queue;
 } client_t;
 
 typedef struct team_s {

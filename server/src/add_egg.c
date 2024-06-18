@@ -8,7 +8,7 @@
 #include "server.h"
 
 // Get the number of eggs on a tile
-int get_nbr_eggs_on_tiles(tile_t *tile)
+int get_nbr_eggs_on_tile(tile_t *tile)
 {
     egg_t *current = tile->eggs;
     int count = 0;

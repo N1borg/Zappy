@@ -32,15 +32,21 @@ int run_command(server_t *serv, client_t *client,
 // Function to execute player command based on buffer, returns 1 on error
 int handle_command_player(server_t *serv, client_t *client, char *buffer)
 {
-    command_map_t command_map[] = {{"Forward", command_forward},
-        {"Right", command_turn_right}, {"Left", command_turn_left},
-        {"Look", command_look}, {"Inventory", command_inventory},
-        {"Broadcast", command_broadcast}, {"Connect_nbr", command_team_slots},
-        {"Fork", command_fork}, {"Eject", command_eject},
-        {"Take object", command_take_object},
-        {"Set object", command_set_object},
-        {"Incantation", command_incantation},
-        {NULL, NULL}};
+    command_map_t command_map[] = {
+        {"Forward", command_forward, 7},
+        {"Right", command_turn_right, 7},
+        {"Left", command_turn_left, 7},
+        {"Look", command_look, 7},
+        {"Inventory", command_inventory, 1},
+        {"Broadcast", command_broadcast, 7},
+        {"Connect_nbr", command_team_slots, 0},
+        {"Fork", command_fork, 42},
+        {"Eject", command_eject, 7},
+        {"Take object", command_take_object, 7},
+        {"Set object", command_set_object, 7},
+        {"Incantation", command_incantation, 300},
+        {NULL, NULL, 0}
+    };
 
     return run_command(serv, client, buffer, command_map);
 }
@@ -48,12 +54,12 @@ int handle_command_player(server_t *serv, client_t *client, char *buffer)
 // Function to execute graphic command based on buffer, returns 1 on error
 int handle_command_graphic(server_t *serv, client_t *client, char *buffer)
 {
-    struct command_map command_map[] = {{"msz", command_msz},
-        {"bct", command_bct}, {"mct", command_mct},
-        {"pin", command_pin}, {"plv", command_plv},
-        {"ppo", command_ppo}, {"sgt", command_sgt},
-        {"sst", command_sst}, {"tna", command_tna},
-        {NULL, NULL}};
+    struct command_map command_map[] = {{"msz", command_msz, 0},
+        {"bct", command_bct, 0}, {"mct", command_mct, 0},
+        {"pin", command_pin, 0}, {"plv", command_plv, 0},
+        {"ppo", command_ppo, 0}, {"sgt", command_sgt, 0},
+        {"sst", command_sst, 0}, {"tna", command_tna, 0},
+        {NULL, NULL, 0}};
 
     return run_command(serv, client, buffer, command_map);
 }
