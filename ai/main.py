@@ -87,7 +87,6 @@ def main():
             ai = AI(name, s, slots, x, y)
             # ai.launch_loop()
             ai.lvl2()
-            ai.refill_food()
 
     except Exception as e:
         print(f'{host}:{port} - {e}')

@@ -336,24 +336,92 @@ class AI:
     def get_object(self, amount, obj_name):
         curr_fwd = 0
         self.reset_commands()
-        # print(f"__HERE{self.inventory[obj_name] < amount} where {self.inventory[obj_name], amount}")
         while self.inventory[obj_name] < amount:
-            # print("__HERE2")
             self.do_look(True)
             self.send_command()
             self.receive_command()
 
-            if obj_name == "food":
-                self.reset_commands()
-                self.urgent_command("Inventory", "", 1)
-                self.send_command()
-                self.receive_command()
+            self.reset_commands()
+            self.urgent_command("Inventory", "", 1)
+            self.send_command()
+            self.receive_command()
+
+            if self.inventory['food'] < 4:
+                self.get_food(8)
 
             tile_nb, obj_nb = self.search_object(obj_name)
             if tile_nb == "UNKNOWN" or obj_nb == "UNKNOWN":
                 if curr_fwd >= self.map_x or curr_fwd >= self.map_y:
                     print("__RIGHT UNKNOWN")
                     self.urgent_command("Right", "", 1)
+                    self.send_command()
+                    self.receive_command()
+                    self.urgent_command("Forward", "", 3)
+                    self.send_command()
+                    self.receive_command()
+                    self.send_command()
+                    self.receive_command()
+                    self.send_command()
+                    self.receive_command()
+                    self.urgent_command("Left", "", 1)
+                    self.send_command()
+                    self.receive_command()
+                    curr_fwd = 0
+                else:
+                    self.urgent_command("Forward", "", 1)
+                    curr_fwd += 1
+                    self.send_command()
+                    self.receive_command()
+            else:
+                self.reset_commands()
+                self.do_walk(tile_nb, False)
+                while len(self.command_queue) > 0:
+                    self.manage_queue()
+                    self.receive_command()
+                self.do_take(obj_name, obj_nb, True)
+                while len(self.command_queue) != 0:
+                    self.send_command()
+                    self.receive_command()
+                if self.inventory[obj_name] == amount:
+                    self.reset_commands()
+                    return
+                else:
+                    continue
+
+    def get_food(self, to_amount):
+        curr_fwd = 0
+        self.reset_commands()
+        self.urgent_command("Inventory", "", 1)
+        self.send_command()
+        self.receive_command()
+
+        while self.inventory['food'] < to_amount:
+            self.do_look(True)
+            self.send_command()
+            self.receive_command()
+
+
+            self.reset_commands()
+            self.urgent_command("Inventory", "", 1)
+            self.send_command()
+            self.receive_command()
+
+            # search for the closest food
+            tile_nb, obj_nb = self.search_object('food')
+            if tile_nb == "UNKNOWN" or obj_nb == "UNKNOWN":
+                if curr_fwd >= self.map_x or curr_fwd >= self.map_y:
+                    print("__RIGHT UNKNOWN")
+                    self.urgent_command("Right", "", 1)
+                    self.send_command()
+                    self.receive_command()
+                    self.urgent_command("Forward", "", 3)
+                    self.send_command()
+                    self.receive_command()
+                    self.send_command()
+                    self.receive_command()
+                    self.send_command()
+                    self.receive_command()
+                    self.urgent_command("Left", "", 1)
                     self.send_command()
                     self.receive_command()
                     curr_fwd = 0
@@ -364,20 +432,21 @@ class AI:
                     self.send_command()
                     self.receive_command()
             else:
-                print("__GOING NORMAL")
                 self.reset_commands()
                 self.do_walk(tile_nb, False)
-                while len(self.command_queue) > 0:
-                    self.manage_queue()
+                while len(self.command_queue) != 0:
+                    self.send_command()
                     self.receive_command()
-                self.do_take(obj_name, 1, True)
-                self.send_command()
-                self.receive_command()
-                if self.inventory[obj_name] == amount:
-                    self.reset_commands()
+                self.do_take('food', obj_nb, False)
+                while len(self.command_queue) != 0:
+                    self.send_command()
+                    self.receive_command()
+                if self.inventory['food'] == to_amount:
                     return
                 else:
                     continue
+
+        
             
     def lvl2(self):
         self.get_object(1, "linemate")
@@ -389,20 +458,26 @@ class AI:
                 return
 
     def refill_food(self):
-        while True:
-            self.reset_commands()
-            self.urgent_command("Inventory", "", 1)
-            self.send_command()
-            self.receive_command()
-            if self.inventory['food'] <= 3:
-                self.get_object(8, "food")
-                self.reset_commands()
-                self.urgent_command("Inventory", "", 1)
-                self.send_command()
-                self.receive_command()
-                # print("___________AAAAAAAAAAA", self.inventory['food'])
-                if self.inventory['food'] >= 8:
-                    return
+        time.sleep(5)
+        self.get_food(8)
+        # while True:
+            # self.reset_commands()
+            # self.urgent_command("Inventory", "", 1)
+            # self.send_command()
+            # self.receive_command()
+        #     if self.inventory['food'] <= 3:
+        #         self.get_food(8)
+        #         self.reset_commands()
+        #         self.urgent_command("Inventory", "", 1)
+        #         self.send_command()
+        #         self.receive_command()
+        #         if self.inventory['food'] >= 8:
+        #             print("___________AAAAAAAAAAA", self.inventory['food'])
+        #             return
+        #     if self.inventory['food'] >= 8:
+        #             return
+            
+    # def lvl3(self):
 
     def launch_loop(self):
         i = 0
