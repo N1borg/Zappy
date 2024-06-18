@@ -24,6 +24,16 @@ void write_tile_stones(tile_t *tile, char *buffer)
         strcat(buffer, "thystame ");
 }
 
+void display_tile_eggs(tile_t *tile, char *buffer)
+{
+    egg_t *current_egg = tile->eggs;
+
+    while (current_egg != NULL) {
+        strcat(buffer, "egg ");
+        current_egg = current_egg->next_tile;
+    }
+}
+
 // Write the tile's objects in the given buffer
 void write_tile_objects(tile_t *tile, char *buffer)
 {
@@ -31,8 +41,7 @@ void write_tile_objects(tile_t *tile, char *buffer)
         if (tile->players[i])
             strcat(buffer, "player ");
     }
-    for (int i = 0; i < tile->egg; i++)
-        strcat(buffer, "egg ");
+    display_tile_eggs(tile, buffer);
     for (int i = 0; i < tile->food; i++)
         strcat(buffer, "food ");
 }

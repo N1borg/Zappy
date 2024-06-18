@@ -27,7 +27,7 @@ void client_handler(server_t *serv, client_t *client)
 
     if (FD_ISSET(client->fd, &serv->readfds)) {
         valread = read(client->fd, buffer, 1024);
-        if (valread == 0) {
+        if (valread <= 0) {
             disconnect_client(serv, client);
         } else {
             buffer[valread - 1] = '\0';
@@ -35,25 +35,6 @@ void client_handler(server_t *serv, client_t *client)
             compute_response(serv, client, buffer);
         }
     }
-}
-
-// Main loop of the server
-int listener_loop(server_t *serv, int *sd, int *max_sd)
-{
-    FD_ZERO(&serv->readfds);
-    FD_SET(serv->master_socket, &serv->readfds);
-    *max_sd = serv->master_socket;
-    add_child_socket(serv, sd, max_sd);
-    if ((select(*max_sd + 1, &serv->readfds, NULL, NULL, NULL) < 0)
-        && (errno != EINTR))
-        printf("Select error");
-    if (FD_ISSET(serv->master_socket, &serv->readfds))
-        accept_client(serv);
-    for (int i = 0; i < MAX_CLIENTS; i++) {
-        (*sd) = serv->clients[i]->fd;
-        client_handler(serv, serv->clients[i]);
-    }
-    return 0;
 }
 
 // Start the server and listen for incoming connections
@@ -64,8 +45,19 @@ int start_listener(server_t *serv)
 
     printf("Listening on port %d...\n", serv->port);
     while (true) {
-        if (listener_loop(serv, &sd, &max_sd) != 0)
-            return 84;
+        FD_ZERO(&serv->readfds);
+        FD_SET(serv->master_socket, &serv->readfds);
+        max_sd = serv->master_socket;
+        add_child_socket(serv, &sd, &max_sd);
+        if ((select((max_sd + 1), &serv->readfds, NULL, NULL, NULL) < 0)
+            && (errno != EINTR))
+            printf("Select error");
+        if (FD_ISSET(serv->master_socket, &serv->readfds))
+            accept_client(serv);
+        for (int i = 0; i < MAX_CLIENTS; i++) {
+            sd = serv->clients[i]->fd;
+            client_handler(serv, serv->clients[i]);
+        }
     }
     return 0;
 }

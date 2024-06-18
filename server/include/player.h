@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "egg.h"
+
 #define MAX_CLIENTS 2048
 
 #ifndef FD_SETSIZE
@@ -44,4 +46,5 @@ typedef struct team_s {
     char *name;
     int free_slots;
     client_t *players[MAX_CLIENTS];
+    egg_t *eggs;
 } team_t;

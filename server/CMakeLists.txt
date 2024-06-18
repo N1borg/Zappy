@@ -22,6 +22,8 @@ set(SHARED_SRC
     src/basic_functions.c
     src/coordinates.c
     src/display_tile.c
+    src/add_egg.c
+    src/remove_egg.c
     src/player_commands/success_response.c
     src/player_commands/broadcast.c
     src/player_commands/eject.c

@@ -19,7 +19,7 @@ void set_tile(tile_t *tile, int x, int y)
     tile->mendiane = 0;
     tile->phiras = 0;
     tile->thystame = 0;
-    tile->egg = 0;
+    tile->eggs = NULL;
     for (int i = 0; i < MAX_CLIENTS; i++)
         tile->players[i] = NULL;
 }
@@ -36,19 +36,6 @@ tile_t **init_map(int width, int height)
     }
     map[height] = NULL;
     return map;
-}
-
-// Spawns eggs randomly on the map
-void spawn_eggs(tile_t **map, int width, int height, int num_eggs)
-{
-    int x = 0;
-    int y = 0;
-
-    for (int i = 0; i < num_eggs; i++) {
-        x = rand() % width;
-        y = rand() % height;
-        map[y][x].egg++;
-    }
 }
 
 // Initialize given client structure
@@ -73,12 +60,20 @@ void set_client(client_t *clients)
 // Initializes the server struct
 void init_server(server_t *serv)
 {
+    int x = 0;
+    int y = 0;
+
     serv->master_socket = 0;
     for (int i = 0; i < MAX_CLIENTS; i++) {
         serv->clients[i] = malloc(sizeof(client_t));
         set_client(serv->clients[i]);
     }
     serv->map = init_map(serv->width, serv->height);
-    spawn_eggs(serv->map, serv->width, serv->height,
-        (serv->max_client_team * (serv->team_nb - 1)));
+    for (int i = 0; i < serv->team_nb - 1; i++) {
+        for (int j = 0; j < serv->max_client_team; j++) {
+            x = rand() % serv->width;
+            y = rand() % serv->height;
+            add_egg(serv->teams[i], &serv->map[x][y]);
+        }
+    }
 }
