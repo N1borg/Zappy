@@ -5,7 +5,7 @@
 ** MediumIsland
 */
 
-#include "MediumIsland.hpp"
+#include "Island/MediumIsland.hpp"
 
 MediumIsland::MediumIsland(Model model) : model(model) {}
 

@@ -5,7 +5,7 @@
 ** SamllIsland
 */
 
-#include "SmallIsland.hpp"
+#include "Island/SmallIsland.hpp"
 
 SmallIsland::SmallIsland(Model model) : model(model) {}
 

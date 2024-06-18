@@ -16,9 +16,9 @@
 #include "Collectables/Mendiane.hpp"
 #include "Collectables/Phiras.hpp"
 #include "Collectables/Thystame.hpp"
-#include "SmallIsland.hpp"
-#include "MediumIsland.hpp"
-#include "BigIsland.hpp"
+#include "Island/SmallIsland.hpp"
+#include "Island/MediumIsland.hpp"
+#include "Island/BigIsland.hpp"
 
 #include <math.h>
 #include <time.h>
