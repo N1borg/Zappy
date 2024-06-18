@@ -5,7 +5,7 @@
 ** Parser
 */
 
-#include "ParseArguments.hpp"
+#include "Parser/ParseArguments.hpp"
 
 ParseArguments::ParseArguments(int argc, char *argv[]) : _argc(argc), _argv(argv) {}
 

@@ -58,14 +58,14 @@ set(SHARED_SRC
     src/Window.cpp
     src/Map.cpp
     src/Player.cpp
-    src/Egg.cpp
-    src/Food.cpp
-    src/Linemate.cpp
-    src/Deraumere.cpp
-    src/Sibur.cpp
-    src/Mendiane.cpp
-    src/Phiras.cpp
-    src/Thystame.cpp
+    src/Collectables/Egg.cpp
+    src/Collectables/Food.cpp
+    src/Collectables/Linemate.cpp
+    src/Collectables/Deraumere.cpp
+    src/Collectables/Sibur.cpp
+    src/Collectables/Mendiane.cpp
+    src/Collectables/Phiras.cpp
+    src/Collectables/Thystame.cpp
     src/SmallIsland.cpp
     src/MediumIsland.cpp
     src/BigIsland.cpp

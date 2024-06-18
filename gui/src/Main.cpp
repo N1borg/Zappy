@@ -6,7 +6,7 @@
 */
 
 #include "Gui.hpp"
-#include "ParseArguments.hpp"
+#include "Parser/ParseArguments.hpp"
 #include "Socket.hpp"
 #include "Window.hpp"
 #include "Map.hpp"

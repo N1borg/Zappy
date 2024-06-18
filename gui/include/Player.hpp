@@ -15,7 +15,7 @@ public:
     ~Player() = default;
 
     void draw(Vector3 position, float scale, Color tint) const override;
-    void SetRotation(float yRotation);
+    void setRotation(float yRotation);
 
 private:
     Model model;

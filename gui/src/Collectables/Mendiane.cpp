@@ -2,14 +2,14 @@
 ** EPITECH PROJECT, 2024
 ** B-YEP-400-LIL-4-1-zappy-romaric.loevenbruck
 ** File description:
-** Phiras
+** Mendiane
 */
 
-#include "Phiras.hpp"
+#include "Collectables/Mendiane.hpp"
 
-Phiras::Phiras(Model model) : model(model) {}
+Mendiane::Mendiane(Model model) : model(model) {}
 
-void Phiras::draw(Vector3 position, float scale, Color tint) const
+void Mendiane::draw(Vector3 position, float scale, Color tint) const
 {
     Vector3 rotationAxis = {0, 1, 0};
     Vector3 scaleVector = {scale, scale, scale};
@@ -17,7 +17,7 @@ void Phiras::draw(Vector3 position, float scale, Color tint) const
     DrawModelEx(model, position, rotationAxis, yRotation * RAD2DEG, scaleVector, tint);
 }
 
-void Phiras::SetRotation(float yRotation)
+void Mendiane::setRotation(float yRotation)
 {
     this->yRotation = yRotation;
 }

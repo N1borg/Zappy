@@ -17,7 +17,7 @@ void SmallIsland::draw(Vector3 position, float scale, Color tint) const
     DrawModelEx(model, position, rotationAxis, yRotation * RAD2DEG, scaleVector, tint);
 }
 
-void SmallIsland::SetRotation(float yRotation)
+void SmallIsland::setRotation(float yRotation)
 {
     this->yRotation = yRotation;
 }

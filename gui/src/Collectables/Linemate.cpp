@@ -2,14 +2,14 @@
 ** EPITECH PROJECT, 2024
 ** B-YEP-400-LIL-4-1-zappy-romaric.loevenbruck
 ** File description:
-** Deraumere
+** Linemate
 */
 
-#include "Deraumere.hpp"
+#include "Collectables/Linemate.hpp"
 
-Deraumere::Deraumere(Model model) : model(model) {}
+Linemate::Linemate(Model model) : model(model) {}
 
-void Deraumere::draw(Vector3 position, float scale, Color tint) const
+void Linemate::draw(Vector3 position, float scale, Color tint) const
 {
     Vector3 rotationAxis = {0, 1, 0};
     Vector3 scaleVector = {scale, scale, scale};
@@ -17,7 +17,7 @@ void Deraumere::draw(Vector3 position, float scale, Color tint) const
     DrawModelEx(model, position, rotationAxis, yRotation * RAD2DEG, scaleVector, tint);
 }
 
-void Deraumere::SetRotation(float yRotation)
+void Linemate::setRotation(float yRotation)
 {
     this->yRotation = yRotation;
 }
