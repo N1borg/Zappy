@@ -58,7 +58,7 @@ Camera3D Window::getCamera() const
     return _camera;
 }
 
-int Window::getCameraMode()
+int Window::getCameraMode() const
 {
     return _cameraMode;
 }

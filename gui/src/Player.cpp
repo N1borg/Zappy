@@ -17,7 +17,7 @@ void Player::draw(Vector3 position, float scale, Color tint) const
     DrawModelEx(_model, position, rotationAxis, _yRotation * RAD2DEG, scaleVector, tint);
 }
 
-void Player::SetRotationY(float yRotation)
+void Player::setRotationY(float yRotation)
 {
     this->_yRotation = yRotation;
 }

@@ -7,17 +7,17 @@
 
 #include "Collectables/Sibur.hpp"
 
-Sibur::Sibur(Model model) : model(model) {}
+Sibur::Sibur(Model model) : _model(model) {}
 
 void Sibur::draw(Vector3 position, float scale, Color tint) const
 {
     Vector3 rotationAxis = {0, 1, 0};
     Vector3 scaleVector = {scale, scale, scale};
 
-    DrawModelEx(model, position, rotationAxis, yRotation * RAD2DEG, scaleVector, tint);
+    DrawModelEx(_model, position, rotationAxis, _yRotation * RAD2DEG, scaleVector, tint);
 }
 
-void Sibur::setRotation(float yRotation)
+void Sibur::setRotationY(float yRotation)
 {
-    this->yRotation = yRotation;
+    this->_yRotation = yRotation;
 }

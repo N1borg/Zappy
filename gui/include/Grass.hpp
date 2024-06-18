@@ -15,7 +15,7 @@ public:
     ~Grass() = default;
 
     void draw(Vector3 position, float scale, Color tint) const override;
-    void SetRotationY(float yRotation);
+    void setRotationY(float yRotation);
 
 private:
     Model _model;

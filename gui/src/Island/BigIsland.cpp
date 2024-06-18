@@ -7,17 +7,17 @@
 
 #include "Island/BigIsland.hpp"
 
-BigIsland::BigIsland(Model model) : model(model) {}
+BigIsland::BigIsland(Model model) : _model(model) {}
 
 void BigIsland::draw(Vector3 position, float scale, Color tint) const
 {
     Vector3 rotationAxis = {0, 1, 0};
     Vector3 scaleVector = {scale, scale, scale};
 
-    DrawModelEx(model, position, rotationAxis, yRotation * RAD2DEG, scaleVector, tint);
+    DrawModelEx(_model, position, rotationAxis, _yRotation * RAD2DEG, scaleVector, tint);
 }
 
-Model BigIsland::getModel() const
+void BigIsland::setRotationY(float yRotation)
 {
-    return model;
+    this->_yRotation = yRotation;
 }

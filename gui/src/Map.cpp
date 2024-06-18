@@ -30,15 +30,15 @@ Map::Map(int width, int height) : _width(width), _height(height)
             Tile_t tile(_modelPlayer, _modelEgg, _modelFood, _modelLinemate, _modelDeraumere, _modelSibur,
                 _modelMendiane, _modelPhiras, _modelThystame, _modelSmallIsland, _modelMediumIsland, _modelBigIsland);
 
-            tile.player.first.setRotation(GetRandomValue(0, 360) * DEG2RAD);
-            tile.food.first.setRotation(GetRandomValue(0, 360) * DEG2RAD);
-            tile.linemate.first.setRotation(GetRandomValue(0, 360) * DEG2RAD);
-            tile.deraumere.first.setRotation(GetRandomValue(0, 360) * DEG2RAD);
-            tile.sibur.first.setRotation(GetRandomValue(0, 360) * DEG2RAD);
-            tile.mendiane.first.setRotation(GetRandomValue(0, 360) * DEG2RAD);
-            tile.phiras.first.setRotation(GetRandomValue(0, 360) * DEG2RAD);
-            tile.thystame.first.setRotation(GetRandomValue(0, 360) * DEG2RAD);
-            tile.smallIsland.first.setRotation(GetRandomValue(0, 360) * DEG2RAD);
+            tile.player.first.setRotationY(GetRandomValue(0, 360) * DEG2RAD);
+            tile.food.first.setRotationY(GetRandomValue(0, 360) * DEG2RAD);
+            tile.linemate.first.setRotationY(GetRandomValue(0, 360) * DEG2RAD);
+            tile.deraumere.first.setRotationY(GetRandomValue(0, 360) * DEG2RAD);
+            tile.sibur.first.setRotationY(GetRandomValue(0, 360) * DEG2RAD);
+            tile.mendiane.first.setRotationY(GetRandomValue(0, 360) * DEG2RAD);
+            tile.phiras.first.setRotationY(GetRandomValue(0, 360) * DEG2RAD);
+            tile.thystame.first.setRotationY(GetRandomValue(0, 360) * DEG2RAD);
+            tile.smallIsland.first.setRotationY(GetRandomValue(0, 360) * DEG2RAD);
 
             row.push_back(tile);
         }

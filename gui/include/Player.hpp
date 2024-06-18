@@ -10,14 +10,14 @@
 #include "IModel.hpp"
 
 class Player : public IModel {
-public:
-    Player(Model model);
-    ~Player() = default;
+    public:
+        Player(Model model);
+        ~Player() = default;
 
-    void draw(Vector3 position, float scale, Color tint) const override;
-    void SetRotationY(float yRotation);
+        void draw(Vector3 position, float scale, Color tint) const override;
+        void setRotationY(float yRotation);
 
-private:
-    Model _model;
-    float _yRotation;
+    private:
+        Model _model;
+        float _yRotation;
 };

@@ -7,17 +7,17 @@
 
 #include "Collectables/Thystame.hpp"
 
-Thystame::Thystame(Model model) : model(model) {}
+Thystame::Thystame(Model model) : _model(model) {}
 
 void Thystame::draw(Vector3 position, float scale, Color tint) const
 {
     Vector3 rotationAxis = {0, 1, 0};
     Vector3 scaleVector = {scale, scale, scale};
 
-    DrawModelEx(model, position, rotationAxis, yRotation * RAD2DEG, scaleVector, tint);
+    DrawModelEx(_model, position, rotationAxis, _yRotation * RAD2DEG, scaleVector, tint);
 }
 
-void Thystame::setRotation(float yRotation)
+void Thystame::setRotationY(float yRotation)
 {
-    this->yRotation = yRotation;
+    this->_yRotation = yRotation;
 }

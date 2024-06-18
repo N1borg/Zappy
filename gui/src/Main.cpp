@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
 
     while (!window.shouldClose())
     {
-        window.parseCameraInput();
+        window.parseCameraInputs();
         window.updateCamera();
         window.beginDrawing();
         window.clearBackground(RAYWHITE);
