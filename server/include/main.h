@@ -127,7 +127,7 @@ void init_command_queue(client_t *client);
 int enqueue_command(client_t *client, char *command_str);
 char *dequeue_command(command_queue_t *queue);
 void free_command_queue(command_queue_t *queue);
-void manage_queue(sertver_t *server, client_t *client, char *buffer);
+void manage_queue(client_t *client, char *buffer);
 
 // player commands
 int success_response(client_t *client);

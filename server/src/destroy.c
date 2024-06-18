@@ -39,6 +39,7 @@ int destroy_server(server_t *s, int ret)
     for (int i = 0; s->teams[i]; i++)
         free(s->teams[i]);
     free(s->teams);
+    free_command_queue(s->command_queue);
     destroy_clients(s);
     destroy_map(s->map);
     printf("Server closed\n");

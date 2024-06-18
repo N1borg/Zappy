@@ -32,7 +32,7 @@ void client_handler(server_t *s, client_t *client)
         else {
             buffer[valread - 1] = '\0';
             printf("[%d] - sent: %s\n", client->fd, buffer);
-            manage_queue(s, client, buffer)
+            manage_queue(client, buffer);
         }
     }
 }
@@ -56,16 +56,31 @@ int listener_loop(server_t *s, int *sd, int *max_sd)
     return 0;
 }
 
+// Execute the commands in the queue of the clients
+void execute_queue(server_t *server)
+{
+    char *command = NULL;
+
+    for (int i = 0; i < MAX_CLIENTS; i++) {
+        command = dequeue_command(server->clients[i]->command_queue);
+        if (command != NULL) {
+            compute_response(server, server->clients[i], command);
+            free(command);
+        }
+    }
+}
+
 // Start the server and listen for incoming connections
-int start_listener(server_t *s)
+int start_listener(server_t *server)
 {
     int sd = 0;
     int max_sd = 0;
 
-    printf("Listening on port %d...\n", s->port);
+    printf("Listening on port %d...\n", server->port);
     while (true) {
-        if (listener_loop(s, &sd, &max_sd) != 0)
+        if (listener_loop(server, &sd, &max_sd) != 0)
             return 84;
+        execute_queue(server);
     }
     return 0;
 }

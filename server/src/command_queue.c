@@ -65,6 +65,7 @@ char *dequeue_command(command_queue_t *queue)
     return command_str;
 }
 
+// Free the command queue of the client
 void free_command_queue(command_queue_t *queue)
 {
     command_t *command_node = NULL;
@@ -81,19 +82,9 @@ void free_command_queue(command_queue_t *queue)
     }
     free(queue);
 }
-
-void manage_queue(server_t *server, client_t *client, char *buffer)
+// Handle the client commands
+void manage_queue(client_t *client, char *buffer)
 {
-    char *first_command = NULL;
-    
-    if (client->command_queue->size >= 10)
-        return;
-    enqueue_command(client, buffer);
-    if (client->size > 0) {
-        first_command = dequeue_command(client->command_queue);
-        if (first_command != NULL) {
-            compute_response(server, client, first_command->command);
-            free(first_command);
-        }
-    }
+    if (client->command_queue->size < 10)
+        enqueue_command(client, buffer);
 }
