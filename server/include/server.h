@@ -11,13 +11,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <time.h>
-#include <stdbool.h>
 #include <errno.h>
 #include <arpa/inet.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/time.h>
+#include <stdbool.h>
+#include <signal.h>
+#include <time.h>
 
 #include "player.h"
 #include "tile.h"
