@@ -12,12 +12,12 @@ Window::Window(int width, int height, std::string title)
     _width = width;
     _height = height;
     _title = title;
-    _camera.position = {0.0f, 10.0f, 10.0f};
+    _camera.position = {0.0f, 100.0f, 10.0f};
     _camera.target = {0.0f, 10.0f, 0.0f};
     _camera.up = {0.0f, 1.0f, 0.0f};
-    _camera.fovy = 45.0f;
+    _camera.fovy = 60.0f;
     _camera.projection = CAMERA_PERSPECTIVE;
-    _cameraMode = CAMERA_FIRST_PERSON;
+    _cameraMode = CAMERA_FREE;
 }
 
 void Window::init()
@@ -25,6 +25,7 @@ void Window::init()
     SetTargetFPS(60);
     SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_MSAA_4X_HINT | FLAG_VSYNC_HINT);
     InitWindow(_width, _height, _title.c_str());
+    DisableCursor();
 }
 
 void Window::close()
@@ -50,11 +51,6 @@ int Window::getScreenWidth() const
 int Window::getScreenHeight() const
 {
     return GetScreenHeight();
-}
-
-void Window::disableCursor()
-{
-    DisableCursor();
 }
 
 Camera3D Window::getCamera() const
@@ -169,4 +165,41 @@ std::string Window::animateTextDots(const std::string &string, float elapsedTime
     int dots = static_cast<int>(floor(elapsedTime * 4.0f)) % 4;
     std::string dotsStr(dots, '.');
     return string + dotsStr;
+}
+
+int Window::drawWaitingScreen(Parser &parser, Socket &socket)
+{
+    std::thread connectionThread(&Socket::attemptConnection, &socket);
+
+    float elapsedTime = 0.0f;
+
+    while (!socket.isConnected()) {
+        if (shouldClose()) {
+            connectionThread.detach();
+            return 0;
+        }
+        elapsedTime += GetFrameTime();
+
+        beginDrawing();
+        clearBackground(RAYWHITE);
+
+        std::string connectingText = animateTextDots("Connecting to " + parser.getMachine(), elapsedTime);
+        drawText(connectingText.c_str(), (getScreenWidth() - MeasureText(("Connecting to " + parser.getMachine() + "...").c_str(), 20)) / 2, (getScreenHeight() - 20) / 2, 20, DARKGRAY);
+
+        endDrawing();
+    }
+
+    connectionThread.join();
+
+    if (socket.isConnected()) {
+        return 1;
+    } else {
+        while (!shouldClose()) {
+            beginDrawing();
+            clearBackground(RAYWHITE);
+            drawText("Failed to connect", (getScreenWidth() - MeasureText("Failed to connect", 20)) / 2, (getScreenHeight() - 20) / 2, 20, RED);
+            endDrawing();
+        }
+    }
+    return 0;
 }

@@ -11,6 +11,9 @@
 #include <math.h>
 #include <string>
 
+#include "Parser.hpp"
+#include "Socket.hpp"
+
 class Window {
 public:
     Window(int width, int height, std::string title);
@@ -23,7 +26,6 @@ public:
     void setTargetFPS(int fps);
     int getScreenWidth() const;
     int getScreenHeight() const;
-    void disableCursor();
 
     // Raylib Camera functions
     Camera3D getCamera() const;
@@ -48,6 +50,9 @@ public:
     void drawFPS(int posX, int posY);
 
     std::string animateTextDots(const std::string &string, float elapsedTime);
+
+    // Drawing functions
+    int drawWaitingScreen(Parser &parser, Socket &socket);
 
 private:
     int _width;
