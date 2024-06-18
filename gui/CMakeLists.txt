@@ -57,7 +57,6 @@ set(SHARED_SRC
     src/Parser.cpp
     src/Window.cpp
     src/Map.cpp
-    src/Camera.cpp
     src/Player.cpp
     src/Egg.cpp
     src/Food.cpp

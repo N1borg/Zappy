@@ -12,7 +12,12 @@ Window::Window(int width, int height, std::string title)
     _width = width;
     _height = height;
     _title = title;
-    _camera = GameCamera();
+    _camera.position = {0.0f, 10.0f, 10.0f};
+    _camera.target = {0.0f, 10.0f, 0.0f};
+    _camera.up = {0.0f, 1.0f, 0.0f};
+    _camera.fovy = 45.0f;
+    _camera.projection = CAMERA_PERSPECTIVE;
+    _cameraMode = CAMERA_FIRST_PERSON;
 }
 
 void Window::init()
@@ -22,9 +27,9 @@ void Window::init()
     InitWindow(_width, _height, _title.c_str());
 }
 
-void Window::setTargetFPS(int fps)
+void Window::close()
 {
-    SetTargetFPS(fps);
+    CloseWindow();
 }
 
 bool Window::shouldClose()
@@ -32,59 +37,9 @@ bool Window::shouldClose()
     return WindowShouldClose();
 }
 
-void Window::beginDrawing()
+void Window::setTargetFPS(int fps)
 {
-    BeginDrawing();
-}
-
-void Window::clearBackground(Color color)
-{
-    ClearBackground(color);
-}
-
-void Window::endDrawing()
-{
-    EndDrawing();
-}
-
-void Window::close()
-{
-    CloseWindow();
-}
-
-Camera3D Window::getCamera() const
-{
-    return _camera.getCamera();
-}
-
-void Window::setCameraPosition(Vector3 position)
-{
-    _camera.setPosition(position);
-}
-
-void Window::setCameraTarget(Vector3 target)
-{
-    _camera.setTarget(target);
-}
-
-void Window::setCameraUp(Vector3 up)
-{
-    _camera.setUp(up);
-}
-
-void Window::setCameraFovy(float fovy)
-{
-    _camera.setFovy(fovy);
-}
-
-void Window::setCameraProjection(int projection)
-{
-    _camera.setProjection(projection);
-}
-
-void Window::updateCamera()
-{
-    _camera.updateCamera();
+    SetTargetFPS(fps);
 }
 
 int Window::getScreenWidth() const
@@ -97,19 +52,92 @@ int Window::getScreenHeight() const
     return GetScreenHeight();
 }
 
+Camera3D Window::getCamera() const
+{
+    return _camera;
+}
+
+int Window::getCameraMode()
+{
+    return _camera.projection;
+}
+
+void Window::setCameraMode(int mode)
+{
+    _cameraMode = mode;
+}
+
+void Window::setCameraPosition(Vector3 position)
+{
+    _camera.position = position;
+}
+
+void Window::setCameraTarget(Vector3 target)
+{
+    _camera.target = target;
+}
+
+void Window::setCameraUp(Vector3 up)
+{
+    _camera.up = up;
+}
+
+void Window::setCameraFovy(float fovy)
+{
+    _camera.fovy = fovy;
+}
+
+void Window::setCameraProjection(int projection)
+{
+    _camera.projection = projection;
+}
+
+void Window::updateCamera()
+{
+    UpdateCamera(&_camera, getCameraMode());
+}
+
+void Window::parseCameraInput()
+{
+    switch (GetKeyPressed()) {
+    case KEY_ONE:
+        setCameraMode(CAMERA_FIRST_PERSON);
+        break;
+    case KEY_TWO:
+        setCameraMode(CAMERA_THIRD_PERSON);
+        break;
+    case KEY_THREE:
+        setCameraMode(CAMERA_FREE);
+        break;
+    case KEY_FOUR:
+        setCameraMode(CAMERA_ORBITAL);
+        break;
+    }
+}
+
+void Window::beginDrawing()
+{
+    BeginDrawing();
+}
+
+void Window::endDrawing()
+{
+    EndDrawing();
+}
+
 void Window::beginMode3D()
 {
-    BeginMode3D(_camera.getCamera());
+    BeginMode3D(_camera);
 }
 
-void Window::drawCube(Vector3 position, float width, float height, float length, Color color)
+void Window::endMode3D()
 {
-    DrawCube(position, width, height, length, color);
+    EndMode3D();
 }
 
-void Window::drawCubeWires(Vector3 position, float width, float height, float length, Color color)
+void Window::clearBackground(Color color)
 {
-    DrawCubeWires(position, width, height, length, color);
+    ClearBackground(color);
 }
 
 void Window::drawGrid(int slices, float spacing)
@@ -125,11 +153,6 @@ void Window::drawText(const char *text, int posX, int posY, int fontSize, Color 
 void Window::drawFPS(int posX, int posY)
 {
     DrawFPS(posX, posY);
-}
-
-void Window::endMode3D()
-{
-    EndMode3D();
 }
 
 std::string Window::animateTextDots(const std::string &string, float elapsedTime)

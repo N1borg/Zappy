@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include "Camera.hpp"
 #include "Player.hpp"
 #include "Egg.hpp"
 #include "Food.hpp"
