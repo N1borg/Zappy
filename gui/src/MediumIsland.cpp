@@ -7,17 +7,17 @@
 
 #include "MediumIsland.hpp"
 
-MediumIsland::MediumIsland(Model model) : model(model) {}
+MediumIsland::MediumIsland(Model model) : _model(model) {}
 
 void MediumIsland::draw(Vector3 position, float scale, Color tint) const
 {
     Vector3 rotationAxis = {0, 1, 0};
     Vector3 scaleVector = {scale, scale, scale};
 
-    DrawModelEx(model, position, rotationAxis, yRotation * RAD2DEG, scaleVector, tint);
+    DrawModelEx(_model, position, rotationAxis, _yRotation * RAD2DEG, scaleVector, tint);
 }
 
-Model MediumIsland::getModel() const
+void MediumIsland::SetRotationY(float yRotation)
 {
-    return model;
+    this->_yRotation = yRotation;
 }

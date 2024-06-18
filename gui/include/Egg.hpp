@@ -15,8 +15,9 @@ public:
     ~Egg() = default;
 
     void draw(Vector3 position, float scale, Color tint) const override;
+    void SetRotationY(float yRotation);
 
 private:
-    Model model;
-    float yRotation;
+    Model _model;
+    float _yRotation;
 };

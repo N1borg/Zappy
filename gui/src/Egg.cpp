@@ -7,12 +7,17 @@
 
 #include "Egg.hpp"
 
-Egg::Egg(Model model) : model(model) {}
+Egg::Egg(Model model) : _model(model) {}
 
 void Egg::draw(Vector3 position, float scale, Color tint) const
 {
     Vector3 rotationAxis = {0, 1, 0};
     Vector3 scaleVector = {scale, scale, scale};
 
-    DrawModelEx(model, position, rotationAxis, yRotation * RAD2DEG, scaleVector, tint);
+    DrawModelEx(_model, position, rotationAxis, _yRotation * RAD2DEG, scaleVector, tint);
+}
+
+void Egg::SetRotationY(float yRotation)
+{
+    this->_yRotation = yRotation;
 }
