@@ -5,7 +5,7 @@
 ** server_init
 */
 
-#include "../include/main.h"
+#include "server.h"
 
 // Initializes a tile with the given coordinates
 void set_tile(tile_t *tile, int x, int y)
@@ -55,6 +55,7 @@ void spawn_eggs(tile_t **map, int width, int height, int num_eggs)
 void set_client(client_t *clients)
 {
     clients->fd = 0;
+    clients->id = 0;
     clients->x = 0;
     clients->y = 0;
     clients->level = 0;
@@ -70,14 +71,14 @@ void set_client(client_t *clients)
 }
 
 // Initializes the server struct
-void init_server(server_t *s)
+void init_server(server_t *serv)
 {
-    s->master_socket = 0;
+    serv->master_socket = 0;
     for (int i = 0; i < MAX_CLIENTS; i++) {
-        s->clients[i] = malloc(sizeof(client_t));
-        set_client(s->clients[i]);
+        serv->clients[i] = malloc(sizeof(client_t));
+        set_client(serv->clients[i]);
     }
-    s->map = init_map(s->width, s->height);
-    spawn_eggs(s->map, s->width, s->height,
-        (s->max_client_team * (s->team_nb - 1)));
+    serv->map = init_map(serv->width, serv->height);
+    spawn_eggs(serv->map, serv->width, serv->height,
+        (serv->max_client_team * (serv->team_nb - 1)));
 }

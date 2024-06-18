@@ -5,22 +5,22 @@
 ** moving
 */
 
-#include "../../include/main.h"
+#include "server.h"
 
 // Move the client in the direction he is facing
-int command_forward(server_t *s, client_t *client, char *arg)
+int command_forward(server_t *serv, client_t *player, char *arg)
 {
     if (arg != NULL)
         return 1;
-    if (client->orientation == NORTH)
-        move_player(s, client, client->x, client->y - 1);
-    if (client->orientation == EAST)
-        move_player(s, client, client->x + 1, client->y);
-    if (client->orientation == SOUTH)
-        move_player(s, client, client->x, client->y + 1);
-    if (client->orientation == WEST)
-        move_player(s, client, client->x - 1, client->y);
-    if (client->orientation < 1 || client->orientation > 4)
+    if (player->orientation == NORTH)
+        move_player(serv, player, player->x, player->y - 1);
+    if (player->orientation == EAST)
+        move_player(serv, player, player->x + 1, player->y);
+    if (player->orientation == SOUTH)
+        move_player(serv, player, player->x, player->y + 1);
+    if (player->orientation == WEST)
+        move_player(serv, player, player->x - 1, player->y);
+    if (player->orientation < 1 || player->orientation > 4)
         return 1;
-    return success_response(client);
+    return success_response(player);
 }

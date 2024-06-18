@@ -5,7 +5,7 @@
 ** command_response
 */
 
-#include "../../include/main.h"
+#include "server.h"
 
 // Send an ok response
 int success_response(client_t *client)

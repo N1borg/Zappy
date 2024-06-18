@@ -3,7 +3,7 @@ project(zappy_server)
 
 set(CMAKE_C_STANDARD 17)
 
-set(CMAKE_C_FLAGS "-W -Wall -Wextra -Wpedantic")
+set(CMAKE_C_FLAGS "-W -Wall -Wextra -Wpedantic -Wshadow -Wformat=2 -Wformat-security -I ./include/")
 
 include_directories(include)
 
@@ -14,7 +14,7 @@ set(SHARED_SRC
     src/destroy.c
     src/server_init.c
     src/connections.c
-    src/listener.c
+    src/init_listener.c
     src/generate_resources.c
     src/manage_client.c
     src/manage_team.c
@@ -35,9 +35,31 @@ set(SHARED_SRC
     src/player_commands/take_object.c
     src/player_commands/rotate.c
     src/player_commands/team_slots.c
-    src/graphic_commands/msz.c
     src/graphic_commands/bct.c
+    src/graphic_commands/ebo.c
+    src/graphic_commands/edi.c
+    src/graphic_commands/enw.c
     src/graphic_commands/mct.c
+    src/graphic_commands/msz.c
+    src/graphic_commands/pbc.c
+    src/graphic_commands/pdi.c
+    src/graphic_commands/pdr.c
+    src/graphic_commands/pex.c
+    src/graphic_commands/pfk.c
+    src/graphic_commands/pgt.c
+    src/graphic_commands/pic.c
+    src/graphic_commands/pie.c
+    src/graphic_commands/pin.c
+    src/graphic_commands/plv.c
+    src/graphic_commands/pnw.c
+    src/graphic_commands/ppo.c
+    src/graphic_commands/sbp.c
+    src/graphic_commands/seg.c
+    src/graphic_commands/sgt.c
+    src/graphic_commands/smg.c
+    src/graphic_commands/sst.c
+    src/graphic_commands/suc.c
+    src/graphic_commands/tna.c
 )
 
 add_executable(zappy_server ${SHARED_SRC})

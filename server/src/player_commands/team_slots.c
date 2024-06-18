@@ -5,14 +5,14 @@
 ** team_slots
 */
 
-#include "../../include/main.h"
+#include "server.h"
 
 // Send the number of free slots in the team
-int command_team_slots(server_t *s, client_t *client, char *arg)
+int command_team_slots(server_t *serv, client_t *player, char *arg)
 {
     if (arg != NULL)
         return 1;
-    dprintf(client->fd, "%d\n",
-    s->teams[get_team_id(s, client->team)]->free_slots);
+    dprintf(player->fd, "%d\n",
+    serv->teams[get_team_id(serv, player->team)]->free_slots);
     return 0;
 }

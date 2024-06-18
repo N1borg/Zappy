@@ -5,7 +5,7 @@
 ** display_tile
 */
 
-#include "../include/main.h"
+#include "server.h"
 
 // Write the tile's stones in the given buffer
 void write_tile_stones(tile_t *tile, char *buffer)

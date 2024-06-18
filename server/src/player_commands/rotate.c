@@ -5,28 +5,28 @@
 ** rotating
 */
 
-#include "../../include/main.h"
+#include "server.h"
 
-// Increase the orientation of the client by 1
-int command_turn_right(server_t *s __attribute__((unused)), client_t *client,
-    char *arg __attribute__((unused)))
+// Increase the orientation of the player by 1
+int command_turn_right(server_t *serv __attribute__((unused)),
+    client_t *player, char *arg __attribute__((unused)))
 {
-    int temp = client->orientation;
+    int temp = player->orientation;
 
     if (arg != NULL)
         return 1;
-    client->orientation = (temp == 4) ? 1 : temp + 1;
-    return success_response(client);
+    player->orientation = (temp == 4) ? 1 : temp + 1;
+    return success_response(player);
 }
 
-// Decrease the orientation of the client by 1
-int command_turn_left(server_t *s __attribute__((unused)), client_t *client,
-    char *arg __attribute__((unused)))
+// Decrease the orientation of the player by 1
+int command_turn_left(server_t *serv __attribute__((unused)),
+    client_t *player, char *arg __attribute__((unused)))
 {
-    int temp = client->orientation;
+    int temp = player->orientation;
 
     if (arg != NULL)
         return 1;
-    client->orientation = (temp == 1) ? 4 : temp - 1;
-    return success_response(client);
+    player->orientation = (temp == 1) ? 4 : temp - 1;
+    return success_response(player);
 }

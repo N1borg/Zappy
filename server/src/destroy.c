@@ -5,13 +5,13 @@
 ** destroy
 */
 
-#include "../include/main.h"
+#include "server.h"
 
 // Free clients memory
-void destroy_clients(server_t *s)
+void destroy_clients(server_t *serv)
 {
     for (int i = 0; i < MAX_CLIENTS; i++)
-        free(s->clients[i]);
+        free(serv->clients[i]);
 }
 
 // Free teams memory
@@ -31,16 +31,16 @@ void destroy_map(tile_t **map)
 }
 
 // Close sockets and free memory
-int destroy_server(server_t *s, int ret)
+int destroy_server(server_t *serv, int ret)
 {
-    close(s->master_socket);
-    for (int i = 0; i < s->max_client_team * s->team_nb; i++)
-        close(s->clients[i]->fd);
-    for (int i = 0; s->teams[i]; i++)
-        free(s->teams[i]);
-    free(s->teams);
-    destroy_clients(s);
-    destroy_map(s->map);
+    close(serv->master_socket);
+    for (int i = 0; i < serv->max_client_team * serv->team_nb; i++)
+        close(serv->clients[i]->fd);
+    for (int i = 0; serv->teams[i]; i++)
+        free(serv->teams[i]);
+    free(serv->teams);
+    destroy_clients(serv);
+    destroy_map(serv->map);
     printf("Server closed\n");
     return ret;
 }
