@@ -52,6 +52,11 @@ int Window::getScreenHeight() const
     return GetScreenHeight();
 }
 
+void Window::disableCursor()
+{
+    DisableCursor();
+}
+
 Camera3D Window::getCamera() const
 {
     return _camera;
@@ -100,18 +105,22 @@ void Window::updateCamera()
 void Window::parseCameraInput()
 {
     switch (GetKeyPressed()) {
-    case KEY_ONE:
-        setCameraMode(CAMERA_FIRST_PERSON);
-        break;
-    case KEY_TWO:
-        setCameraMode(CAMERA_THIRD_PERSON);
-        break;
-    case KEY_THREE:
-        setCameraMode(CAMERA_FREE);
-        break;
-    case KEY_FOUR:
-        setCameraMode(CAMERA_ORBITAL);
-        break;
+        case KEY_ONE:
+            setCameraMode(CAMERA_FIRST_PERSON);
+            setCameraUp({0.0f, 1.0f, 0.0f});
+            break;
+        case KEY_TWO:
+            setCameraMode(CAMERA_THIRD_PERSON);
+            setCameraUp({0.0f, 1.0f, 0.0f});
+            break;
+        case KEY_THREE:
+            setCameraMode(CAMERA_FREE);
+            setCameraUp({0.0f, 1.0f, 0.0f});
+            break;
+        case KEY_FOUR:
+            setCameraMode(CAMERA_ORBITAL);
+            setCameraUp({0.0f, 1.0f, 0.0f});
+            break;
     }
 }
 

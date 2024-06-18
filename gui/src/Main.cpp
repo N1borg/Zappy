@@ -67,6 +67,7 @@ int main(int argc, char *argv[])
     Socket socket(parser.getPort(), parser.getMachine());
     Window window(1280, 720, "Zappy GUI");
     window.init();
+    window.disableCursor();
 
     if (!waitConnection(parser, socket, window)) {
         window.close();

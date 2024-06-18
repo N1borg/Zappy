@@ -23,6 +23,7 @@ public:
     void setTargetFPS(int fps);
     int getScreenWidth() const;
     int getScreenHeight() const;
+    void disableCursor();
 
     // Raylib Camera functions
     Camera3D getCamera() const;
