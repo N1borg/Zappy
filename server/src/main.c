@@ -5,11 +5,11 @@
 ** main
 */
 
-void handle_sigpipe(int sig __attribute__ ((unused)))
+#include "server.h"
+
+void handle_sigpipe(int sig __attribute__((unused)))
 {
 }
-
-#include "server.h"
 
 int main(int argc, char *argv[])
 {
