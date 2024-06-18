@@ -112,3 +112,6 @@ void event_sbp(client_t *client);
 void event_seg(server_t *serv, char *team);
 void event_smg(server_t *serv, char *msg);
 void event_suc(client_t *client);
+
+// Resource management functions
+void generate_resources(server_t *server);

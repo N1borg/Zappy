@@ -7,8 +7,22 @@
 
 #pragma once
 
-#include "server.h"
-#include "player.h"
+#define RESSOURCE_COUNT 7
+
+typedef enum {
+    FOOD,
+    LINEMATE,
+    DERAUMERE,
+    SIBUR,
+    MENDIANE,
+    PHIRAS,
+    THYSTAME
+} resource_type_t;
+
+typedef struct {
+    char *name;
+    double density;
+} resource_density_t;
 
 typedef struct tile_s {
     int x;

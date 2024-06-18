@@ -5,7 +5,8 @@
 ** generate_resources.c
 */
 
-#include "../include/main.h"
+#include "server.h"
+#include "tile.h"
 
 /**
  * @brief Increment the resource count on a specific tile.
