@@ -176,7 +176,13 @@ class AI:
             else:
                 self.level += 1
                 self.incantation_done = True
+                # return response
                 print(response)
+                response = receive_response(self.socket)
+                print(response)
+                # response = receive_response(self.socket)
+                # print(response)
+                
 
         elif cmd_name == "Take":
             if response == "ok":
@@ -283,55 +289,61 @@ class AI:
             if "player" in self.look[0] and self.inventory["linemate"] >= 1:
                 self.urgent_command("Set", "linemate", 1)
                 self.send_command()
+                self.receive_command()
                 self.urgent_command("Incantation", "", 1)
                 self.send_command()
+                self.receive_command()
+
             
-    def get_linemate(self):
-        curr_forward = 0
-        if self.inventory["linemate"] == 0:
+    def get_linemate(self, amount):
+        curr_fwd = 0
+        self.reset_commands()
+        while self.inventory["linemate"] < amount:
+            # if food < 3:
+            #    get_food(5)
+
+            print("__HERE 1")
+            self.do_look(True)
+            self.send_command()
+            self.receive_command()
             tile_nb, obj_nb = self.search_object("linemate")
             if tile_nb == "UNKNOWN" or obj_nb == "UNKNOWN":
-                if curr_forward % 3 == 0 and curr_forward % 2 != 0:
+                if curr_fwd >= self.map_x or curr_fwd >= self.map_y:
+                    print("__RIGHT UNKNOWN")
                     self.urgent_command("Right", "", 1)
                     self.send_command()
-                    self.urgent_command("Forward", "", 1)
+                    self.receive_command()
+                    curr_fwd = 0
                 else:
+                    print("__FORWARD UNKNOWN")
                     self.urgent_command("Forward", "", 1)
-                curr_forward += 1
-                self.send_command()
-                self.receive_command()
-                return
+                    curr_fwd += 1
+                    self.send_command()
+                    self.receive_command()
             else:
-                # print("_RESET")
+                print("__GOING NORMAL")
                 self.reset_commands()
                 self.do_walk(tile_nb, False)
-                self.manage_queue()
-                self.receive_command()
-                time.sleep(3)
+                while len(self.command_queue) > 0:
+                    self.manage_queue()
+                    self.receive_command()
                 self.do_take("linemate", 1, True)
                 self.send_command()
                 self.receive_command()
-                self.do_inventory(False)
-                return
-                # print(f"AAAA[CMD] Queue: {self.command_queue}")
-                # self.manage_queue()
-                # self.receive_command()
-            # print("_LOOPING")
-
+    
     def lvl2(self):
         self.do_look(False)
         self.do_look(False)
-        while True:
-            self.do_look(False)
-            self.get_linemate()
-            # if self.inventory["linemate"] >= 1:
-            self.manage_queue()
-            self.receive_command()
-            print(f"[SENT] Queue: {self.sent_queue}")
-            print(f"[CMD] Queue: {self.command_queue}")
+        self.get_linemate(1)
+        # self.manage_queue()
+        # self.receive_command()
+        # print(f"[SENT] Queue: {self.sent_queue}")
+        # print(f"[CMD] Queue: {self.command_queue}")
+        while self.level < 2:
             self.do_incantation()
             if self.incantation_done:
                 self.level += 1
+                print(f"______FINAL LVL {self.level}")
                 return
 
     def launch_loop(self):
