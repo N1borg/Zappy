@@ -17,13 +17,14 @@ egg_t *create_egg(team_t *team, tile_t *tile)
         return NULL;
     new_egg->tile = tile;
     new_egg->team = team;
-    new_egg->id = next_id++;
+    new_egg->id = next_id;
+    next_id += 1;
     new_egg->next_team = NULL;
     new_egg->next_tile = NULL;
     return new_egg;
 }
 
-// Add the egg to the team  
+// Add the egg to the team
 void add_egg_to_team(egg_t *new_egg, team_t *team)
 {
     egg_t *current_team = team->eggs;
