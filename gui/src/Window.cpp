@@ -59,7 +59,7 @@ Camera3D Window::getCamera() const
 
 int Window::getCameraMode()
 {
-    return _camera.projection;
+    return _cameraMode;
 }
 
 void Window::setCameraMode(int mode)
