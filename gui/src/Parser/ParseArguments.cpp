@@ -28,6 +28,11 @@ void ParseArguments::parse()
     }
 }
 
+bool ParseArguments::validateConnection(std::string msg)
+{
+    return msg == "WELCOME\n";
+}
+
 void ParseArguments::setPort(int port)
 {
     _port = port;

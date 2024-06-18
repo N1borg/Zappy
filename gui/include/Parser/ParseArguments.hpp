@@ -16,6 +16,7 @@ class ParseArguments: public IParser {
         ~ParseArguments() = default;
 
         void parse();
+        bool validateConnection(std::string msg);
 
         // Getters
         int getPort() const;

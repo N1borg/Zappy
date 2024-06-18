@@ -28,6 +28,7 @@ public:
 
     bool connectSocket();
     void sendMessage(const std::string &message);
+    std::string receiveMessage();
     void attemptConnection();
 
 private:
@@ -35,4 +36,5 @@ private:
     std::string _machine;
     int _clientSocket;
     std::atomic<bool> _connected;
+    std::thread _connectionThread;
 };

@@ -39,6 +39,15 @@ int main(int argc, char *argv[])
         return 84;
     }
 
+    // Validate connection
+    if (argsParser.validateConnection(socket.receiveMessage())) {
+        std::cout << "Connection established" << std::endl;
+    } else {
+        std::cerr << "Error: Connection failed" << std::endl;
+        window.close();
+        return 84;
+    }
+
     int map_width = 10;
     int map_height = 10;
 

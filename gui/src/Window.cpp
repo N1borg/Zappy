@@ -191,15 +191,7 @@ int Window::drawWaitingScreen(Socket &socket, const std::string machine)
 
     connectionThread.join();
 
-    if (socket.isConnected()) {
+    if (socket.isConnected())
         return 1;
-    } else {
-        while (!shouldClose()) {
-            beginDrawing();
-            clearBackground(RAYWHITE);
-            drawText("Failed to connect", (getScreenWidth() - MeasureText("Failed to connect", 20)) / 2, (getScreenHeight() - 20) / 2, 20, RED);
-            endDrawing();
-        }
-    }
     return 0;
 }
