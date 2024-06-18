@@ -167,7 +167,7 @@ std::string Window::animateTextDots(const std::string &string, float elapsedTime
     return string + dotsStr;
 }
 
-int Window::drawWaitingScreen(Parser &parser, Socket &socket)
+int Window::drawWaitingScreen(Socket &socket, const std::string machine)
 {
     std::thread connectionThread(&Socket::attemptConnection, &socket);
 
@@ -183,8 +183,8 @@ int Window::drawWaitingScreen(Parser &parser, Socket &socket)
         beginDrawing();
         clearBackground(RAYWHITE);
 
-        std::string connectingText = animateTextDots("Connecting to " + parser.getMachine(), elapsedTime);
-        drawText(connectingText.c_str(), (getScreenWidth() - MeasureText(("Connecting to " + parser.getMachine() + "...").c_str(), 20)) / 2, (getScreenHeight() - 20) / 2, 20, DARKGRAY);
+        std::string connectingText = animateTextDots("Connecting to " + machine, elapsedTime);
+        drawText(connectingText.c_str(), (getScreenWidth() - MeasureText(("Connecting to " + machine + "...").c_str(), 20)) / 2, (getScreenHeight() - 20) / 2, 20, DARKGRAY);
 
         endDrawing();
     }

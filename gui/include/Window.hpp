@@ -11,7 +11,7 @@
 #include <math.h>
 #include <string>
 
-#include "Parser.hpp"
+#include "Parser/ParseArguments.hpp"
 #include "Socket.hpp"
 
 class Window {
@@ -52,7 +52,7 @@ public:
     std::string animateTextDots(const std::string &string, float elapsedTime);
 
     // Drawing functions
-    int drawWaitingScreen(Parser &parser, Socket &socket);
+    int drawWaitingScreen(Socket &socket, const std::string machine);
 
 private:
     int _width;

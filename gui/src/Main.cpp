@@ -6,32 +6,35 @@
 */
 
 #include "Gui.hpp"
-#include "Parser.hpp"
+#include "ParseArguments.hpp"
 #include "Socket.hpp"
 #include "Window.hpp"
 #include "Map.hpp"
 
 int main(int argc, char *argv[])
 {
-    Parser parser(argc, argv);
+    ParseArguments argsParser(argc, argv);
 
+    /*
+    ** Parse arguments
+    */
     try {
-        parser.parseArguments();
+        argsParser.parse();
+        if (argsParser.getMachine().empty() || argsParser.getPort() <= 0 || argsParser.getPort() > 65535)
+            throw std::runtime_error("Error: Invalid arguments");
     } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
         return 84;
     }
 
-    if (parser.getMachine().empty() || parser.getPort() <= 0 || parser.getPort() > 65535) {
-        throw std::runtime_error("Error: Invalid arguments");
-        return 84;
-    }
-
-    Socket socket(parser.getPort(), parser.getMachine());
+    /*
+    ** Init socker and window, draw waiting screen while connecting
+    */
+    Socket socket(argsParser.getPort(), argsParser.getMachine());
     Window window(1280, 720, "Zappy GUI");
     window.init();
 
-    if (!window.drawWaitingScreen(parser, socket)) {
+    if (!window.drawWaitingScreen(socket, argsParser.getMachine())) {
         window.close();
         return 84;
     }

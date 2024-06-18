@@ -54,7 +54,7 @@ set(SHARED_SRC
     src/Main.cpp
     src/Help.cpp
     src/Socket.cpp
-    src/Parser.cpp
+    src/Parser/ParseArguments.cpp
     src/Window.cpp
     src/Map.cpp
     src/Player.cpp

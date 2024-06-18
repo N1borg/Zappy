@@ -10,14 +10,14 @@
 #include "IModel.hpp"
 
 class BigIsland : public IModel {
-public:
-    BigIsland(Model model);
-    ~BigIsland() = default;
+    public:
+        BigIsland(Model model);
+        ~BigIsland() = default;
 
-    void draw(Vector3 position, float scale, Color tint) const override;
-    Model getModel() const;
+        void draw(Vector3 position, float scale, Color tint) const override;
+        Model getModel() const;
 
-private:
-    Model model;
-    float yRotation;
+    private:
+        Model model;
+        float yRotation;
 };
