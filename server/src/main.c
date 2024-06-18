@@ -5,12 +5,17 @@
 ** main
 */
 
+void handle_sigpipe(int sig __attribute__ ((unused)))
+{
+}
+
 #include "server.h"
 
 int main(int argc, char *argv[])
 {
     server_t server = parse_args(argc, argv);
 
+    signal(SIGPIPE, handle_sigpipe);
     srand(time(NULL));
     if (argc == 2 && strcmp(argv[1], "-help") == 0)
         return help(argv[0], 0, &server);

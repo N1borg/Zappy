@@ -43,7 +43,7 @@ int is_team(server_t *serv, char *team_name)
 // Return 1 if socket exists as player, 0 if not
 int is_player(server_t *serv, int socket)
 {
-    for (int i = 0; serv->clients[i]; i++) {
+    for (int i = 0; i < MAX_CLIENTS && serv->clients[i]; i++) {
         if (serv->clients[i]->fd == socket && serv->clients[i]->team != NULL)
             return 1;
     }
@@ -53,7 +53,7 @@ int is_player(server_t *serv, int socket)
 // Return the client based its id
 client_t *get_client_by_id(server_t *serv, int id)
 {
-    for (int i = 0; serv->clients[i]; i++) {
+    for (int i = 0; i < MAX_CLIENTS && serv->clients[i]; i++) {
         if (serv->clients[i]->id == id)
             return serv->clients[i];
     }
