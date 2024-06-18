@@ -5,10 +5,10 @@
 ** handle_command
 */
 
-#include "../include/main.h"
+#include "server.h"
 
 // Function to run command based on buffer, returns 1 on error
-int run_command(server_t *s, client_t *client,
+int run_command(server_t *serv, client_t *client,
     char *buffer, command_map_t *command_map)
 {
     char *args = strchr(buffer, ' ');
@@ -20,62 +20,70 @@ int run_command(server_t *s, client_t *client,
     }
     if (command == NULL)
         command = buffer;
-    printf("buffer: |%s|, command: |%s|, args: |%s|\n", buffer, command, args);
     for (int i = 0; command_map[i].command != NULL; i++) {
         if (strcmp(command_map[i].command, command) == 0) {
-            return command_map[i].command_function(s,
+            return command_map[i].command_function(serv,
                 client, args);
         }
     }
-    free(command);
     return 1;
 }
 
 // Function to execute player command based on buffer, returns 1 on error
-int handle_command_player(server_t *s, client_t *client, char *buffer)
+int handle_command_player(server_t *serv, client_t *client, char *buffer)
 {
-    command_map_t command_map[] = {{"Forward", command_forward},
-        {"Right", command_turn_right}, {"Left", command_turn_left},
-        {"Look", command_look}, {"Inventory", command_inventory},
-        {"Broadcast", command_broadcast}, {"Connect_nbr", command_team_slots},
-        {"Fork", command_fork}, {"Eject", command_eject},
-        {"Take object", command_take_object},
-        {"Set object", command_set_object},
-        {"Incantation", command_incantation},
-        {NULL, NULL}};
+    command_map_t command_map[] = {
+        {"Forward", command_forward, 7},
+        {"Right", command_turn_right, 7},
+        {"Left", command_turn_left, 7},
+        {"Look", command_look, 7},
+        {"Inventory", command_inventory, 1},
+        {"Broadcast", command_broadcast, 7},
+        {"Connect_nbr", command_team_slots, 0},
+        {"Fork", command_fork, 42},
+        {"Eject", command_eject, 7},
+        {"Take object", command_take_object, 7},
+        {"Set object", command_set_object, 7},
+        {"Incantation", command_incantation, 300},
+        {NULL, NULL, 0}
+    };
 
-    return run_command(s, client, buffer, command_map);
+    return run_command(serv, client, buffer, command_map);
 }
 
 // Function to execute graphic command based on buffer, returns 1 on error
-int handle_command_graphic(server_t *s, client_t *client, char *buffer)
+int handle_command_graphic(server_t *serv, client_t *client, char *buffer)
 {
-    command_map_t command_map[] = {{"msz", command_map_size},
-        {"bct", command_tile_content}, {"mct", command_map_content},
-        {NULL, NULL}};
+    struct command_map command_map[] = {{"msz", command_msz, 0},
+        {"bct", command_bct, 0}, {"mct", command_mct, 0},
+        {"pin", command_pin, 0}, {"plv", command_plv, 0},
+        {"ppo", command_ppo, 0}, {"sgt", command_sgt, 0},
+        {"sst", command_sst, 0}, {"tna", command_tna, 0},
+        {NULL, NULL, 0}};
 
-    return run_command(s, client, buffer, command_map);
+    return run_command(serv, client, buffer, command_map);
 }
 
 // Compute response based on buffer
-void compute_response(server_t *s, client_t *client, char *buffer)
+void compute_response(server_t *serv, client_t *client, char *buffer)
 {
-    if (is_team(s, buffer) == 1) {
-        if (create_player(s, client, buffer) != 0)
-            dprintf(client->fd, "ko\n");
+    if (is_team(serv, buffer) == 1) {
+        if (create_player(serv, client, buffer) != 0
+            && dprintf(client->fd, "ko\n") < 0 && errno == EPIPE)
+                disconnect_client(serv, client);
         return;
     }
     if (client->team == NULL) {
-        dprintf(client->fd, "ko\n");
+        if (dprintf(client->fd, "ko\n") < 0 && errno == EPIPE)
+            disconnect_client(serv, client);
         return;
     }
-    printf("buffer: %s\n", buffer);
-    if (strcmp(client->team, "GRAPHIC") != 0) {
-        if (handle_command_player(s, client, buffer) != 0)
-            dprintf(client->fd, "ko\n");
-    }
-    if (strcmp(client->team, "GRAPHIC") == 0) {
-        if (handle_command_graphic(s, client, buffer) != 0)
-            dprintf(client->fd, "ko\n");
-    }
+    if (strcmp(client->team, "GRAPHIC") != 0 &&
+        handle_command_player(serv, client, buffer) != 0
+        && dprintf(client->fd, "ko\n") < 0 && errno == EPIPE)
+                disconnect_client(serv, client);
+    if (strcmp(client->team, "GRAPHIC") == 0 &&
+        handle_command_graphic(serv, client, buffer) != 0 &&
+        dprintf(client->fd, "ko\n") < 0 && errno == EPIPE)
+                disconnect_client(serv, client);
 }

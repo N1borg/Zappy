@@ -5,7 +5,7 @@
 ** look_buffer_len
 */
 
-#include "../../include/main.h"
+#include "server.h"
 
 // Return the number of chars to init the look buffer
 int tile_size(tile_t *tile)
@@ -16,7 +16,7 @@ int tile_size(tile_t *tile)
         if (tile->players[i])
             ret += 7;
     }
-    ret += tile->egg * 4 + tile->food * 5 + tile->linemate * 9
+    ret += get_nbr_eggs_on_tile(tile) * 4 + tile->food * 5 + tile->linemate * 9
     + tile->deraumere * 10 + tile->sibur * 6 + tile->mendiane * 9
     + tile->phiras * 7 + tile->thystame * 9;
     return (ret + 1);

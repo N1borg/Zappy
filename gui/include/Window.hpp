@@ -26,18 +26,20 @@ public:
     void setTargetFPS(int fps);
     int getScreenWidth() const;
     int getScreenHeight() const;
+    void disableCursor();
+    bool isKeyPressed(int key);
 
     // Raylib Camera functions
     Camera3D getCamera() const;
-    int getCameraMode();
-    void setCameraMode(int mode);
+    int getCameraMode() const;
+    void updateCamera();
     void setCameraPosition(Vector3 position);
     void setCameraTarget(Vector3 target);
     void setCameraUp(Vector3 up);
     void setCameraFovy(float fovy);
     void setCameraProjection(int projection);
-    void updateCamera();
-    void parseCameraInput();
+    void setCameraMode(int mode);
+    void parseCameraInputs();
 
     // Raylib drawing functions
     void beginDrawing();
@@ -45,13 +47,14 @@ public:
     void beginMode3D();
     void endMode3D();
     void clearBackground(Color color);
+    void drawPlane(Vector3 position, Vector2 size, Color color);
     void drawGrid(int slices, float spacing);
     void drawText(const char *text, int posX, int posY, int fontSize, Color color);
     void drawFPS(int posX, int posY);
 
     std::string animateTextDots(const std::string &string, float elapsedTime);
 
-    // Drawing functions
+        // Drawing functions
     int drawWaitingScreen(Socket &socket, const std::string machine);
 
 private:

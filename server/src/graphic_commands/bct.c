@@ -2,18 +2,19 @@
 ** EPITECH PROJECT, 2024
 ** B-YEP-400-LIL-4-1-zappy-romaric.loevenbruck
 ** File description:
-** map_size
+** content of a tile
 */
 
-#include "../../include/main.h"
+#include "server.h"
 
 // Function to send the tile content
-void send_tile_content(server_t *s, client_t *client, int x, int y)
+void send_tile_content(server_t *serv, client_t *client, int x, int y)
 {
     dprintf(client->fd, "bct %d %d %d %d %d %d %d %d %d\n", x, y,
-        s->map[y][x].food, s->map[y][x].linemate, s->map[y][x].deraumere,
-        s->map[y][x].sibur, s->map[y][x].mendiane, s->map[y][x].phiras,
-        s->map[y][x].thystame);
+        serv->map[y][x].food, serv->map[y][x].linemate,
+        serv->map[y][x].deraumere, serv->map[y][x].sibur,
+        serv->map[y][x].mendiane, serv->map[y][x].phiras,
+        serv->map[y][x].thystame);
 }
 
 // Return 1 if the string is an integer
@@ -30,7 +31,7 @@ int is_integer(const char *str)
 }
 
 // Function to parse the command arguments
-int parse_command_args(server_t *s, client_t *client,
+int parse_command_args(server_t *serv, client_t *client,
     char *token, char *endptr)
 {
     int x = 0;
@@ -48,14 +49,14 @@ int parse_command_args(server_t *s, client_t *client,
     token = strtok(NULL, " ");
     if (token != NULL)
         return 1;
-    if (x < 0 || x >= s->width || y < 0 || y >= s->height)
+    if (x < 0 || x >= serv->width || y < 0 || y >= serv->height)
         return 1;
-    send_tile_content(s, client, x, y);
+    send_tile_content(serv, client, x, y);
     return 0;
 }
 
 // Function to send the tile content
-int command_tile_content(server_t *s, client_t *client, char *arg)
+int command_bct(server_t *serv, client_t *client, char *arg)
 {
     char *token = NULL;
     char *endptr = NULL;
@@ -65,5 +66,5 @@ int command_tile_content(server_t *s, client_t *client, char *arg)
     token = strtok(arg, " ");
     if (token == NULL || !is_integer(token))
         return 1;
-    return parse_command_args(s, client, token, endptr);
+    return parse_command_args(serv, client, token, endptr);
 }

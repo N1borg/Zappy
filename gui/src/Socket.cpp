@@ -7,7 +7,7 @@
 
 #include "Socket.hpp"
 
-Socket::Socket(int port, const std::string machine) : _port(port), _machine(machine), _clientSocket(0), _connected(false) {}
+Socket::Socket(int port, std::string machine) : _port(port), _machine(machine), _clientSocket(-1), _connected(false) {}
 
 Socket::~Socket()
 {

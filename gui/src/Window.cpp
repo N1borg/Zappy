@@ -12,12 +12,12 @@ Window::Window(int width, int height, std::string title)
     _width = width;
     _height = height;
     _title = title;
-    _camera.position = {0.0f, 100.0f, 10.0f};
-    _camera.target = {0.0f, 10.0f, 0.0f};
-    _camera.up = {0.0f, 1.0f, 0.0f};
-    _camera.fovy = 60.0f;
-    _camera.projection = CAMERA_PERSPECTIVE;
-    _cameraMode = CAMERA_FREE;
+    setCameraPosition({0.0f, 10.0f, 10.0f});
+    setCameraTarget({0.0f, 10.0f, 0.0f});
+    setCameraUp({0.0f, 1.0f, 0.0f});
+    setCameraFovy(60.0f);
+    setCameraProjection(CAMERA_PERSPECTIVE);
+    setCameraMode(CAMERA_FREE);
 }
 
 void Window::init()
@@ -98,24 +98,26 @@ void Window::updateCamera()
     UpdateCamera(&_camera, getCameraMode());
 }
 
-void Window::parseCameraInput()
+void Window::parseCameraInputs()
 {
     switch (GetKeyPressed()) {
         case KEY_ONE:
             setCameraMode(CAMERA_FIRST_PERSON);
-            setCameraUp({0.0f, 1.0f, 0.0f});
+            setCameraUp({ 0.0f, 1.0f, 0.0f });
             break;
         case KEY_TWO:
             setCameraMode(CAMERA_THIRD_PERSON);
-            setCameraUp({0.0f, 1.0f, 0.0f});
+            setCameraUp({ 0.0f, 1.0f, 0.0f });
             break;
         case KEY_THREE:
             setCameraMode(CAMERA_FREE);
-            setCameraUp({0.0f, 1.0f, 0.0f});
+            setCameraUp({ 0.0f, 1.0f, 0.0f });
             break;
         case KEY_FOUR:
             setCameraMode(CAMERA_ORBITAL);
-            setCameraUp({0.0f, 1.0f, 0.0f});
+            setCameraUp({ 0.0f, 1.0f, 0.0f });
+            break;
+        default:
             break;
     }
 }
@@ -143,6 +145,11 @@ void Window::endMode3D()
 void Window::clearBackground(Color color)
 {
     ClearBackground(color);
+}
+
+void Window::drawPlane(Vector3 position, Vector2 size, Color color)
+{
+    DrawPlane(position, size, color);
 }
 
 void Window::drawGrid(int slices, float spacing)

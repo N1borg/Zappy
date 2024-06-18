@@ -5,7 +5,7 @@
 ** server_init
 */
 
-#include "../include/main.h"
+#include "server.h"
 
 // Initializes a tile with the given coordinates
 void set_tile(tile_t *tile, int x, int y)
@@ -19,7 +19,7 @@ void set_tile(tile_t *tile, int x, int y)
     tile->mendiane = 0;
     tile->phiras = 0;
     tile->thystame = 0;
-    tile->egg = 0;
+    tile->eggs = NULL;
     for (int i = 0; i < MAX_CLIENTS; i++)
         tile->players[i] = NULL;
 }
@@ -38,23 +38,11 @@ tile_t **init_map(int width, int height)
     return map;
 }
 
-// Spawns eggs randomly on the map
-void spawn_eggs(tile_t **map, int width, int height, int num_eggs)
-{
-    int x = 0;
-    int y = 0;
-
-    for (int i = 0; i < num_eggs; i++) {
-        x = rand() % width;
-        y = rand() % height;
-        map[y][x].egg++;
-    }
-}
-
 // Initialize given client structure
 void set_client(client_t *clients)
 {
     clients->fd = 0;
+    clients->id = 0;
     clients->x = 0;
     clients->y = 0;
     clients->level = 0;
@@ -67,17 +55,26 @@ void set_client(client_t *clients)
     clients->phiras = 0;
     clients->thystame = 0;
     clients->team = NULL;
+    clients->command_queue = NULL;
 }
 
 // Initializes the server struct
-void init_server(server_t *s)
+void init_server(server_t *serv)
 {
-    s->master_socket = 0;
+    int x = 0;
+    int y = 0;
+
+    serv->master_socket = 0;
     for (int i = 0; i < MAX_CLIENTS; i++) {
-        s->clients[i] = malloc(sizeof(client_t));
-        set_client(s->clients[i]);
+        serv->clients[i] = malloc(sizeof(client_t));
+        set_client(serv->clients[i]);
     }
-    s->map = init_map(s->width, s->height);
-    spawn_eggs(s->map, s->width, s->height,
-        (s->max_client_team * (s->team_nb - 1)));
+    serv->map = init_map(serv->width, serv->height);
+    for (int i = 0; i < serv->team_nb - 1; i++) {
+        for (int j = 0; j < serv->max_client_team; j++) {
+            x = rand() % serv->width;
+            y = rand() % serv->height;
+            add_egg(serv->teams[i], &serv->map[x][y]);
+        }
+    }
 }

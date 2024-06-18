@@ -11,8 +11,9 @@
 #include <raymath.h>
 
 class IModel {
-    public:
-        virtual ~IModel() = default;
+public:
+    virtual ~IModel() = default;
 
-        virtual void draw(Vector3 position, float scale, Color tint) const = 0;
+    virtual void draw(Vector3 position, float scale, Color tint) const = 0;
+    virtual void SetRotationY(float yRotation) = 0;
 };
