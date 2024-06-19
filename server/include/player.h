@@ -50,6 +50,8 @@ typedef struct client_s {
     int mendiane;
     int phiras;
     int thystame;
+    int tick;
+    int life;
     char *team;
     command_queue_t *command_queue;
 } client_t;

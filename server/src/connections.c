@@ -56,10 +56,6 @@ int start_listener(server_t *serv)
 {
     int sd = 0;
     int max_sd = 0;
-    clock_t last_tick = clock();
-    double tick_interval = 1.0 / server->freq;
-    clock_t current_time = 0;
-    double elapsed_time = 0;
 
     printf("Listening on port %d...\n", serv->port);
     while (true) {

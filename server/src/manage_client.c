@@ -56,6 +56,8 @@ void init_player(server_t *serv, client_t *player)
 
     temp_id++;
     player->id = temp_id;
+    player->life = 126;
+    player->tick = 0;
     dprintf(player->fd, "%d\n", serv->teams[team_id]->free_slots);
     dprintf(player->fd, "%d %d\n", serv->width, serv->height);
     event_pnw(serv, player);
