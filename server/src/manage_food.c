@@ -5,7 +5,7 @@
 ** food.c
 */
 
-#include "../include/main.h"
+#include "server.h"
 
 void check_if_dead(client_t *client)
 {
