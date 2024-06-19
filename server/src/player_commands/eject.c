@@ -7,6 +7,27 @@
 
 #include "server.h"
 
+// Calculate new coordinates based on orientation
+void calculate_new_coordinates(server_t *serv, client_t *player, int *x, int *y)
+{
+    switch (player->orientation) {
+        case NORTH:
+            *y = y_to_map_y(serv, *y - 1);
+            break;
+        case SOUTH:
+            *y = y_to_map_y(serv, *y + 1);
+            break;
+        case EAST:
+            *x = x_to_map_x(serv, *x + 1);
+            break;
+        case WEST:
+            *x = x_to_map_x(serv, *x - 1);
+            break;
+        default:
+            break;
+    }
+}
+
 // Reject players from the tile
 int eject_players(server_t *serv, client_t *player, int x, int y)
 {
@@ -14,14 +35,7 @@ int eject_players(server_t *serv, client_t *player, int x, int y)
     int y2 = y;
     int has_ejected = 0;
 
-    if (player->orientation == NORTH)
-        y2 = y_to_map_y(serv, y - 1);
-    if (player->orientation == SOUTH)
-        y2 = y_to_map_y(serv, y + 1);
-    if (player->orientation == EAST)
-        x2 = x_to_map_x(serv, x + 1);
-    if (player->orientation == WEST)
-        x2 = x_to_map_x(serv, x - 1);
+    calculate_new_coordinates(serv, player, &x2, &y2);
     for (int i = 0; i < MAX_CLIENTS && serv->map[y][x].players[i]; i++)
         has_ejected += move_player(serv, serv->map[y][x].players[i], x2, y2);
     if (has_ejected > 0)
@@ -37,14 +51,7 @@ int command_eject(server_t *serv, client_t *player, char *arg)
 
     if (arg != NULL)
         return 1;
-    if (player->orientation == NORTH)
-        y = y_to_map_y(serv, y - 1);
-    if (player->orientation == SOUTH)
-        y = y_to_map_y(serv, y + 1);
-    if (player->orientation == EAST)
-        x = x_to_map_x(serv, x + 1);
-    if (player->orientation == WEST)
-        x = x_to_map_x(serv, x - 1);
+    calculate_new_coordinates(serv, player, &x, &y);
     if (player->orientation < 1 || player->orientation > 4)
         return 1;
     if (eject_players(serv, player, x, y) > 0 ||

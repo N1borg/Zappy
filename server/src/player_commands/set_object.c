@@ -31,11 +31,11 @@ void init_resources_set(resource_t *resources, server_t *serv, client_t *player)
 int command_set_object(server_t *serv, client_t *player, char *arg)
 {
     resource_t resources[8];
+
     init_resources_set(resources, serv, player);
 
     if (arg == NULL)
         return 1;
-
     for (int i = 0; resources[i].name != NULL; i++) {
         if (!strcmp(arg, resources[i].name) && *resources[i].player_resource > 0) {
             (*resources[i].player_resource)--;
