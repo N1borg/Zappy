@@ -76,11 +76,11 @@ int destroy_eggs_from_tiles(tile_t *tile)
 }
 
 // Destroy all eggs from the server
-void destroy_eggs(server_t *server)
+void destroy_eggs(server_t *serv)
 {
-    for (int x = 0; x < server->width; x++) {
-        for (int y = 0; y < server->height; y++) {
-            destroy_eggs_from_tiles(&server->map[x][y]);
+    for (int x = 0; x < serv->width; x++) {
+        for (int y = 0; y < serv->height; y++) {
+            destroy_eggs_from_tiles(&serv->map[x][y]);
         }
     }
 }

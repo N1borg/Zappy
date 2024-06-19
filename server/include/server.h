@@ -74,7 +74,7 @@ int get_nbr_eggs_on_tile(tile_t *tile);
 int add_egg(team_t *team, tile_t *tile);
 int remove_egg(egg_t *egg);
 int destroy_eggs_from_tiles(tile_t *tile);
-void destroy_eggs(server_t *server);
+void destroy_eggs(server_t *serv);
 void init_command_queue(client_t *client);
 int enqueue_command(client_t *client, char *command_str);
 char *dequeue_command(command_queue_t *queue);
@@ -126,4 +126,4 @@ void event_smg(server_t *serv, char *msg);
 void event_suc(client_t *client);
 
 // Resource management functions
-void generate_resources(server_t *server);
+void generate_resources(server_t *serv);
