@@ -10,7 +10,7 @@
 // Add the child sockets to the readfds set
 void add_child_socket(server_t *serv, int *sd, int *max_sd)
 {
-    for (int i = 0; i < serv->max_client_team * serv->team_nb; i++) {
+    for (int i = 0; i < MAX_CLIENTS; i++) {
         (*sd) = serv->clients[i]->fd;
         if (*sd > 0)
             FD_SET(*sd, &serv->readfds);

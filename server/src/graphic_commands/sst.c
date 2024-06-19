@@ -15,7 +15,7 @@ int command_sst(server_t *serv, client_t *client, char *arg)
     if (arg == NULL)
         return 1;
     temp_freq = atoi(arg);
-    if (temp_freq < 0 || (temp_freq == 0 && strcmp(arg, "0") != 0))
+    if (temp_freq <= 0)
         return 1;
     serv->freq = temp_freq;
     dprintf(client->fd, "sst %d\n", serv->freq);

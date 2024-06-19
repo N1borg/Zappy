@@ -19,7 +19,7 @@ void accept_client(server_t *serv)
         perror("Accept");
     printf("[%d] - New connection | fd: %d, ip: %s, port: %d\n", new_socket,
     new_socket, inet_ntoa(serv->addr.sin_addr), ntohs(serv->addr.sin_port));
-    for (int i = 0; i < serv->max_client_team * serv->team_nb; i++) {
+    for (int i = 0; i < MAX_CLIENTS; i++) {
         if (serv->clients[i]->fd == 0) {
             serv->clients[i]->fd = new_socket;
             init_command_queue(serv->clients[i]);
