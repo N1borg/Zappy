@@ -7,10 +7,21 @@
 
 #include "server.h"
 
+// Free eggs memory
+void destroy_eggs(server_t *serv)
+{
+    for (int i = 0; serv->map[i]; i++) {
+        for (int j = 0; serv->map[i][j].eggs; j++) {
+            destroy_eggs_pointer(serv->map[i][j].eggs);
+        }
+    }
+}
+
 // Free clients memory
 void destroy_clients(server_t *serv)
 {
     for (int i = 0; i < MAX_CLIENTS; i++) {
+        close(serv->clients[i]->fd);
         free_command_queue(serv->clients[i]->command_queue);
         free(serv->clients[i]);
     }
@@ -36,13 +47,9 @@ void destroy_map(tile_t **map)
 int destroy_server(server_t *serv, int ret)
 {
     close(serv->master_socket);
-    for (int i = 0; i < MAX_CLIENTS; i++) {
-        close(serv->clients[i]->fd);
-    }
-    for (int i = 0; serv->teams[i]; i++)
-        free(serv->teams[i]);
-    free(serv->teams);
     destroy_clients(serv);
+    destroy_teams(serv->teams);
+    destroy_eggs(serv);
     destroy_map(serv->map);
     printf("Server closed\n");
     return ret;

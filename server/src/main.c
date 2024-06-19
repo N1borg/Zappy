@@ -27,7 +27,6 @@ int main(int argc, char *argv[])
     init_server(&serv);
     if (init_socket(&serv) != 0 || init_listener(&serv) != 0)
         return destroy_server(&serv, 84);
-    if (start_listener(&serv) != 0)
-        return destroy_server(&serv, 84);
+    start_listener(&serv);
     return destroy_server(&serv, 0);
 }

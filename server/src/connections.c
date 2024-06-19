@@ -20,7 +20,7 @@ void add_child_socket(server_t *serv, int *sd, int *max_sd)
 }
 
 // Handle the client messages
-int client_handler(server_t *serv, client_t *client)
+void client_handler(server_t *serv, client_t *client)
 {
     char buffer[1024];
     int valread = 0;
@@ -32,15 +32,9 @@ int client_handler(server_t *serv, client_t *client)
         } else {
             buffer[valread - 1] = '\0';
             printf("[%d] - sent: %s\n", client->fd, buffer);
-            // FOR DEBUG PURPOSE
-            if (strcmp(buffer, "DEBUG_EXIT") == 0) {
-                disconnect_client(serv, client);
-                return 1;
-            }
             manage_queue(client, buffer);
         }
     }
-    return 0;
 }
 
 // Execute the commands in the queue of the clients
@@ -56,7 +50,7 @@ void execute_queue(server_t *serv, client_t *client)
 }
 
 // Start the server and listen for incoming connections
-int start_listener(server_t *serv)
+void start_listener(server_t *serv)
 {
     int sd = 0;
     int max_sd = 0;
@@ -74,10 +68,8 @@ int start_listener(server_t *serv)
             accept_client(serv);
         for (int i = 0; i < MAX_CLIENTS; i++) {
             sd = serv->clients[i]->fd;
-            if (client_handler(serv, serv->clients[i]))
-                return 1;
+            client_handler(serv, serv->clients[i]);
             execute_queue(serv, serv->clients[i]);
         }
     }
-    return 0;
 }

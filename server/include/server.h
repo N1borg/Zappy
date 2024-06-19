@@ -46,7 +46,7 @@ typedef struct command_map {
 
 int help(char *binary_name, int ret, server_t *serv);
 server_t parse_args(int argc, char *argv[]);
-int start_listener(server_t *serv);
+void start_listener(server_t *serv);
 int init_socket(server_t *serv);
 int init_listener(server_t *serv);
 void accept_client(server_t *serv);
@@ -74,7 +74,7 @@ int get_nbr_eggs_on_tile(tile_t *tile);
 egg_t *add_egg(team_t *team, tile_t *tile);
 int remove_egg(egg_t *egg);
 int destroy_eggs_from_tiles(server_t *server, tile_t *tile);
-void destroy_eggs(server_t *serv);
+void destroy_eggs_pointer(egg_t *eggs);
 void init_command_queue(client_t *client);
 int enqueue_command(client_t *client, char *command_str);
 char *dequeue_command(command_queue_t *queue);
