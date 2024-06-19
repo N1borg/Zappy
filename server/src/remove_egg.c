@@ -64,7 +64,7 @@ int destroy_eggs_from_tiles(server_t *server, tile_t *tile)
         return 0;
     current_egg = tile->eggs;
     while (current_egg != NULL) {
-        event_edi(server, current_egg->id);
+        event_edi(server, current_egg);
         next_egg = current_egg->next_tile;
         remove_egg_from_team(current_egg, current_egg->team);
         remove_egg_from_tile(current_egg, tile);

@@ -62,7 +62,6 @@ set(SHARED_SRC
     src/graphic_commands/sgt.c
     src/graphic_commands/smg.c
     src/graphic_commands/sst.c
-    src/graphic_commands/suc.c
     src/graphic_commands/tna.c
 )
 

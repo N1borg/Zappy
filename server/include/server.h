@@ -125,9 +125,9 @@ void event_sbp(client_t *client);
 void event_seg(server_t *serv, char *team);
 void event_smg(server_t *serv, char *msg);
 void event_suc(client_t *client);
-void event_enw(server_t *serv, client_t *player, eggs_t *egg);
-void event_ebo(server_t *serv, eggs_t *egg);
-void event_edi(server_t *serv, int id);
+void event_enw(server_t *serv, client_t *player, egg_t *egg);
+void event_ebo(server_t *serv, egg_t *egg);
+void event_edi(server_t *serv, egg_t *egg);
 
 // Resource management functions
 void generate_resources(server_t *serv);
