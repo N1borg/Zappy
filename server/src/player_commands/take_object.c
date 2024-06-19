@@ -7,59 +7,40 @@
 
 #include "server.h"
 
-// Take stone from map
-int command_take_stones2(server_t *serv, client_t *player, char *arg)
+// Initialize resources
+void init_resources_take(resource_t *resources, server_t *serv, client_t *player)
 {
-    if (!strcmp(arg, "mendiane") &&
-            serv->map[player->y][player->x].mendiane) {
-        serv->map[player->y][player->x].mendiane--;
-        player->mendiane++;
-        return success_response(player);
-    }
-    if (!strcmp(arg, "phiras") && serv->map[player->y][player->x].phiras) {
-        serv->map[player->y][player->x].phiras--;
-        player->phiras++;
-        return success_response(player);
-    }
-    if (!strcmp(arg, "thystame") && serv->map[player->y][player->x].thystame) {
-        serv->map[player->y][player->x].thystame--;
-        player->thystame++;
-        return success_response(player);
-    }
-    return 1;
-}
-
-// Take stone from map
-int command_take_stones1(server_t *serv, client_t *player, char *arg)
-{
-    if (!strcmp(arg, "linemate") && serv->map[player->y][player->x].linemate) {
-        serv->map[player->y][player->x].linemate--;
-        player->linemate++;
-        return success_response(player);
-    }
-    if (!strcmp(arg, "deraumere") &&
-        serv->map[player->y][player->x].deraumere > 0) {
-        serv->map[player->y][player->x].deraumere--;
-        player->deraumere++;
-        return success_response(player);
-    }
-    if (!strcmp(arg, "sibur") && serv->map[player->y][player->x].sibur) {
-        serv->map[player->y][player->x].sibur--;
-        player->sibur++;
-        return success_response(player);
-    }
-    return command_take_stones2(serv, player, arg);
+    resources[0] = (resource_t){"food", &player->food,
+        &serv->map[player->y][player->x].food};
+    resources[1] = (resource_t){"linemate", &player->linemate,
+        &serv->map[player->y][player->x].linemate};
+    resources[2] = (resource_t){"deraumere", &player->deraumere,
+        &serv->map[player->y][player->x].deraumere};
+    resources[3] = (resource_t){"sibur", &player->sibur,
+        &serv->map[player->y][player->x].sibur};
+    resources[4] = (resource_t){"mendiane", &player->mendiane,
+        &serv->map[player->y][player->x].mendiane};
+    resources[5] = (resource_t){"phiras", &player->phiras,
+        &serv->map[player->y][player->x].phiras};
+    resources[6] = (resource_t){"thystame", &player->thystame,
+        &serv->map[player->y][player->x].thystame};
+    resources[7] = (resource_t){NULL, NULL, NULL};
 }
 
 // Take object to inventory
 int command_take_object(server_t *serv, client_t *player, char *arg)
 {
-    if (arg == NULL || strlen(arg) <= 3)
+    resource_t resources[8];
+
+    init_resources_take(resources, serv, player);
+    if (arg == NULL)
         return 1;
-    if (!strcmp(arg, "food") && serv->map[player->y][player->x].food > 0) {
-        serv->map[player->y][player->x].food--;
-        player->food++;
-        return success_response(player);
+    for (int i = 0; resources[i].name != NULL; i++) {
+        if (!strcmp(arg, resources[i].name) && *resources[i].tile_resource > 0) {
+            (*resources[i].tile_resource)--;
+            (*resources[i].player_resource)++;
+            return success_response(player);
+        }
     }
-    return command_take_stones1(serv, player, arg);
+    return 1;
 }

@@ -23,6 +23,12 @@ typedef enum {
 } resource_type_t;
 
 typedef struct {
+    const char *name;
+    int *player_resource;
+    int *tile_resource;
+} resource_t;
+
+typedef struct {
     char *name;
     double density;
 } resource_density_t;
