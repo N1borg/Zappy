@@ -49,14 +49,16 @@ int main(int argc, char *argv[])
     }
 
     socket.sendMessage("msz\n");
-    std::string msg = socket.receiveMessage();
-    std::cout << msg << std::endl;
+    std::istringstream msg = std::istringstream(socket.receiveMessage());
+    std::string map_size, map_width, map_height;
 
-    int map_width = 10;
-    int map_height = 10;
+    msg >> map_size >> map_width >> map_height;
+
+    int width = std::stoi(map_width);
+    int height = std::stoi(map_height);
 
     // Create map
-    Map map(map_width, map_height);
+    Map map(width, height);
     std::vector<std::vector<Tile_t>> tiles = map.getTiles();
 
     bool selected = false;

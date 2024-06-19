@@ -102,6 +102,8 @@ void Socket::stopThread()
 
 void Socket::readThread()
 {
+    ParseCommands cmdParser;
+
     while (_threadRunning) {
         if (!_connected)
             attemptConnection();
@@ -109,6 +111,6 @@ void Socket::readThread()
         if (message.empty())
             _connected = false;
         else
-            std::cout << message << std::endl;
+            cmdParser.parse(message);
     }
 }

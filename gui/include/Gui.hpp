@@ -8,5 +8,8 @@
 #pragma once
 
 #include <iostream>
+#include <sstream>
+#include <string>
+
 
 void help(std::string binary);

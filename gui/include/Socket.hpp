@@ -14,6 +14,7 @@
 #include <unistd.h>
 #include <thread>
 #include <atomic>
+#include "Parser/ParseCommands.hpp"
 
 class Socket {
     public:
