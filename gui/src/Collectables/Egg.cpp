@@ -2,14 +2,14 @@
 ** EPITECH PROJECT, 2024
 ** B-YEP-400-LIL-4-1-zappy-romaric.loevenbruck
 ** File description:
-** Mendiane
+** Egg
 */
 
-#include "Mendiane.hpp"
+#include "Collectables/Egg.hpp"
 
-Mendiane::Mendiane(Model model) : _model(model) {}
+Egg::Egg(Model model) : _model(model) {}
 
-void Mendiane::draw(Vector3 position, float scale, Color tint) const
+void Egg::draw(Vector3 position, float scale, Color tint) const
 {
     Vector3 rotationAxis = {0, 1, 0};
     Vector3 scaleVector = {scale, scale, scale};
@@ -17,7 +17,7 @@ void Mendiane::draw(Vector3 position, float scale, Color tint) const
     DrawModelEx(_model, position, rotationAxis, _yRotation * RAD2DEG, scaleVector, tint);
 }
 
-void Mendiane::SetRotationY(float yRotation)
+void Egg::setRotationY(float yRotation)
 {
     this->_yRotation = yRotation;
 }

@@ -2,17 +2,17 @@
 ** EPITECH PROJECT, 2024
 ** B-YEP-400-LIL-4-1-zappy-romaric.loevenbruck
 ** File description:
-** Player
+** MediumIsland
 */
 
 #pragma once
 
 #include "IModel.hpp"
 
-class Player : public IModel {
+class MediumIsland : public IModel {
     public:
-        Player(Model model);
-        ~Player() = default;
+        MediumIsland(Model model);
+        ~MediumIsland() = default;
 
         void draw(Vector3 position, float scale, Color tint) const override;
         void setRotationY(float yRotation);

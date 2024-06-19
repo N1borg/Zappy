@@ -2,14 +2,14 @@
 ** EPITECH PROJECT, 2024
 ** B-YEP-400-LIL-4-1-zappy-romaric.loevenbruck
 ** File description:
-** Sibur
+** Food
 */
 
-#include "Sibur.hpp"
+#include "Collectables/Food.hpp"
 
-Sibur::Sibur(Model model) : _model(model) {}
+Food::Food(Model model) : _model(model) {}
 
-void Sibur::draw(Vector3 position, float scale, Color tint) const
+void Food::draw(Vector3 position, float scale, Color tint) const
 {
     Vector3 rotationAxis = {0, 1, 0};
     Vector3 scaleVector = {scale, scale, scale};
@@ -17,7 +17,7 @@ void Sibur::draw(Vector3 position, float scale, Color tint) const
     DrawModelEx(_model, position, rotationAxis, _yRotation * RAD2DEG, scaleVector, tint);
 }
 
-void Sibur::SetRotationY(float yRotation)
+void Food::setRotationY(float yRotation)
 {
     this->_yRotation = yRotation;
 }

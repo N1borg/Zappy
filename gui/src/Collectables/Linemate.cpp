@@ -2,14 +2,14 @@
 ** EPITECH PROJECT, 2024
 ** B-YEP-400-LIL-4-1-zappy-romaric.loevenbruck
 ** File description:
-** Thystame
+** Linemate
 */
 
-#include "Thystame.hpp"
+#include "Collectables/Linemate.hpp"
 
-Thystame::Thystame(Model model) : _model(model) {}
+Linemate::Linemate(Model model) : _model(model) {}
 
-void Thystame::draw(Vector3 position, float scale, Color tint) const
+void Linemate::draw(Vector3 position, float scale, Color tint) const
 {
     Vector3 rotationAxis = {0, 1, 0};
     Vector3 scaleVector = {scale, scale, scale};
@@ -17,7 +17,7 @@ void Thystame::draw(Vector3 position, float scale, Color tint) const
     DrawModelEx(_model, position, rotationAxis, _yRotation * RAD2DEG, scaleVector, tint);
 }
 
-void Thystame::SetRotationY(float yRotation)
+void Linemate::setRotationY(float yRotation)
 {
     this->_yRotation = yRotation;
 }

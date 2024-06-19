@@ -2,17 +2,17 @@
 ** EPITECH PROJECT, 2024
 ** B-YEP-400-LIL-4-1-zappy-romaric.loevenbruck
 ** File description:
-** Player
+** Linemate
 */
 
 #pragma once
 
 #include "IModel.hpp"
 
-class Player : public IModel {
+class Linemate : public IModel {
     public:
-        Player(Model model);
-        ~Player() = default;
+        Linemate(Model model);
+        ~Linemate() = default;
 
         void draw(Vector3 position, float scale, Color tint) const override;
         void setRotationY(float yRotation);

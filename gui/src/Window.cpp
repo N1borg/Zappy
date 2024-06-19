@@ -17,7 +17,7 @@ Window::Window(int width, int height, std::string title)
     setCameraUp({0.0f, 1.0f, 0.0f});
     setCameraFovy(60.0f);
     setCameraProjection(CAMERA_PERSPECTIVE);
-    setCameraMode(CAMERA_FIRST_PERSON);
+    setCameraMode(CAMERA_FREE);
 }
 
 void Window::init()
@@ -25,6 +25,7 @@ void Window::init()
     SetTargetFPS(60);
     SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_MSAA_4X_HINT | FLAG_VSYNC_HINT);
     InitWindow(_width, _height, _title.c_str());
+    DisableCursor();
 }
 
 void Window::close()
@@ -52,16 +53,6 @@ int Window::getScreenHeight() const
     return GetScreenHeight();
 }
 
-void Window::disableCursor()
-{
-    DisableCursor();
-}
-
-bool Window::isKeyPressed(int key)
-{
-    return IsKeyPressed(key);
-}
-
 Camera3D Window::getCamera() const
 {
     return _camera;
@@ -72,9 +63,9 @@ int Window::getCameraMode() const
     return _cameraMode;
 }
 
-void Window::updateCamera()
+void Window::setCameraMode(int mode)
 {
-    UpdateCamera(&_camera, _cameraMode);
+    _cameraMode = mode;
 }
 
 void Window::setCameraPosition(Vector3 position)
@@ -102,9 +93,33 @@ void Window::setCameraProjection(int projection)
     _camera.projection = projection;
 }
 
-void Window::setCameraMode(int mode)
+void Window::updateCamera()
 {
-    _cameraMode = mode;
+    UpdateCamera(&_camera, getCameraMode());
+}
+
+void Window::parseCameraInputs()
+{
+    switch (GetKeyPressed()) {
+        case KEY_ONE:
+            setCameraMode(CAMERA_FIRST_PERSON);
+            setCameraUp({ 0.0f, 1.0f, 0.0f });
+            break;
+        case KEY_TWO:
+            setCameraMode(CAMERA_THIRD_PERSON);
+            setCameraUp({ 0.0f, 1.0f, 0.0f });
+            break;
+        case KEY_THREE:
+            setCameraMode(CAMERA_FREE);
+            setCameraUp({ 0.0f, 1.0f, 0.0f });
+            break;
+        case KEY_FOUR:
+            setCameraMode(CAMERA_ORBITAL);
+            setCameraUp({ 0.0f, 1.0f, 0.0f });
+            break;
+        default:
+            break;
+    }
 }
 
 void Window::beginDrawing()
@@ -152,27 +167,38 @@ void Window::drawFPS(int posX, int posY)
     DrawFPS(posX, posY);
 }
 
-void Window::parseCameraInputs()
-{
-    switch (GetKeyPressed()) {
-        case KEY_ONE:
-            setCameraMode(CAMERA_FREE);
-            break;
-        case KEY_TWO:
-            setCameraMode(CAMERA_FIRST_PERSON);
-            break;
-        case KEY_THREE:
-            setCameraMode(CAMERA_THIRD_PERSON);
-            break;
-        case KEY_FOUR:
-            setCameraMode(CAMERA_ORBITAL);
-            break;
-    }
-}
-
 std::string Window::animateTextDots(const std::string &string, float elapsedTime)
 {
     int dots = static_cast<int>(floor(elapsedTime * 4.0f)) % 4;
     std::string dotsStr(dots, '.');
     return string + dotsStr;
+}
+
+int Window::drawWaitingScreen(Socket &socket, const std::string machine)
+{
+    std::thread connectionThread(&Socket::attemptConnection, &socket);
+
+    float elapsedTime = 0.0f;
+
+    while (!socket.isConnected()) {
+        if (shouldClose()) {
+            connectionThread.detach();
+            return 0;
+        }
+        elapsedTime += GetFrameTime();
+
+        beginDrawing();
+        clearBackground(RAYWHITE);
+
+        std::string connectingText = animateTextDots("Connecting to " + machine, elapsedTime);
+        drawText(connectingText.c_str(), (getScreenWidth() - MeasureText(("Connecting to " + machine + "...").c_str(), 20)) / 2, (getScreenHeight() - 20) / 2, 20, DARKGRAY);
+
+        endDrawing();
+    }
+
+    connectionThread.join();
+
+    if (socket.isConnected())
+        return 1;
+    return 0;
 }

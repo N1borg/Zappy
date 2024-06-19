@@ -5,51 +5,50 @@
 ** Parser
 */
 
-#include "Parser.hpp"
+#include "Parser/ParseArguments.hpp"
 
-Parser::Parser(int argc, char *argv[]) : _argc(argc), _argv(argv) {}
+ParseArguments::ParseArguments(int argc, char *argv[]) : _argc(argc), _argv(argv) {}
 
-void Parser::parseArguments()
+void ParseArguments::parse()
 {
-    if (_argc != 5) {
+    if (_argc != 5)
         throw std::runtime_error("Error: Invalid arguments");
-    }
+
     try {
         if (std::string(_argv[1]) == "-p" && std::string(_argv[3]) == "-h") {
             _port = std::stoi(_argv[2]);
             _machine = std::string(_argv[4]);
         }
-        else if (std::string(_argv[1]) == "-h" && std::string(_argv[3]) == "-p") {
+        if (std::string(_argv[1]) == "-h" && std::string(_argv[3]) == "-p") {
             _port = std::stoi(_argv[4]);
             _machine = std::string(_argv[2]);
-        } else {
-            throw std::runtime_error("Error: Invalid arguments");
         }
     } catch (const std::exception &e) {
         throw std::runtime_error("Error: Invalid arguments");
     }
 }
 
-bool Parser::parseWelcome(const std::string& message) {
-    return message == "WELCOME\n";
+bool ParseArguments::validateConnection(std::string msg)
+{
+    return msg == "WELCOME\n";
 }
 
-void Parser::setPort(int port)
+void ParseArguments::setPort(int port)
 {
     _port = port;
 }
 
-int Parser::getPort() const
+int ParseArguments::getPort() const
 {
     return _port;
 }
 
-void Parser::setMachine(std::string machine)
+void ParseArguments::setMachine(std::string machine)
 {
     _machine = machine;
 }
 
-std::string Parser::getMachine() const
+std::string ParseArguments::getMachine() const
 {
     return _machine;
 }

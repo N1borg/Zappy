@@ -2,14 +2,14 @@
 ** EPITECH PROJECT, 2024
 ** B-YEP-400-LIL-4-1-zappy-romaric.loevenbruck
 ** File description:
-** Egg
+** BigIsland
 */
 
-#include "Egg.hpp"
+#include "Island/BigIsland.hpp"
 
-Egg::Egg(Model model) : _model(model) {}
+BigIsland::BigIsland(Model model) : _model(model) {}
 
-void Egg::draw(Vector3 position, float scale, Color tint) const
+void BigIsland::draw(Vector3 position, float scale, Color tint) const
 {
     Vector3 rotationAxis = {0, 1, 0};
     Vector3 scaleVector = {scale, scale, scale};
@@ -17,7 +17,7 @@ void Egg::draw(Vector3 position, float scale, Color tint) const
     DrawModelEx(_model, position, rotationAxis, _yRotation * RAD2DEG, scaleVector, tint);
 }
 
-void Egg::SetRotationY(float yRotation)
+void BigIsland::setRotationY(float yRotation)
 {
     this->_yRotation = yRotation;
 }

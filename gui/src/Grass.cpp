@@ -7,17 +7,17 @@
 
 #include "Grass.hpp"
 
-Grass::Grass(Model model) : _model(model) {}
+Grass::Grass(Model model) : model(model) {}
 
 void Grass::draw(Vector3 position, float scale, Color tint) const
 {
     Vector3 rotationAxis = {0, 1, 0};
     Vector3 scaleVector = {scale, scale, scale};
 
-    DrawModelEx(_model, position, rotationAxis, _yRotation * RAD2DEG, scaleVector, tint);
+    DrawModelEx(model, position, rotationAxis, yRotation * RAD2DEG, scaleVector, tint);
 }
 
-void Grass::SetRotationY(float yRotation)
+void Player::SetRotation(float yRotation)
 {
-    this->_yRotation = yRotation;
+    this->yRotation = yRotation;
 }

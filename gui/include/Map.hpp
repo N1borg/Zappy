@@ -8,17 +8,17 @@
 #pragma once
 
 #include "Player.hpp"
-#include "Egg.hpp"
-#include "Food.hpp"
-#include "Linemate.hpp"
-#include "Deraumere.hpp"
-#include "Sibur.hpp"
-#include "Mendiane.hpp"
-#include "Phiras.hpp"
-#include "Thystame.hpp"
-#include "SmallIsland.hpp"
-#include "MediumIsland.hpp"
-#include "BigIsland.hpp"
+#include "Collectables/Egg.hpp"
+#include "Collectables/Food.hpp"
+#include "Collectables/Linemate.hpp"
+#include "Collectables/Deraumere.hpp"
+#include "Collectables/Sibur.hpp"
+#include "Collectables/Mendiane.hpp"
+#include "Collectables/Phiras.hpp"
+#include "Collectables/Thystame.hpp"
+#include "Island/SmallIsland.hpp"
+#include "Island/MediumIsland.hpp"
+#include "Island/BigIsland.hpp"
 
 #include <math.h>
 #include <time.h>
