@@ -38,7 +38,8 @@ int incant_all_players(server_t *serv, client_t *player)
         if (serv->map[y][x].players[i]->level == level) {
             players_evolved++;
             serv->map[y][x].players[i]->level++;
-            dprintf(player->fd, "Current level: %d\n", player->level);
+            dprintf(serv->map[y][x].players[i]->fd,
+            "Current level: %d\n", serv->map[y][x].players[i]->level);
         }
     }
     return 0;
