@@ -42,6 +42,8 @@ int main(int argc, char *argv[])
     // Validate connection
     if (argsParser.validateConnection(socket.receiveMessage())) {
         std::cout << "Connection established" << std::endl;
+        socket.sendMessage("GRAPHIC\n");
+        sleep(0.5);
     } else {
         std::cerr << "Error: Connection failed" << std::endl;
         window.close();
@@ -50,15 +52,21 @@ int main(int argc, char *argv[])
 
     socket.sendMessage("msz\n");
     std::istringstream msg = std::istringstream(socket.receiveMessage());
-    std::string map_size, map_width, map_height;
+    std::string mapSz, mapWidthStr, mapHeightStr;
+    int mapWidth, mapHeight;
 
-    msg >> map_size >> map_width >> map_height;
-
-    int width = std::stoi(map_width);
-    int height = std::stoi(map_height);
+    try {
+        msg >> mapSz >> mapWidthStr >> mapHeightStr;
+        mapWidth = std::stoi(mapWidthStr);
+        mapHeight = std::stoi(mapHeightStr);
+    } catch (const std::exception &e) {
+        std::cerr << "Error: Invalid map size" << std::endl;
+        window.close();
+        return 84;
+    }
 
     // Create map
-    Map map(width, height);
+    Map map(mapWidth, mapHeight);
     std::vector<std::vector<Tile_t>> tiles = map.getTiles();
 
     bool selected = false;
