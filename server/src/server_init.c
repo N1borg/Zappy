@@ -59,6 +59,16 @@ void set_client(client_t *clients)
     clients->command_queue = NULL;
 }
 
+void add_new_egg(server_t *serv, client_t *client, team_t *team, tile_t *tile)
+{
+    egg_t *new_egg = add_egg(team, tile);
+
+    if (new_egg == NULL)
+        disconnect_client(serv, client);
+    else
+        event_enw(serv, client, new_egg);
+}
+
 // Initializes the server struct
 void init_server(server_t *serv)
 {
@@ -75,7 +85,7 @@ void init_server(server_t *serv)
         for (int j = 0; j < serv->max_client_team; j++) {
             x = rand() % serv->width;
             y = rand() % serv->height;
-            add_egg(serv->teams[i], &serv->map[x][y]);
+            add_new_egg(serv, serv->clients[i], serv->teams[i], &serv->map[x][y]);
         }
     }
 
