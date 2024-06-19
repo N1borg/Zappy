@@ -20,13 +20,13 @@ void place_resource_rare(server_t *serv, int x, int y, int resource_type)
 {
     switch (resource_type) {
         case MENDIANE:
-            serv->map[y][x].mendiane++;
+            serv->map[y][x].resources.mendiane++;
             break;
         case PHIRAS:
-            serv->map[y][x].phiras++;
+            serv->map[y][x].resources.phiras++;
             break;
         case THYSTAME:
-            serv->map[y][x].thystame++;
+            serv->map[y][x].resources.thystame++;
             break;
         default:
             break;
@@ -45,16 +45,16 @@ void place_resource_common(server_t *serv, int x, int y, int resource_type)
 {
     switch (resource_type) {
         case FOOD:
-            serv->map[y][x].food++;
+            serv->map[y][x].resources.food++;
             break;
         case LINEMATE:
-            serv->map[y][x].linemate++;
+            serv->map[y][x].resources.linemate++;
             break;
         case DERAUMERE:
-            serv->map[y][x].deraumere++;
+            serv->map[y][x].resources.deraumere++;
             break;
         case SIBUR:
-            serv->map[y][x].sibur++;
+            serv->map[y][x].resources.sibur++;
             break;
         default:
             place_resource_rare(serv, x, y, resource_type);

@@ -8,7 +8,8 @@
 #include "server.h"
 
 // Calculate new coordinates based on orientation
-void calculate_new_coordinates(server_t *serv, client_t *player, int *x, int *y)
+void calculate_new_coordinates(server_t *serv, client_t *player,
+    int *x, int *y)
 {
     switch (player->orientation) {
         case NORTH:

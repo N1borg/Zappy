@@ -36,7 +36,7 @@ typedef struct server_s {
     fd_set readfds;
     client_t *clients[MAX_CLIENTS];
     tile_t **map;
-} server_t; 
+} server_t;
 
 typedef struct command_map {
     const char *command;
@@ -83,7 +83,6 @@ void manage_queue(client_t *client, char *buffer);
 
 // player commands
 int success_response(client_t *client);
-int error_response(client_t *client);
 int command_forward(server_t *serv, client_t *client, char *arg);
 int command_turn_right(server_t *serv __attribute__((unused)),
     client_t *client, char *arg);
@@ -118,8 +117,10 @@ void event_pbc(server_t *serv, client_t *player, char *message);
 void event_pdi(server_t *serv, client_t *player);
 void event_pdr(server_t *serv, client_t *player, int ressource);
 void event_pex(server_t *serv, client_t *player);
+void event_pfk(server_t *serv, client_t *player);
 void event_pgt(server_t *serv, client_t *player, int ressource);
 void event_pnw(server_t *serv, client_t *player);
+void event_pie(server_t *serv, client_t *player, char *result);
 void event_sbp(client_t *client);
 void event_seg(server_t *serv, char *team);
 void event_smg(server_t *serv, char *msg);

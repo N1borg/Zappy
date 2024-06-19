@@ -12,13 +12,13 @@ void set_tile(tile_t *tile, int x, int y)
 {
     tile->x = x;
     tile->y = y;
-    tile->food = 0;
-    tile->linemate = 0;
-    tile->deraumere = 0;
-    tile->sibur = 0;
-    tile->mendiane = 0;
-    tile->phiras = 0;
-    tile->thystame = 0;
+    tile->resources.food = 0;
+    tile->resources.linemate = 0;
+    tile->resources.deraumere = 0;
+    tile->resources.sibur = 0;
+    tile->resources.mendiane = 0;
+    tile->resources.phiras = 0;
+    tile->resources.thystame = 0;
     tile->eggs = NULL;
     for (int i = 0; i < MAX_CLIENTS; i++)
         tile->players[i] = NULL;
@@ -48,13 +48,13 @@ void set_client(client_t *clients)
     clients->level = 0;
     clients->is_incanting = false;
     clients->orientation = 0;
-    clients->food = 10;
-    clients->linemate = 0;
-    clients->deraumere = 0;
-    clients->sibur = 0;
-    clients->mendiane = 0;
-    clients->phiras = 0;
-    clients->thystame = 0;
+    clients->inv.food = 10;
+    clients->inv.linemate = 0;
+    clients->inv.deraumere = 0;
+    clients->inv.sibur = 0;
+    clients->inv.mendiane = 0;
+    clients->inv.phiras = 0;
+    clients->inv.thystame = 0;
     clients->team = NULL;
     clients->command_queue = NULL;
 }

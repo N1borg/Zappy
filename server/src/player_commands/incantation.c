@@ -29,9 +29,9 @@ int incant_all_players(server_t *serv, client_t *player)
     int y = player->y;
     int level = player->level;
     int players_to_evolve = (((level + 1) / 2) * 2);
-    printf("players_to_evolve: %d\n", players_to_evolve);
     int players_evolved = 0;
 
+    printf("players_to_evolve: %d\n", players_to_evolve);
     player->is_incanting = false;
     for (int i = 0; players_evolved < level
         && i < MAX_CLIENTS && serv->map[y][x].players[i]; i++) {
@@ -50,13 +50,14 @@ int incant_lasts(server_t *serv, client_t *player, tile_t *tile)
 {
     int num_players = get_players(serv, player);
 
-    if (player->level == 6 && tile->linemate >= 1 &&
-        tile->deraumere >= 2 && tile->sibur >= 3 &&
-        tile->phiras >= 1 && num_players == 6)
+    if (player->level == 6 && tile->resources.linemate >= 1 &&
+        tile->resources.deraumere >= 2 && tile->resources.sibur >= 3 &&
+        tile->resources.phiras >= 1 && num_players == 6)
         return incant_all_players(serv, player);
-    if (player->level == 7 && tile->linemate >= 2 && tile->deraumere >= 2
-        && tile->sibur >= 2 && tile->mendiane >= 2 && tile->phiras >= 2 &&
-        tile->mendiane >= 1 && num_players == 6)
+    if (player->level == 7 && tile->resources.linemate >= 2 &&
+        tile->resources.deraumere >= 2 && tile->resources.sibur >= 2 &&
+        tile->resources.mendiane >= 2 && tile->resources.phiras >= 2 &&
+        tile->resources.mendiane >= 1 && num_players == 6)
         return incant_all_players(serv, player);
     return 1;
 }
@@ -66,15 +67,17 @@ int incant_first(server_t *serv, client_t *player, tile_t *tile)
 {
     int num_players = get_players(serv, player);
 
-    if (player->level == 3 && tile->linemate >= 2 &&
-        tile->sibur >= 1 && tile->phiras >= 2 &&
+    if (player->level == 3 && tile->resources.linemate >= 2 &&
+        tile->resources.sibur >= 1 && tile->resources.phiras >= 2 &&
         num_players == 2)
         return incant_all_players(serv, player);
-    if (player->level == 4 && tile->linemate >= 1 && tile->deraumere >= 1
-        && tile->sibur >= 2 && tile->phiras >= 1 && num_players == 4)
+    if (player->level == 4 && tile->resources.linemate >= 1 &&
+        tile->resources.deraumere >= 1 && tile->resources.sibur >= 2
+        && tile->resources.phiras >= 1 && num_players == 4)
         return incant_all_players(serv, player);
-    if (player->level == 5 && tile->linemate >= 1 && tile->deraumere >= 2
-        && tile->sibur >= 1 && tile->mendiane >= 3 && num_players == 4)
+    if (player->level == 5 && tile->resources.linemate >= 1 &&
+        tile->resources.deraumere >= 2 && tile->resources.sibur >= 1 &&
+        tile->resources.mendiane >= 3 && num_players == 4)
         return incant_all_players(serv, player);
     return incant_lasts(serv, player, tile);
 }
@@ -88,10 +91,11 @@ int command_incantation(server_t *serv, client_t *player, char *arg)
 
     if (arg != NULL)
         return 1;
-    if (player->level == 1 && serv->map[y][x].linemate >= 1)
+    if (player->level == 1 && serv->map[y][x].resources.linemate >= 1)
         return incant_all_players(serv, player);
-    if (player->level == 2 && serv->map[y][x].linemate >= 1 &&
-        serv->map[y][x].deraumere >= 1 && serv->map[y][x].sibur >= 1
+    if (player->level == 2 && serv->map[y][x].resources.linemate >= 1 &&
+        serv->map[y][x].resources.deraumere >= 1 &&
+        serv->map[y][x].resources.sibur >= 1
         && num_players == 2)
         return incant_all_players(serv, player);
     return incant_first(serv, player, &serv->map[y][x]);

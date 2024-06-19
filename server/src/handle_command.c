@@ -84,6 +84,6 @@ void compute_response(server_t *serv, client_t *client, char *buffer)
                 disconnect_client(serv, client);
     if (strcmp(client->team, "GRAPHIC") == 0 &&
         handle_command_graphic(serv, client, buffer) != 0 &&
-        dprintf(client->fd, "ko\n") < 0 && errno == EPIPE)
+        dprintf(client->fd, "suc\n") < 0 && errno == EPIPE)
                 disconnect_client(serv, client);
 }
