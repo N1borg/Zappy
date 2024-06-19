@@ -25,6 +25,7 @@ set(SHARED_SRC
     src/add_egg.c
     src/remove_egg.c
     src/command_queue.c
+    src/manage_food.c
     src/player_commands/success_response.c
     src/player_commands/broadcast.c
     src/player_commands/eject.c
