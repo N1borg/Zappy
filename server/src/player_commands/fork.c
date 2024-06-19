@@ -18,5 +18,5 @@ int command_fork(server_t *serv, client_t *client, char *arg)
     if (add_egg(team, tile) == 84)
         return 84;
     team->free_slots++;
-    return 0;
+    return success_response(client);
 }

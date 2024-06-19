@@ -56,7 +56,6 @@ int command_take_object(server_t *serv, client_t *player, char *arg)
 {
     if (arg == NULL || strlen(arg) <= 3)
         return 1;
-    arg++;
     if (!strcmp(arg, "food") && serv->map[player->y][player->x].food > 0) {
         serv->map[player->y][player->x].food--;
         player->food++;

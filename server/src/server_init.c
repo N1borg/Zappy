@@ -77,4 +77,7 @@ void init_server(server_t *serv)
             add_egg(serv->teams[i], &serv->map[x][y]);
         }
     }
+
+    // FOR DEBUG PURPOSE
+    generate_resources(serv);
 }
