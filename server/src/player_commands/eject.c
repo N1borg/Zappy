@@ -55,7 +55,7 @@ int command_eject(server_t *serv, client_t *player, char *arg)
     if (player->orientation < 1 || player->orientation > 4)
         return 1;
     if (eject_players(serv, player, x, y) > 0 ||
-        destroy_eggs_from_tiles(&serv->map[y][x]) > 0)
+        destroy_eggs_from_tiles(ser, &serv->map[y][x]) > 0)
         return success_response(player);
     return 1;
 }
