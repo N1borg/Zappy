@@ -38,16 +38,14 @@ void client_handler(server_t *serv, client_t *client)
 }
 
 // Execute the commands in the queue of the clients
-void execute_queue(server_t *server)
+void execute_queue(server_t *server, client_t *client)
 {
     char *command = NULL;
 
-    for (int i = 0; i < MAX_CLIENTS; i++) {
-        command = dequeue_command(server->clients[i]->command_queue);
-        if (command != NULL) {
-            compute_response(server, server->clients[i], command);
-            free(command);
-        }
+    command = dequeue_command(client->command_queue);
+    if (command != NULL) {
+        compute_response(server, client, command);
+        free(command);
     }
 }
 
@@ -71,6 +69,7 @@ int start_listener(server_t *serv)
         for (int i = 0; i < MAX_CLIENTS; i++) {
             sd = serv->clients[i]->fd;
             client_handler(serv, serv->clients[i]);
+            execute_queue(serv, serv->clients[i]);
         }
     }
     return 0;
