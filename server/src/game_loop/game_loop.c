@@ -38,7 +38,7 @@ int check_player_death(client_t *player)
     if (player->life >= 0)
         return 1;
     if (!player->food) {
-        send_command("dead", player);
+        dprintf(player->fd, "dead\n"); //TODO: add graphic 
         delete_client(player);
         return 0;
     }
