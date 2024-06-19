@@ -36,7 +36,7 @@ typedef struct server_s {
     fd_set readfds;
     client_t *clients[MAX_CLIENTS];
     tile_t **map;
-} server_t;
+} server_t; 
 
 typedef struct command_map {
     const char *command;

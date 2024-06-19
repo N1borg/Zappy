@@ -42,6 +42,7 @@ typedef struct client_s {
     int x;
     int y;
     int level;
+    bool is_incanting;
     orientation_t orientation;
     int food;
     int linemate;
