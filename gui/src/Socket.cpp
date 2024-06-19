@@ -7,7 +7,7 @@
 
 #include "Socket.hpp"
 
-Socket::Socket(int port, std::string machine) : _port(port), _machine(machine), _clientSocket(-1), _connected(false) {}
+Socket::Socket(int port, std::string machine) : _port(port), _machine(machine), _clientSocket(-1), _connected(false), _threadRunning(false) {}
 
 Socket::~Socket()
 {
@@ -84,5 +84,31 @@ void Socket::attemptConnection()
         _connected = connectSocket();
         if (!_connected)
             std::this_thread::sleep_for(std::chrono::seconds(2));
+    }
+}
+
+void Socket::startThread()
+{
+    _threadRunning = true;
+    _thread = std::thread(&Socket::readThread, this);
+}
+
+void Socket::stopThread()
+{
+    _threadRunning = false;
+    if (_thread.joinable())
+        _thread.join();
+}
+
+void Socket::readThread()
+{
+    while (_threadRunning) {
+        if (!_connected)
+            attemptConnection();
+        std::string message = receiveMessage();
+        if (message.empty())
+            _connected = false;
+        else
+            std::cout << message << std::endl;
     }
 }

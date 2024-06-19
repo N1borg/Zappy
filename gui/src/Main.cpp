@@ -48,9 +48,14 @@ int main(int argc, char *argv[])
         return 84;
     }
 
+    socket.sendMessage("msz\n");
+    std::string msg = socket.receiveMessage();
+    std::cout << msg << std::endl;
+
     int map_width = 10;
     int map_height = 10;
 
+    // Create map
     Map map(map_width, map_height);
     std::vector<std::vector<Tile_t>> tiles = map.getTiles();
 
@@ -73,8 +78,10 @@ int main(int argc, char *argv[])
     map.setPhiras(5, 5, true);
     map.setThystame(6, 6, true);
 
-    while (!window.shouldClose())
-    {
+    // Starts thread for reading messages
+    socket.startThread();
+
+    while (!window.shouldClose()) {
         window.parseCameraInputs();
         window.updateCamera();
         window.beginDrawing();
@@ -93,5 +100,6 @@ int main(int argc, char *argv[])
     }
     map.unload();
     window.close();
+    socket.stopThread();
     return 0;
 }
