@@ -54,7 +54,6 @@ int command_set_object(server_t *serv, client_t *player, char *arg)
 {
     if (arg == NULL || strlen(arg) <= 3)
         return 1;
-    arg++;
     if (!strcmp(arg, "food") && player->food > 0) {
         player->food--;
         serv->map[player->y][player->x].food++;

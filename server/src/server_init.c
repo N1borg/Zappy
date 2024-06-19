@@ -46,6 +46,7 @@ void set_client(client_t *clients)
     clients->x = 0;
     clients->y = 0;
     clients->level = 0;
+    clients->is_incanting = false;
     clients->orientation = 0;
     clients->food = 0;
     clients->linemate = 0;
