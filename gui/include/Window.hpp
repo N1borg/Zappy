@@ -8,39 +8,57 @@
 #pragma once
 
 #include <raylib.h>
+#include <math.h>
 #include <string>
 
-#include "Camera.hpp"
+#include "Parser/ParseArguments.hpp"
+#include "Socket.hpp"
 
 class Window {
     public:
-        Window() = default;
         Window(int width, int height, std::string title);
         ~Window() = default;
 
-        // Raylib Camera functions
-        Camera3D getCamera() const;
-        void updateCamera();
-
         // Raylib window functions
         void init();
-        void setTargetFPS(int fps);
-        bool shouldClose();
-        void beginDrawing();
-        void clearBackground(Color color);
-        void endDrawing();
         void close();
+        bool shouldClose();
+        void setTargetFPS(int fps);
+        int getScreenWidth() const;
+        int getScreenHeight() const;
+        void disableCursor();
+        bool isKeyPressed(int key);
+
+        // Raylib Camera functions
+        Camera3D getCamera() const;
+        int getCameraMode() const;
+        void updateCamera();
+        void setCameraPosition(Vector3 position);
+        void setCameraTarget(Vector3 target);
+        void setCameraUp(Vector3 up);
+        void setCameraFovy(float fovy);
+        void setCameraProjection(int projection);
+        void setCameraMode(int mode);
+        void parseCameraInputs();
 
         // Raylib drawing functions
+        void beginDrawing();
+        void endDrawing();
         void beginMode3D();
-        void drawCube(Vector3 position, float width, float height, float length, Color color);
-        void drawCubeWires(Vector3 position, float width, float height, float length, Color color);
-        void drawGrid(int slices, float spacing);
         void endMode3D();
+        void clearBackground(Color color);
+        void drawPlane(Vector3 position, Vector2 size, Color color);
+        void drawGrid(int slices, float spacing);
+        void drawText(const char *text, int posX, int posY, int fontSize, Color color);
+        void drawFPS(int posX, int posY);
+
+        std::string animateTextDots(const std::string &string, float elapsedTime);
+        int drawWaitingScreen(Socket &socket, const std::string machine);
 
     private:
         int _width;
         int _height;
         std::string _title;
-        GameCamera _camera;
+        Camera _camera;
+        int _cameraMode;
 };

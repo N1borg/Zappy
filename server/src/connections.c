@@ -5,58 +5,54 @@
 ** client handler
 */
 
-#include "../include/main.h"
+#include "server.h"
 
 // Add the child sockets to the readfds set
-void add_child_socket(server_t *s, int *sd, int *max_sd)
+void add_child_socket(server_t *serv, int *sd, int *max_sd)
 {
-    for (int i = 0; i < s->max_client_team; i++) {
-        (*sd) = s->clients[i]->fd;
+    for (int i = 0; i < serv->max_client_team * serv->team_nb; i++) {
+        (*sd) = serv->clients[i]->fd;
         if (*sd > 0)
-            FD_SET(*sd, &s->readfds);
+            FD_SET(*sd, &serv->readfds);
         if (*sd > *max_sd)
             *max_sd = *sd;
     }
 }
 
 // Handle the client messages
-void client_handler(server_t *s, client_t *client)
+void client_handler(server_t *serv, client_t *client)
 {
     char buffer[1024];
     int valread = 0;
 
-    if (FD_ISSET(client->fd, &s->readfds)) {
+    if (FD_ISSET(client->fd, &serv->readfds)) {
         valread = read(client->fd, buffer, 1024);
-        if (valread == 0) {
-            disconnect_client(s, client);
+        if (valread <= 0) {
+            disconnect_client(serv, client);
         } else {
             buffer[valread - 1] = '\0';
-            compute_response(s, client, buffer);
+            printf("[%d] - sent: %s\n", client->fd, buffer);
+            manage_queue(client, buffer);
         }
     }
 }
 
-// Main loop of the server
-int listener_loop(server_t *s, int *sd, int *max_sd)
+// Execute the commands in the queue of the clients
+void execute_queue(server_t *server)
 {
-    FD_ZERO(&s->readfds);
-    FD_SET(s->master_socket, &s->readfds);
-    *max_sd = s->master_socket;
-    add_child_socket(s, sd, max_sd);
-    if ((select(*max_sd + 1, &s->readfds, NULL, NULL, NULL) < 0)
-        && (errno != EINTR))
-        printf("Select error");
-    if (FD_ISSET(s->master_socket, &s->readfds))
-        accept_client(s);
+    char *command = NULL;
+
     for (int i = 0; i < MAX_CLIENTS; i++) {
-        (*sd) = s->clients[i]->fd;
-        client_handler(s, s->clients[i]);
+        command = dequeue_command(server->clients[i]->command_queue);
+        if (command != NULL) {
+            compute_response(server, server->clients[i], command);
+            free(command);
+        }
     }
-    return 0;
 }
 
 // Start the server and listen for incoming connections
-int start_litener(server_t *s)
+int start_listener(server_t *serv)
 {
     int sd = 0;
     int max_sd = 0;
@@ -65,20 +61,21 @@ int start_litener(server_t *s)
     clock_t current_time = 0;
     double elapsed_time = 0;
 
-    if (init_socket(s) != 0 || init_listener(s) != 0)
-        return 84;
-    printf("Listening on port %d...\n", s->port);
+    printf("Listening on port %d...\n", serv->port);
     while (true) {
-        current_time = clock();
-        elapsed_time = (current_time - last_tick) / CLOCKS_PER_SEC;
-
-        if (elapsed_time >= tick_interval) {
-            handle_events();
-            last_tick = current_time;
+        FD_ZERO(&serv->readfds);
+        FD_SET(serv->master_socket, &serv->readfds);
+        max_sd = serv->master_socket;
+        add_child_socket(serv, &sd, &max_sd);
+        if ((select((max_sd + 1), &serv->readfds, NULL, NULL, NULL) < 0)
+            && (errno != EINTR))
+            printf("Select error");
+        if (FD_ISSET(serv->master_socket, &serv->readfds))
+            accept_client(serv);
+        for (int i = 0; i < MAX_CLIENTS; i++) {
+            sd = serv->clients[i]->fd;
+            client_handler(serv, serv->clients[i]);
         }
-
-        if (listener_loop(s, &sd, &max_sd) != 0)
-            return 84;
     }
     return 0;
 }
