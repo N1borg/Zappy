@@ -8,15 +8,18 @@
 #include "server.h"
 
 // Create an egg
-int command_fork(server_t *server, client_t *client, char *arg)
+int command_fork(server_t *serv, client_t *player, char *arg)
 {
-    tile_t *tile = &server->map[client->y][client->x];
-    team_t *team = server->teams[get_team_id(server, client->team)];
+    tile_t *tile = &serv->map[player->y][player->x];
+    team_t *team = serv->teams[get_team_id(serv, player->team)];
+    egg_t *egg = NULL;
 
     if (arg != NULL)
         return 1;
-    if (add_egg(team, tile) == 84)
-        return 84;
+    egg = add_egg(team, tile);
+    if (egg == NULL)
+        return 1;
     team->free_slots++;
-    return 0;
+    event_enw(serv, player, egg);
+    return success_response(player);
 }

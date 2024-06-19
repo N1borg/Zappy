@@ -12,15 +12,21 @@ int command_forward(server_t *serv, client_t *player, char *arg)
 {
     if (arg != NULL)
         return 1;
-    if (player->orientation == NORTH)
-        move_player(serv, player, player->x, player->y - 1);
-    if (player->orientation == EAST)
-        move_player(serv, player, player->x + 1, player->y);
-    if (player->orientation == SOUTH)
-        move_player(serv, player, player->x, player->y + 1);
-    if (player->orientation == WEST)
-        move_player(serv, player, player->x - 1, player->y);
-    if (player->orientation < 1 || player->orientation > 4)
-        return 1;
+    switch (player->orientation) {
+        case NORTH:
+            move_player(serv, player, player->x, player->y - 1);
+            break;
+        case EAST:
+            move_player(serv, player, player->x + 1, player->y);
+            break;
+        case SOUTH:
+            move_player(serv, player, player->x, player->y + 1);
+            break;
+        case WEST:
+            move_player(serv, player, player->x - 1, player->y);
+            break;
+        default:
+            return 1;
+    }
     return success_response(player);
 }

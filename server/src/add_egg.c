@@ -68,13 +68,13 @@ void add_egg_to_tile(egg_t *new_egg, tile_t *tile)
 }
 
 // Add an egg to the server
-int add_egg(team_t *team, tile_t *tile)
+egg_t *add_egg(team_t *team, tile_t *tile)
 {
     egg_t *new_egg = create_egg(team, tile);
 
     if (new_egg == NULL)
-        return 84;
+        return NULL;
     add_egg_to_team(new_egg, team);
     add_egg_to_tile(new_egg, tile);
-    return 0;
+    return new_egg;
 }

@@ -25,6 +25,16 @@ typedef enum {
     WEST
 } orientation_t;
 
+typedef struct item_s {
+    int food;
+    int linemate;
+    int deraumere;
+    int sibur;
+    int mendiane;
+    int phiras;
+    int thystame;
+} item_t;
+
 typedef struct command_s {
     char *command;
     struct command_s *next;
@@ -42,14 +52,10 @@ typedef struct client_s {
     int x;
     int y;
     int level;
+    bool is_forking;
+    bool is_incanting;
     orientation_t orientation;
-    int food;
-    int linemate;
-    int deraumere;
-    int sibur;
-    int mendiane;
-    int phiras;
-    int thystame;
+    item_t inv;
     char *team;
     command_queue_t *command_queue;
 } client_t;

@@ -49,6 +49,8 @@ char *dequeue_command(command_queue_t *queue)
     command_t *command_node = NULL;
     char *command_str = NULL;
 
+    if (queue == NULL)
+        return NULL;
     if (queue->front == NULL)
         return NULL;
     command_node = queue->front;

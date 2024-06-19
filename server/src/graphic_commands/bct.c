@@ -11,10 +11,10 @@
 void send_tile_content(server_t *serv, client_t *client, int x, int y)
 {
     dprintf(client->fd, "bct %d %d %d %d %d %d %d %d %d\n", x, y,
-        serv->map[y][x].food, serv->map[y][x].linemate,
-        serv->map[y][x].deraumere, serv->map[y][x].sibur,
-        serv->map[y][x].mendiane, serv->map[y][x].phiras,
-        serv->map[y][x].thystame);
+        serv->map[y][x].resources.food, serv->map[y][x].resources.linemate,
+        serv->map[y][x].resources.deraumere, serv->map[y][x].resources.sibur,
+        serv->map[y][x].resources.mendiane, serv->map[y][x].resources.phiras,
+        serv->map[y][x].resources.thystame);
 }
 
 // Return 1 if the string is an integer

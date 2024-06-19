@@ -42,8 +42,8 @@ int handle_command_player(server_t *serv, client_t *client, char *buffer)
         {"Connect_nbr", command_team_slots, 0},
         {"Fork", command_fork, 42},
         {"Eject", command_eject, 7},
-        {"Take object", command_take_object, 7},
-        {"Set object", command_set_object, 7},
+        {"Take", command_take_object, 7},
+        {"Set", command_set_object, 7},
         {"Incantation", command_incantation, 300},
         {NULL, NULL, 0}
     };
@@ -84,6 +84,6 @@ void compute_response(server_t *serv, client_t *client, char *buffer)
                 disconnect_client(serv, client);
     if (strcmp(client->team, "GRAPHIC") == 0 &&
         handle_command_graphic(serv, client, buffer) != 0 &&
-        dprintf(client->fd, "ko\n") < 0 && errno == EPIPE)
+        dprintf(client->fd, "suc\n") < 0 && errno == EPIPE)
                 disconnect_client(serv, client);
 }

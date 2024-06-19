@@ -10,17 +10,17 @@
 // Write the tile's stones in the given buffer
 void write_tile_stones(tile_t *tile, char *buffer)
 {
-    for (int i = 0; i < tile->linemate; i++)
+    for (int i = 0; i < tile->resources.linemate; i++)
         strcat(buffer, "linemate ");
-    for (int i = 0; i < tile->deraumere; i++)
+    for (int i = 0; i < tile->resources.deraumere; i++)
         strcat(buffer, "deraumere ");
-    for (int i = 0; i < tile->sibur; i++)
+    for (int i = 0; i < tile->resources.sibur; i++)
         strcat(buffer, "sibur ");
-    for (int i = 0; i < tile->mendiane; i++)
+    for (int i = 0; i < tile->resources.mendiane; i++)
         strcat(buffer, "mendiane ");
-    for (int i = 0; i < tile->phiras; i++)
+    for (int i = 0; i < tile->resources.phiras; i++)
         strcat(buffer, "phiras ");
-    for (int i = 0; i < tile->thystame; i++)
+    for (int i = 0; i < tile->resources.thystame; i++)
         strcat(buffer, "thystame ");
 }
 
@@ -42,7 +42,7 @@ void write_tile_objects(tile_t *tile, char *buffer)
             strcat(buffer, "player ");
     }
     display_tile_eggs(tile, buffer);
-    for (int i = 0; i < tile->food; i++)
+    for (int i = 0; i < tile->resources.food; i++)
         strcat(buffer, "food ");
 }
 

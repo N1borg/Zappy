@@ -12,7 +12,7 @@ void event_pex(server_t *serv, client_t *player)
 {
     for (int i = 0; i < MAX_CLIENTS; i++) {
         if (serv->clients[i] && serv->clients[i]->team &&
-            strcmp(serv->clients[i]->team, player->team) == 0) {
+            strcmp(serv->clients[i]->team, "GRAPHIC") == 0) {
             dprintf(serv->clients[i]->fd, "pex %d\n", player->id);
         }
     }

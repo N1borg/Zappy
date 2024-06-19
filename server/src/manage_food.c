@@ -5,11 +5,11 @@
 ** food.c
 */
 
-#include "../include/main.h"
+#include "server.h"
 
 void check_if_dead(client_t *client)
 {
-    if (client->food == 0) {
+    if (client->inv.food == 0) {
         dprintf(client->fd, "dead\n");
         close(client->fd);
         set_client(client);
@@ -17,12 +17,12 @@ void check_if_dead(client_t *client)
     }
 }
 
-void manage_food(server_t *server)
+void manage_food(server_t *serv)
 {
-    for (int i = 0; server->clients[i] != NULL; i++) {
-        if (server->clients[i]->food > 0) {
-            server->clients[i]->food--;
-            check_if_dead(server->clients[i]);
+    for (int i = 0; serv->clients[i] != NULL; i++) {
+        if (serv->clients[i]->inv.food > 0) {
+            serv->clients[i]->inv.food--;
+            check_if_dead(serv->clients[i]);
         }
     }
 }

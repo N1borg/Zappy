@@ -22,7 +22,13 @@ typedef enum {
     THYSTAME
 } resource_type_t;
 
-typedef struct {
+typedef struct resource_s {
+    const char *name;
+    int *player_resource;
+    int *tile_resource;
+} resource_t;
+
+typedef struct resource_density_s {
     char *name;
     double density;
 } resource_density_t;
@@ -30,13 +36,7 @@ typedef struct {
 typedef struct tile_s {
     int x;
     int y;
-    int food;
-    int linemate;
-    int deraumere;
-    int sibur;
-    int mendiane;
-    int phiras;
-    int thystame;
+    item_t resources;
     egg_t *eggs;
     client_t *players[MAX_CLIENTS];
 } tile_t;
