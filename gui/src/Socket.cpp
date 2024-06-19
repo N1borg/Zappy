@@ -64,6 +64,7 @@ void Socket::sendMessage(const std::string &message)
     ssize_t bytesSent = send(_clientSocket, message.c_str(), message.size(), 0);
     if (bytesSent == -1)
         throw std::runtime_error("Failed to send message: " + std::string(strerror(errno)));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 }
 
 std::string Socket::receiveMessage()

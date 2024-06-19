@@ -43,7 +43,6 @@ int main(int argc, char *argv[])
     if (argsParser.validateConnection(socket.receiveMessage())) {
         std::cout << "Connection established" << std::endl;
         socket.sendMessage("GRAPHIC\n");
-        sleep(0.5);
     } else {
         std::cerr << "Error: Connection failed" << std::endl;
         window.close();
