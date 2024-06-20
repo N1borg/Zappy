@@ -72,14 +72,6 @@ std::string Socket::receiveMessage()
     if (_clientSocket == -1)
         throw std::runtime_error("Socket is not connected");
 
-    struct timeval tv;
-    tv.tv_sec = 3;
-    tv.tv_usec = 0;
-
-    // Define socket timeout
-    if (setsockopt(_clientSocket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof(tv)) < 0)
-        throw std::runtime_error("Failed to set socket timeout: " + std::string(strerror(errno)));
-
     char buffer[1024] = {0};
     ssize_t bytesReceived = recv(_clientSocket, buffer, 1024, 0);
     if (bytesReceived == -1) {
@@ -115,14 +107,27 @@ void Socket::stopThread()
 void Socket::readThread()
 {
     ParseCommands cmdParser;
+    fd_set readfds;
+    struct timeval tv;
+    int retval;
 
     while (_threadRunning) {
         if (!_connected)
             attemptConnection();
-        std::string message = receiveMessage();
-        if (message.empty())
-            _connected = false;
-        else
-            cmdParser.parse(message);
+
+        FD_ZERO(&readfds);
+        FD_SET(_clientSocket, &readfds);
+
+        tv.tv_sec = 0;
+        tv.tv_usec = 0;
+
+        retval = select(_clientSocket + 1, &readfds, 0, 0, &tv);
+        if (retval != -1 && FD_ISSET(_clientSocket, &readfds)) {
+            std::string message = receiveMessage();
+            if (message.empty())
+                _connected = false;
+            else
+                cmdParser.parse(message);
+        }
     }
 }
