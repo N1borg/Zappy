@@ -58,13 +58,12 @@ void elapse_time(server_t *serv)
     }
 }
 
-// TODO: change server->freq so that it is directly the number of 1000000000 / freq to avoid making a division every frame
-
 int game_loop(server_t *serv)
 {
     struct timespec start;
     struct timespec current;
     double elapsed_time = 0;
+    double interval = 1000000000 / serv->freq;
 
     clock_gettime(CLOCK_REALTIME, &start);
     while (!check_game_end(serv)) {
@@ -72,12 +71,11 @@ int game_loop(server_t *serv)
         clock_gettime(CLOCK_REALTIME, &current);
         elapsed_time = (current.tv_sec - start.tv_sec) * 1000000000 +
             (current.tv_nsec - start.tv_nsec);
-        if (elapsed_time >= 1000000000 / serv->freq) {
+        if (elapsed_time >= interval) {
             elapse_time(serv);
             start.tv_sec = current.tv_sec;
             start.tv_nsec = current.tv_nsec;
         }
     }
-
     return 84;
 }
