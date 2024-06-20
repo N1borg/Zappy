@@ -30,19 +30,21 @@ void accept_client(server_t *serv)
 }
 
 // Close the socket and print the disconnection message
-void disconnect_client(server_t *s, client_t *client)
+void disconnect_client(server_t *serv, client_t *client)
 {
-    int addrl = sizeof(s->addr);
+    int addrl = sizeof(serv->addr);
 
-    getpeername(client->fd, (struct sockaddr *)&s->addr, (socklen_t *)&addrl);
+    getpeername(client->fd,
+        (struct sockaddr *)&serv->addr, (socklen_t *)&addrl);
     printf("[%d] - Disconnected | ip: %s, port: %d \n", client->fd,
-        inet_ntoa(s->addr.sin_addr), ntohs(s->addr.sin_port));
+        inet_ntoa(serv->addr.sin_addr), ntohs(serv->addr.sin_port));
     if (client->team != NULL) {
         if (strcmp(client->team, "GRAPHIC") != 0) {
-            s->map[client->y][client->x].players[get_player_id_on_map(
-                &s->map[client->y][client->x], client)] = NULL;
+            event_pdi(serv, client);
+            serv->map[client->y][client->x].players[get_player_id_on_map(
+                &serv->map[client->y][client->x], client)] = NULL;
         }
-        s->teams[get_team_id(s, client->team)]->free_slots++;
+        serv->teams[get_team_id(serv, client->team)]->free_slots++;
     }
     close(client->fd);
     set_client(client);

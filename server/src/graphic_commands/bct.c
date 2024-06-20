@@ -39,18 +39,18 @@ int parse_command_args(server_t *serv, client_t *client,
 
     x = strtol(token, &endptr, 10);
     if (*endptr != '\0')
-        return 1;
+        return event_sbp(client);
     token = strtok(NULL, " ");
     if (token == NULL || !is_integer(token))
-        return 1;
+        return event_sbp(client);
     y = strtol(token, &endptr, 10);
     if (*endptr != '\0')
-        return 1;
+        return event_sbp(client);
     token = strtok(NULL, " ");
     if (token != NULL)
-        return 1;
+        return event_sbp(client);
     if (x < 0 || x >= serv->width || y < 0 || y >= serv->height)
-        return 1;
+        return event_sbp(client);
     send_tile_content(serv, client, x, y);
     return 0;
 }
@@ -62,9 +62,9 @@ int command_bct(server_t *serv, client_t *client, char *arg)
     char *endptr = NULL;
 
     if (arg == NULL)
-        return 1;
+        return event_sbp(client);
     token = strtok(arg, " ");
     if (token == NULL || !is_integer(token))
-        return 1;
+        return event_sbp(client);
     return parse_command_args(serv, client, token, endptr);
 }

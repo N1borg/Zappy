@@ -24,6 +24,7 @@ typedef enum {
 
 typedef struct resource_s {
     const char *name;
+    const char *graphic_name;
     int *player_resource;
     int *tile_resource;
 } resource_t;
