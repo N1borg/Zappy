@@ -29,7 +29,8 @@ static int get_command_time(char *command_str, command_map_t *command_map)
 }
 
 // Enqueue a command in the command queue of the client
-static int add_command(client_t *client, char *command_str, command_map_t *command_map)
+static int add_command(client_t *client, char *command_str,
+    command_map_t *command_map)
 {
     command_t *new_command = NULL;
 
