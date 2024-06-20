@@ -115,10 +115,10 @@ int command_tna(server_t *serv, client_t *client, char *arg);
 // graphic events
 void event_pbc(server_t *serv, client_t *player, char *message);
 void event_pdi(server_t *serv, client_t *player);
-void event_pdr(server_t *serv, client_t *player, const char *ressource);
+void event_pdr(server_t *serv, client_t *player, int ressource);
 void event_pex(server_t *serv, client_t *player);
 void event_pfk(server_t *serv, client_t *player);
-void event_pgt(server_t *serv, client_t *player, const char *ressource);
+void event_pgt(server_t *serv, client_t *player, int ressource);
 void event_pnw(server_t *serv, client_t *player);
 void event_pie(server_t *serv, client_t *player, char *result);
 int event_sbp(client_t *client);

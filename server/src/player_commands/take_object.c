@@ -11,19 +11,19 @@
 void init_resources_take(resource_t *resources,
     server_t *serv, client_t *player)
 {
-    resources[0] = (resource_t){"food", "q0", &player->inv.food,
+    resources[0] = (resource_t){"food", 0, &player->inv.food,
         &serv->map[player->y][player->x].resources.food};
-    resources[1] = (resource_t){"linemate", "q1", &player->inv.linemate,
+    resources[1] = (resource_t){"linemate", 1, &player->inv.linemate,
         &serv->map[player->y][player->x].resources.linemate};
-    resources[2] = (resource_t){"deraumere", "q2", &player->inv.deraumere,
+    resources[2] = (resource_t){"deraumere", 2, &player->inv.deraumere,
         &serv->map[player->y][player->x].resources.deraumere};
-    resources[3] = (resource_t){"sibur", "q3", &player->inv.sibur,
+    resources[3] = (resource_t){"sibur", 3, &player->inv.sibur,
         &serv->map[player->y][player->x].resources.sibur};
-    resources[4] = (resource_t){"mendiane", "q4", &player->inv.mendiane,
+    resources[4] = (resource_t){"mendiane", 4, &player->inv.mendiane,
         &serv->map[player->y][player->x].resources.mendiane};
-    resources[5] = (resource_t){"phiras", "q5", &player->inv.phiras,
+    resources[5] = (resource_t){"phiras", 5, &player->inv.phiras,
         &serv->map[player->y][player->x].resources.phiras};
-    resources[6] = (resource_t){"thystame", "q6", &player->inv.thystame,
+    resources[6] = (resource_t){"thystame", 6, &player->inv.thystame,
         &serv->map[player->y][player->x].resources.thystame};
     resources[7] = (resource_t){NULL, NULL, NULL, NULL};
 }
