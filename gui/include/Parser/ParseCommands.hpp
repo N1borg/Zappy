@@ -5,8 +5,7 @@
 ** ParseCommands
 */
 
-#ifndef PARSECOMMANDS_HPP_
-#define PARSECOMMANDS_HPP_
+#pragma once
 
 class ParseCommands {
     public:
@@ -16,5 +15,3 @@ class ParseCommands {
     protected:
     private:
 };
-
-#endif /* !PARSECOMMANDS_HPP_ */
