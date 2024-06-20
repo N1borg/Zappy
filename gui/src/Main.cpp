@@ -68,8 +68,6 @@ int main(int argc, char *argv[])
     Map map(mapWidth, mapHeight);
     std::vector<std::vector<Tile_t>> tiles = map.getTiles();
 
-    bool selected = false;
-
     map.setPlayer(1, 3, true);
     map.setPlayer(1, 8, true);
     map.setPlayer(4, 8, true);
@@ -102,8 +100,7 @@ int main(int argc, char *argv[])
         window.endMode3D();
 
         window.drawText(TextFormat("X:%f Y:%f Z:%f", window.getCamera().position.x, window.getCamera().position.y, window.getCamera().position.z), 10, 40, 20, GRAY);
-        if (selected)
-            window.drawText("MODEL SELECTED", window.getScreenWidth() - 110, 10, 10, GREEN);
+
         window.drawFPS(10, 10);
         window.endDrawing();
     }

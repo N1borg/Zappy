@@ -5,8 +5,7 @@
 ** Commands
 */
 
-#ifndef COMMANDS_HPP_
-#define COMMANDS_HPP_
+#pragma once
 
 #include <iostream>
 
@@ -19,5 +18,3 @@ class Commands {
         void getMapContent(const std::string& params);
         void getPlayerPosition(const std::string& params);
 };
-
-#endif /* !COMMANDS_HPP_ */

@@ -7,17 +7,4 @@
 
 #include "Island/SmallIsland.hpp"
 
-SmallIsland::SmallIsland(Model model) : _model(model) {}
-
-void SmallIsland::draw(Vector3 position, float scale, Color tint) const
-{
-    Vector3 rotationAxis = {0, 1, 0};
-    Vector3 scaleVector = {scale, scale, scale};
-
-    DrawModelEx(_model, position, rotationAxis, _yRotation * RAD2DEG, scaleVector, tint);
-}
-
-void SmallIsland::setRotationY(float yRotation)
-{
-    this->_yRotation = yRotation;
-}
+SmallIsland::SmallIsland(Model model) : BaseModel(model) {}

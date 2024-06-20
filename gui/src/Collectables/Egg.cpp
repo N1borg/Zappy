@@ -7,17 +7,4 @@
 
 #include "Collectables/Egg.hpp"
 
-Egg::Egg(Model model) : _model(model) {}
-
-void Egg::draw(Vector3 position, float scale, Color tint) const
-{
-    Vector3 rotationAxis = {0, 1, 0};
-    Vector3 scaleVector = {scale, scale, scale};
-
-    DrawModelEx(_model, position, rotationAxis, _yRotation * RAD2DEG, scaleVector, tint);
-}
-
-void Egg::setRotationY(float yRotation)
-{
-    this->_yRotation = yRotation;
-}
+Egg::Egg(Model model) : BaseModel(model) {}

@@ -7,17 +7,10 @@
 
 #pragma once
 
-#include "IModel.hpp"
+#include "BaseModel.hpp"
 
-class Food : public IModel {
-    public:
-        Food(Model model);
-        ~Food() = default;
-
-        void draw(Vector3 position, float scale, Color tint) const override;
-        void setRotationY(float yRotation);
-
-    private:
-        Model _model;
-        float _yRotation;
+class Food : public BaseModel {
+public:
+    Food(Model model);
+    ~Food() = default;
 };

@@ -81,7 +81,8 @@ void Map::draw()
             if (tile.thystame.second)
                 tile.thystame.first.draw({x * 10.0f, 9.8f + scatter, z * 10.0f}, 20.0f, WHITE);
             if (tile.egg.second)
-                tile.egg.first.draw({x * 10.0f, 9.8f + scatter, z * 10.0f}, 5.0f, WHITE);
+                // tile.egg.first.draw({x * 10.0f, 9.8f + scatter, z * 10.0f}, 5.0f, WHITE);
+                tile.egg.first.drawWires({x * 10.0f, 9.8f + scatter, z * 10.0f}, 5.0f, WHITE);
         }
     }
 }

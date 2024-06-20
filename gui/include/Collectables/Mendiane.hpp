@@ -7,17 +7,10 @@
 
 #pragma once
 
-#include "IModel.hpp"
+#include "BaseModel.hpp"
 
-class Mendiane : public IModel {
-    public:
-        Mendiane(Model model);
-        ~Mendiane() = default;
-
-        void draw(Vector3 position, float scale, Color tint) const override;
-        void setRotationY(float yRotation);
-
-    private:
-        Model _model;
-        float _yRotation;
+class Mendiane : public BaseModel {
+public:
+    Mendiane(Model model);
+    ~Mendiane() = default;
 };

@@ -7,17 +7,4 @@
 
 #include "Collectables/Mendiane.hpp"
 
-Mendiane::Mendiane(Model model) : _model(model) {}
-
-void Mendiane::draw(Vector3 position, float scale, Color tint) const
-{
-    Vector3 rotationAxis = {0, 1, 0};
-    Vector3 scaleVector = {scale, scale, scale};
-
-    DrawModelEx(_model, position, rotationAxis, _yRotation * RAD2DEG, scaleVector, tint);
-}
-
-void Mendiane::setRotationY(float yRotation)
-{
-    this->_yRotation = yRotation;
-}
+Mendiane::Mendiane(Model model) : BaseModel(model) {}

@@ -7,17 +7,4 @@
 
 #include "Collectables/Linemate.hpp"
 
-Linemate::Linemate(Model model) : _model(model) {}
-
-void Linemate::draw(Vector3 position, float scale, Color tint) const
-{
-    Vector3 rotationAxis = {0, 1, 0};
-    Vector3 scaleVector = {scale, scale, scale};
-
-    DrawModelEx(_model, position, rotationAxis, _yRotation * RAD2DEG, scaleVector, tint);
-}
-
-void Linemate::setRotationY(float yRotation)
-{
-    this->_yRotation = yRotation;
-}
+Linemate::Linemate(Model model) : BaseModel(model) {}

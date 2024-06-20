@@ -7,17 +7,10 @@
 
 #pragma once
 
-#include "IModel.hpp"
+#include "BaseModel.hpp"
 
-class Phiras : public IModel {
-    public:
-        Phiras(Model model);
-        ~Phiras() = default;
-
-        void draw(Vector3 position, float scale, Color tint) const override;
-        void setRotationY(float yRotation);
-
-    private:
-        Model _model;
-        float _yRotation;
+class Phiras : public BaseModel {
+public:
+    Phiras(Model model);
+    ~Phiras() = default;
 };
