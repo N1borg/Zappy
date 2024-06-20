@@ -40,11 +40,11 @@ void client_handler(server_t *serv, client_t *client)
 // Execute the commands in the queue of the clients
 void execute_queue(server_t *serv, client_t *client)
 {
-    char *command = NULL;
+    command_t *command  = dequeue_command(client->command_queue);
 
-    command = dequeue_command(client->command_queue);
     if (command != NULL) {
-        compute_response(serv, client, command);
+        compute_response(serv, client, command->command, command->time);
+        free(command->command);
         free(command);
     }
 }

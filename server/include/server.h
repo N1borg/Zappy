@@ -53,7 +53,7 @@ void accept_client(server_t *serv);
 void disconnect_client(server_t *serv, client_t *client);
 void destroy_map(tile_t **map);
 void init_server(server_t *serv);
-void compute_response(server_t *serv, client_t *client, char *buffer);
+void compute_response(server_t *serv, client_t *client, char *buffer, int time);
 int is_team(server_t *serv, char *team_name);
 int is_player(server_t *serv, int socket);
 int tablen(team_t **tab);
@@ -77,7 +77,7 @@ int destroy_eggs_from_tiles(server_t *server, tile_t *tile);
 void destroy_eggs_pointer(egg_t *eggs);
 void init_command_queue(client_t *client);
 int enqueue_command(client_t *client, char *command_str);
-char *dequeue_command(command_queue_t *queue);
+command_t *dequeue_command(command_queue_t *queue);
 void free_command_queue(command_queue_t *queue);
 void manage_queue(client_t *client, char *buffer);
 

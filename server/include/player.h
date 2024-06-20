@@ -30,6 +30,7 @@ typedef struct item_s {
 
 typedef struct command_s {
     char *command;
+    int time;
     struct command_s *next;
 } command_t;
 

@@ -18,8 +18,18 @@ void init_command_queue(client_t *client)
     client->command_queue->size = 0;
 }
 
+// Get the time of a command
+static int get_command_time(char *command_str, command_map_t *command_map)
+{
+    for (int i = 0; command_map[i].command != NULL; i++) {
+        if (strcmp(command_str, command_map[i].command) == 0)
+            return command_map[i].time_limit;
+    }
+    return 0;
+}
+
 // Enqueue a command in the command queue of the client
-int enqueue_command(client_t *client, char *command_str)
+static int add_command(client_t *client, char *command_str, command_map_t *command_map)
 {
     command_t *new_command = NULL;
 
@@ -27,6 +37,7 @@ int enqueue_command(client_t *client, char *command_str)
     if (new_command == NULL)
         return 84;
     new_command->command = strdup(command_str);
+    new_command->time = get_command_time(command_str, command_map);
     if (new_command->command == NULL) {
         free(new_command);
         return 84;
@@ -43,27 +54,40 @@ int enqueue_command(client_t *client, char *command_str)
     return 0;
 }
 
+int enqueue_command(client_t *client, char *command_str)
+{
+    command_map_t command_map[] = {
+        {"Forward", 7},
+        {"Right", 7},
+        {"Left", 7},
+        {"Look", 7},
+        {"Inventory", 1},
+        {"Broadcast", 7},
+        {"Connect_nbr", 0},
+        {"Fork", 42},
+        {"Eject", 7},
+        {"Take", 7},
+        {"Set", 7},
+        {"Incantation", 300},
+        {NULL, 0}
+    };
+
+    return add_command(client, command_str, command_map);
+}
+
 // Dequeue a command from the command queue of the client
-char *dequeue_command(command_queue_t *queue)
+command_t *dequeue_command(command_queue_t *queue)
 {
     command_t *command_node = NULL;
-    char *command_str = NULL;
 
-    if (queue == NULL)
-        return NULL;
-    if (queue->front == NULL)
+    if (queue == NULL || queue->front == NULL)
         return NULL;
     command_node = queue->front;
-    command_str = strdup(command_node->command);
-    if (command_str == NULL)
-        return NULL;
-    queue->front = command_node->next;
+    queue->front = queue->front->next;
     if (queue->front == NULL)
         queue->back = NULL;
-    free(command_node->command);
-    free(command_node);
     queue->size--;
-    return command_str;
+    return command_node;
 }
 
 // Free the command queue of the client
