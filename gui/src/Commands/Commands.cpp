@@ -51,12 +51,12 @@ void Commands::getBroadcast(const std::string& params)
     std::cout  << "Broadcast: " << params << std::endl;
 }
 
-void Commands::getStartofIncantation(const std::string& params)
+void Commands::getStartOfIncantation(const std::string& params)
 {
     std::cout  << "Start of Incantation: " << params << std::endl;
 }
 
-void Commands::getEndofIncantation(const std::string& params)
+void Commands::getEndOfIncantation(const std::string& params)
 {
     std::cout  << "End of Incantation: " << params << std::endl;
 }

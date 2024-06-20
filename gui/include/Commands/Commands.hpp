@@ -23,8 +23,8 @@ class Commands {
         void getPlayerLevel(const std::string& params);
         void getPlayerInventory(const std::string& params);
         void getExpulsion(const std::string& params);
-        void getStartofIncantation(const std::string& params);
-        void getEndofIncantation(const std::string& params);
+        void getStartOfIncantation(const std::string& params);
+        void getEndOfIncantation(const std::string& params);
         void getLayingEggByPlayer(const std::string& params);
         void getResourceDropping(const std::string& params);
         void getResourceCollecting(const std::string& params);
