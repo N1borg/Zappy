@@ -12,11 +12,6 @@ void Commands::getMapSize(const std::string &params)
     std::cout << "Map size: " << params << std::endl;
 }
 
-void Commands::getMapContent(const std::string& params)
-{
-    std::cout  << "Map content: " << params << std::endl;
-}
-
 void Commands::getPlayerPosition(const std::string& params)
 {
     std::cout  << "Player Position: " << params << std::endl;
@@ -27,7 +22,7 @@ void Commands::getTileContent(const std::string& params)
     std::cout  << "Tile Content: " << params << std::endl;
 }
 
-void Commands::getTeamName(const std::string& params)
+void Commands::getTeamsName(const std::string& params)
 {
     std::cout  << "Team Name: " << params << std::endl;
 }
@@ -47,7 +42,7 @@ void Commands::getPlayerInventory(const std::string& params)
     std::cout  << "Player Inventory: " << params << std::endl;
 }
 
-void Commands::getPlayerExpulsion(const std::string& params)
+void Commands::getExpulsion(const std::string& params)
 {
     std::cout  << "Player Expulsion: " << params << std::endl;
 }
@@ -66,7 +61,7 @@ void Commands::getEndofIncantation(const std::string& params)
     std::cout  << "End of Incantation: " << params << std::endl;
 }
 
-void Commands::getLayingEggbyPlayer(const std::string& params)
+void Commands::getLayingEggByPlayer(const std::string& params)
 {
     std::cout  << "Laying Egg by Player: " << params << std::endl;
 }
@@ -86,12 +81,12 @@ void Commands::getPlayerDeath(const std::string& params)
     std::cout  << "Player Death: " << params << std::endl;
 }
 
-void Commands::getLaidEggbyPlayer(const std::string& params)
+void Commands::getEggLaidByPlayer(const std::string& params)
 {
     std::cout  << "Egg Laid by Player: " << params << std::endl;
 }
 
-void Commands::getPlayerConnectioninEgg(const std::string& params)
+void Commands::getPlayerConnectionInEgg(const std::string& params)
 {
     std::cout  << "Player Connection in Egg: " << params << std::endl;
 }
@@ -111,7 +106,7 @@ void Commands::getTimeUnitModification(const std::string& params)
     std::cout  << "Time Unit Modification: " << params << std::endl;
 }
 
-void Commands::getEndofGame(const std::string& params)
+void Commands::getEndOfGame(const std::string& params)
 {
     std::cout  << "End of Game: " << params << std::endl;
 }
