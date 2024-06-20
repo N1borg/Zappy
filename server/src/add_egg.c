@@ -55,11 +55,14 @@ void add_egg_to_team(egg_t *new_egg, team_t *team)
 // Add the egg to the tile
 void add_egg_to_tile(egg_t *new_egg, tile_t *tile)
 {
-    egg_t *current_tile = tile->eggs;
+    egg_t *current_tile = NULL;
 
-    if (current_tile == NULL) {
+    if (tile == NULL || new_egg == NULL)
+        return;
+    if (tile->eggs == NULL) {
         tile->eggs = new_egg;
     } else {
+        current_tile = tile->eggs;
         while (current_tile->next_tile != NULL) {
             current_tile = current_tile->next_tile;
         }
