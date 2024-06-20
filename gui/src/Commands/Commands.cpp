@@ -51,6 +51,10 @@ void Commands::getPlayerExpulsion(const std::string& params)
 {
     std::cout  << "Player Expulsion: " << params << std::endl;
 }
+void Commands::getBroadcast(const std::string& params)
+{
+    std::cout  << "Broadcast: " << params << std::endl;
+}
 
 void Commands::getStartofIncantation(const std::string& params)
 {

@@ -39,6 +39,7 @@ class Commands {
         void getServerMessage(const std::string& params);
         void getUnknownCommand(const std::string& params);
         void getCommandParameter(const std::string& params);
+        void getBroadcast(const std::string& params);
 };
 
 #endif /* !COMMANDS_HPP_ */
