@@ -85,10 +85,8 @@ void init_server(server_t *serv)
         for (int j = 0; j < serv->max_client_team; j++) {
             x = rand() % serv->width;
             y = rand() % serv->height;
-            add_new_egg(serv, serv->clients[i], serv->teams[i], &serv->map[x][y]);
+            add_new_egg(serv, serv->clients[i],
+                serv->teams[i], &serv->map[x][y]);
         }
     }
-
-    // FOR DEBUG PURPOSE
-    generate_resources(serv);
 }

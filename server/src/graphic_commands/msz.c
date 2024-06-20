@@ -11,7 +11,7 @@
 int command_msz(server_t *serv, client_t *client, char *arg)
 {
     if (arg != NULL)
-        return 1;
+        return event_sbp(client);
     dprintf(client->fd, "msz %d %d\n", serv->width, serv->height);
     return 0;
 }

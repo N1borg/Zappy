@@ -9,14 +9,7 @@
 
 #include "egg.h"
 
-#define MAX_CLIENTS 2048
-
-#ifndef FD_SETSIZE
-    #define FD_SETSIZE MAX_CLIENTS
-#else
-    #undef FD_SETSIZE
-    #define FD_SETSIZE MAX_CLIENTS
-#endif
+#define MAX_CLIENTS 100
 
 typedef enum {
     NORTH = 1,
@@ -37,6 +30,7 @@ typedef struct item_s {
 
 typedef struct command_s {
     char *command;
+    int time;
     struct command_s *next;
 } command_t;
 
