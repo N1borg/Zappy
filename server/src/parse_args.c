@@ -64,6 +64,8 @@ server_t parse_args(int argc, char *argv[])
     serv.max_client_team = 0;
     serv.teams = NULL;
     get_param(&serv, argc, argv);
+    if (!serv.teams)
+        return serv;
     for (int i = 0; serv.teams[i + 1]; i++)
         serv.teams[i]->free_slots = serv.max_client_team;
     serv.teams[get_team_id(&serv, "GRAPHIC")]->free_slots = MAX_CLIENTS;
