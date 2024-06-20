@@ -84,9 +84,12 @@ def main():
                 else:
                     print(f'Unexpected response for map size from server: {response}')
 
-            ai = AI(name, s, slots, x, y)
-            # ai.launch_loop()
-            ai.lvl2()
+            ai = AI(name, s, slots, int(x), int(y))
+            ai.name_choosing()
+            ai.i_love_food()
+            # ai.lvl2()
+            # ai.lvl3()
+
 
     except Exception as e:
         print(f'{host}:{port} - {e}')

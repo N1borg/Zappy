@@ -35,13 +35,13 @@ resources = ["linemate", "deraumere", "sibur", "mendiane", "phiras", "thystame"]
 medianes = [0, 2, 6, 12, 20, 30, 42, 56, 72]
 
 incantation_levels = {
-    2: {"players": 1, "linemate": 1, "sibur": 0, "mendiane": 0, "phiras": 0, "thystame": 0},
-    3: {"players": 2, "linemate": 1, "sibur": 1, "mendiane": 0, "phiras": 0, "thystame": 0},
-    4: {"players": 2, "linemate": 2, "sibur": 0, "mendiane": 0, "phiras": 2, "thystame": 0},
-    5: {"players": 4, "linemate": 1, "sibur": 1, "mendiane": 0, "phiras": 1, "thystame": 0},
-    6: {"players": 4, "linemate": 1, "sibur": 2, "mendiane": 3, "phiras": 0, "thystame": 0},
-    7: {"players": 6, "linemate": 1, "sibur": 2, "mendiane": 0, "phiras": 1, "thystame": 0},
-    8: {"players": 6, "linemate": 2, "sibur": 2, "mendiane": 2, "phiras": 2, "thystame": 1}
+    2: {"player": 1, "linemate": 1, "sibur": 0, "mendiane": 0, "phiras": 0, "thystame": 0},
+    3: {"player": 2, "linemate": 1, "sibur": 1, "mendiane": 0, "phiras": 0, "thystame": 0},
+    4: {"player": 2, "linemate": 2, "sibur": 0, "mendiane": 0, "phiras": 2, "thystame": 0},
+    5: {"player": 4, "linemate": 1, "sibur": 1, "mendiane": 0, "phiras": 1, "thystame": 0},
+    6: {"player": 4, "linemate": 1, "sibur": 2, "mendiane": 3, "phiras": 0, "thystame": 0},
+    7: {"player": 6, "linemate": 1, "sibur": 2, "mendiane": 0, "phiras": 1, "thystame": 0},
+    8: {"player": 6, "linemate": 2, "sibur": 2, "mendiane": 2, "phiras": 2, "thystame": 1}
 }
 
 class AI:
@@ -61,6 +61,13 @@ class AI:
         self.sent_queue = []
 
         self.incantation_done = False
+
+        self.names = ["Rom", "Rob", "Ana", "Val", "Vic", "Jul", "Idk", "Lol", "Kek", "Uwu"]
+        self.name = self.names[0]
+
+        self.broadcast_dir = 0
+        self.proposed_incantation = False
+        self.responses_count = 0
 
     def parse_look(self, look_str):
         look_str = look_str.strip('[]')
@@ -122,35 +129,131 @@ class AI:
             time.sleep(2)
             return 1
 
-    def receive_command(self):
-        response = receive_response(self.socket)
+    def find_incantation(self):
+        tile_nb = -1
+        while tile_nb == -1:
+            if self.direction in range(3, 5):
+                    self.urgent_command("Left", "", 1)
+                    self.send_command()
+                    self.receive_command("")
+            elif self.direction == 5:
+                self.urgent_command("Left", "", 2)
+                for i in range(2):
+                    self.send_command()
+                    self.receive_command("")
+            elif self.direction in range(6, 8):
+                self.urgent_command("Left", "", 1)
+                self.send_command()
+                self.receive_command("")
+            self.urgent_command("Forward", "", 1)
+            self.send_command()
+            self.receive_command("")
+            self.do_look(True)
+            self.send_command()
+            self.receive_command("")
+            tile_nb, player_nb = self.search_object("player")
+            if tile_nb == "UNKNOWN" or player_nb == "UNKNOWN":
+                self.urgent_command("Broadcast", f"{self.team}/!/{self.name}/!/oute", 1)
+                self.send_command()
+                self.receive_command("")
+                continue
+            else:
+                break
+
+        self.reset_commands()
+        self.do_walk(tile_nb, False)
+        while len(self.command_queue) > 0:
+            self.manage_queue()
+            self.receive_command("")
+
+
+
+            
+
+
+    def broadcast_receive(self, response):
+        inc_list = ["inc2", "inc3", "inc4", "inc5", "inc6", "inc7"]
+        response = response[8:] if response[:8] == "message " else response
+        print(response)
+        self.direction, message = response.split(", ")
+
+        int(self.direction)
+        message = message.split("/!/")
+        # msg_dict = {"team": "", "name": "", "cmd": ""}
+        if isinstance(message, list) and len(message) == 3:
+            team, name, cmd = message[0], message[1], message[2]
+        else:
+            print("Other team broadcast, ignoring")
+            return 1
+        if self.team != team:
+            print("Other team broadcast, ignoring")
+            return 1
+
+        if cmd == "qiela":
+            self.urgent_command("Broadcast", f"{self.team}/!/{self.name}/!/cmoi", 1)
+            self.send_command()
+            self.receive_command("")
+        elif cmd == "cmoi":
+            self.name = self.names[self.responses_count + 1]
+        elif cmd == "suila":
+            pass
+        elif cmd in inc_list:
+            self.find_incantation()
+        elif cmd == "oute" and self.proposed_incantation:
+            self.urgent_command("Broadcast", f"{self.team}/!/{self.name}/!/icila", 1)
+            self.send_command()
+            self.receive_command("")
+            
+
+    def receive_command(self, response):
+        if response == "":
+            response = receive_response(self.socket)
         if response == "dead" or not response:
-            # TODO: implement death mechanism
             print("We are dead")
             exit()
             return
-        print(f"        Received response   [<-]: {response}")
-        cmd = self.sent_queue.pop()
-        cmd_name, cmd_arg = "", ""
-        if len(cmd.split(" ")) == 2:
-            cmd_name, cmd_arg = cmd.split(" ")
-        else:
-            cmd_name = cmd
 
-        if cmd_name == "Forward" or cmd_name == "Right" or cmd_name == "Left" or cmd_name == "Fork" or cmd_name == "Broadcast":
+
+        print(f"        Received response   [<-]: {response}")
+        cmd = ""
+        if response == "":
+            cmd = self.sent_queue.pop()
+            cmd_name, cmd_arg = "", ""
+            if len(cmd.split(" ")) == 2:
+                cmd_name, cmd_arg = cmd.split(" ")
+            else:
+                cmd_name = cmd
+        else:
+            cmd_name = ""
+
+        if response[:8] == "message ":
+            self.broadcast_receive(response)
+            # self.responses_count += 1
+            if cmd != "":
+                self.sent_queue.append(cmd)
+    
+        elif cmd_name == "Broadcast":
+            if response == "ok":
+                # response = receive_response(self.socket)
+                print("Broadcast: OK")
+            else:
+                print(f"Received an unexpected response from {cmd_name} command: ", response)
+                self.receive_command("")
+
+        elif cmd_name == "Forward" or cmd_name == "Right" or cmd_name == "Left" or cmd_name == "Fork" or cmd_name == "Broadcast":
             if response == "ok":
                 print(cmd_name + ": OK")
             else:
                 print(f"Received an unexpected response from {cmd_name} command: ", response)
 
         elif cmd_name == "Look":
-            if response[0] != '[':
+            if response[0] != '[' or response == "ko":
                 print(f"Received an unexpected response from {cmd_name} command: ", response)
             else:
                 self.look = self.parse_look(response)
 
         elif cmd_name == "Inventory":
-            if response[0] != '[':
+            if (response[0] != '[' and response[2] != 'f') or response == "ko":
                 print(f"Received an unexpected response from {cmd_name} command: ", response)
             else:
                 self.inventory = self.parse_inventory(response)
@@ -171,6 +274,7 @@ class AI:
         elif cmd_name == "Incantation":
             if response == "ko":
                 print("Incantation failed")
+                self.proposed_incantation = False
             else:
                 self.level += 1
                 self.incantation_done = True
@@ -254,7 +358,7 @@ class AI:
         
         if left_or_right > 0:
             if urgent:
-                self.urgent_command("Right", "", 1)
+                self.urgent_command ("Right", "", 1)
             else:
                 self.append_command("Right", "", 1)
         elif left_or_right < 0:
@@ -285,66 +389,32 @@ class AI:
         # for level 1 drop needed objects and start incantation
         self.do_look(True)
         self.send_command()
-        self.receive_command()
+        self.receive_command("")
         if self.level == 1:
             conditions_dict = incantation_levels[self.level + 1]
-            print(self.look)
+            # print(self.look)
             if "player" in self.look[0] and self.inventory["linemate"] >= 1:
                 self.urgent_command("Set", "linemate", 1)
                 self.send_command()
-                self.receive_command()
+                self.receive_command("")
                 self.urgent_command("Incantation", "", 1)
                 self.send_command()
-                self.receive_command()
+                self.receive_command("")
+        # else:
+            # conditions_dict = incantation_levels[]
 
-    def get_linemate(self, amount):
-        curr_fwd = 0
-        self.reset_commands()
-        while self.inventory["linemate"] < amount:
-            # if food < 3:
-            #    get_food(5)
-
-            # print("__HERE 1")
-            self.do_look(True)
-            self.send_command()
-            self.receive_command()
-            tile_nb, obj_nb = self.search_object("linemate")
-            if tile_nb == "UNKNOWN" or obj_nb == "UNKNOWN":
-                if curr_fwd >= self.map_x or curr_fwd >= self.map_y:
-                    print("__RIGHT UNKNOWN")
-                    self.urgent_command("Right", "", 1)
-                    self.send_command()
-                    self.receive_command()
-                    curr_fwd = 0
-                else:
-                    print("__FORWARD UNKNOWN")
-                    self.urgent_command("Forward", "", 1)
-                    curr_fwd += 1
-                    self.send_command()
-                    self.receive_command()
-            else:
-                print("__GOING NORMAL")
-                self.reset_commands()
-                self.do_walk(tile_nb, False)
-                while len(self.command_queue) > 0:
-                    self.manage_queue()
-                    self.receive_command()
-                self.do_take("linemate", 1, True)
-                self.send_command()
-                self.receive_command()
-    
     def get_object(self, amount, obj_name):
         curr_fwd = 0
         self.reset_commands()
         while self.inventory[obj_name] < amount:
             self.do_look(True)
             self.send_command()
-            self.receive_command()
+            self.receive_command("")
 
             self.reset_commands()
             self.urgent_command("Inventory", "", 1)
             self.send_command()
-            self.receive_command()
+            self.receive_command("")
 
             if self.inventory['food'] < 4:
                 self.get_food(8)
@@ -355,33 +425,33 @@ class AI:
                     print("__RIGHT UNKNOWN")
                     self.urgent_command("Right", "", 1)
                     self.send_command()
-                    self.receive_command()
+                    self.receive_command("")
                     self.urgent_command("Forward", "", 3)
                     self.send_command()
-                    self.receive_command()
+                    self.receive_command("")
                     self.send_command()
-                    self.receive_command()
+                    self.receive_command("")
                     self.send_command()
-                    self.receive_command()
+                    self.receive_command("")
                     self.urgent_command("Left", "", 1)
                     self.send_command()
-                    self.receive_command()
+                    self.receive_command("")
                     curr_fwd = 0
                 else:
                     self.urgent_command("Forward", "", 1)
                     curr_fwd += 1
                     self.send_command()
-                    self.receive_command()
+                    self.receive_command("")
             else:
                 self.reset_commands()
                 self.do_walk(tile_nb, False)
                 while len(self.command_queue) > 0:
                     self.manage_queue()
-                    self.receive_command()
+                    self.receive_command("")
                 self.do_take(obj_name, obj_nb, True)
                 while len(self.command_queue) != 0:
                     self.send_command()
-                    self.receive_command()
+                    self.receive_command("")
                 if self.inventory[obj_name] == amount:
                     self.reset_commands()
                     return
@@ -393,18 +463,19 @@ class AI:
         self.reset_commands()
         self.urgent_command("Inventory", "", 1)
         self.send_command()
-        self.receive_command()
+        self.receive_command("")
 
+        print()
         while self.inventory['food'] < to_amount:
             self.do_look(True)
             self.send_command()
-            self.receive_command()
+            self.receive_command("")
 
 
             self.reset_commands()
             self.urgent_command("Inventory", "", 1)
             self.send_command()
-            self.receive_command()
+            self.receive_command("")
 
             # search for the closest food
             tile_nb, obj_nb = self.search_object('food')
@@ -413,41 +484,43 @@ class AI:
                     print("__RIGHT UNKNOWN")
                     self.urgent_command("Right", "", 1)
                     self.send_command()
-                    self.receive_command()
+                    self.receive_command("")
                     self.urgent_command("Forward", "", 3)
                     self.send_command()
-                    self.receive_command()
+                    self.receive_command("")
                     self.send_command()
-                    self.receive_command()
+                    self.receive_command("")
                     self.send_command()
-                    self.receive_command()
+                    self.receive_command("")
                     self.urgent_command("Left", "", 1)
                     self.send_command()
-                    self.receive_command()
+                    self.receive_command("")
                     curr_fwd = 0
                 else:
                     print("__GOING NORMAL")
                     self.urgent_command("Forward", "", 1)
                     curr_fwd += 1
                     self.send_command()
-                    self.receive_command()
+                    self.receive_command("")
             else:
                 self.reset_commands()
                 self.do_walk(tile_nb, False)
                 while len(self.command_queue) != 0:
                     self.send_command()
-                    self.receive_command()
+                    self.receive_command("")
                 self.do_take('food', obj_nb, False)
                 while len(self.command_queue) != 0:
                     self.send_command()
-                    self.receive_command()
+                    self.receive_command("")
+                self.reset_commands()
+                self.urgent_command("Inventory", "", 1)
+                self.send_command()
+                self.receive_command("")
                 if self.inventory['food'] == to_amount:
                     return
                 else:
                     continue
 
-        
-            
     def lvl2(self):
         self.get_object(1, "linemate")
         while self.level < 2:
@@ -456,28 +529,44 @@ class AI:
             if self.incantation_done:
                 self.level += 1
                 return
-
-    def refill_food(self):
-        time.sleep(5)
-        self.get_food(8)
-        # while True:
-            # self.reset_commands()
-            # self.urgent_command("Inventory", "", 1)
-            # self.send_command()
-            # self.receive_command()
-        #     if self.inventory['food'] <= 3:
-        #         self.get_food(8)
-        #         self.reset_commands()
-        #         self.urgent_command("Inventory", "", 1)
-        #         self.send_command()
-        #         self.receive_command()
-        #         if self.inventory['food'] >= 8:
-        #             print("___________AAAAAAAAAAA", self.inventory['food'])
-        #             return
-        #     if self.inventory['food'] >= 8:
-        #             return
             
-    # def lvl3(self):
+    def lvl3(self):
+        lvl_dict = incantation_levels[3]
+        for key in lvl_dict.keys():
+            if key == "player":
+                continue
+
+            if lvl_dict[key] > 0:  
+                self.get_object(lvl_dict[key], key)
+        
+        self.reset_commands()
+        self.urgent_command("Inventory", "", 1)
+        self.send_command()
+        self.receive_command("")
+
+        print(self.inventory)
+
+    def name_choosing(self):
+        self.reset_commands()
+        self.urgent_command("Broadcast", f"{self.team}/!/{self.name}/!/qiela", 1)
+        self.send_command()
+        self.receive_command("")
+        self.receive_command("")
+        self.name = self.names[self.responses_count + 1]
+        print(self.name)
+
+    def i_love_food(self):
+        time.sleep(3)
+        while True:
+            # self.get_food(10)
+            # self.urgent_command("Broadcast", f"{self.team}/!/{self.name}/!/suila", 1)
+            # self.send_command()
+            # self.receive_command("")
+            # print("")
+            self.receive_command("")
+            time.sleep(3)
+            # print(self.name)
+
 
     def launch_loop(self):
         i = 0
@@ -491,12 +580,12 @@ class AI:
 
             # i += 1
             # self.manage_queue()
-            # self.receive_command()
+            # self.receive_command("")
             # time.sleep(3)
             # self.manage_food()
             # time.sleep(3)
             # self.manage_queue()
-            # self.receive_command()
+            # self.receive_command("")
             # print(f"[SENT] Queue: {self.sent_queue}")
             # print(f"[CMD] Queue: {self.command_queue}")
             # self.reset_commands()
