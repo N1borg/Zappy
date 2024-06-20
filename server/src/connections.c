@@ -10,7 +10,7 @@
 // Add the child sockets to the readfds set
 void add_child_socket(server_t *serv, int *sd, int *max_sd)
 {
-    for (int i = 0; i < serv->max_client_team * serv->team_nb; i++) {
+    for (int i = 0; i < MAX_CLIENTS; i++) {
         (*sd) = serv->clients[i]->fd;
         if (*sd > 0)
             FD_SET(*sd, &serv->readfds);
@@ -38,21 +38,19 @@ void client_handler(server_t *serv, client_t *client)
 }
 
 // Execute the commands in the queue of the clients
-void execute_queue(server_t *server)
+void execute_queue(server_t *serv, client_t *client)
 {
-    char *command = NULL;
+    command_t *command  = dequeue_command(client->command_queue);
 
-    for (int i = 0; i < MAX_CLIENTS; i++) {
-        command = dequeue_command(server->clients[i]->command_queue);
-        if (command != NULL) {
-            compute_response(server, server->clients[i], command);
-            free(command);
-        }
+    if (command != NULL) {
+        compute_response(serv, client, command->command, command->time);
+        free(command->command);
+        free(command);
     }
 }
 
 // Start the server and listen for incoming connections
-int start_listener(server_t *serv)
+void start_listener(server_t *serv)
 {
     int sd = 0;
     int max_sd = 0;
@@ -71,7 +69,7 @@ int start_listener(server_t *serv)
         for (int i = 0; i < MAX_CLIENTS; i++) {
             sd = serv->clients[i]->fd;
             client_handler(serv, serv->clients[i]);
+            execute_queue(serv, serv->clients[i]);
         }
     }
-    return 0;
 }

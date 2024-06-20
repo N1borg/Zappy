@@ -11,22 +11,22 @@
 /**
  * @brief Increment the resource count on a specific tile.
  *
- * @param server A pointer to the server structure.
+ * @param serv A pointer to the server structure.
  * @param x The x-coordinate of the tile.
  * @param y The y-coordinate of the tile.
  * @param resource_type The type of resource to place.
  */
-void place_resource_rare(server_t *server, int x, int y, int resource_type)
+void place_resource_rare(server_t *serv, int x, int y, int resource_type)
 {
     switch (resource_type) {
         case MENDIANE:
-            server->map[y][x].mendiane++;
+            serv->map[y][x].resources.mendiane++;
             break;
         case PHIRAS:
-            server->map[y][x].phiras++;
+            serv->map[y][x].resources.phiras++;
             break;
         case THYSTAME:
-            server->map[y][x].thystame++;
+            serv->map[y][x].resources.thystame++;
             break;
         default:
             break;
@@ -36,48 +36,48 @@ void place_resource_rare(server_t *server, int x, int y, int resource_type)
 /**
  * @brief Increment the resource count on a specific tile.
  *
- * @param server A pointer to the server structure.
+ * @param serv A pointer to the server structure.
  * @param x The x-coordinate of the tile.
  * @param y The y-coordinate of the tile.
  * @param resource_type The type of resource to place.
  */
-void place_resource_common(server_t *server, int x, int y, int resource_type)
+void place_resource_common(server_t *serv, int x, int y, int resource_type)
 {
     switch (resource_type) {
         case FOOD:
-            server->map[y][x].food++;
+            serv->map[y][x].resources.food++;
             break;
         case LINEMATE:
-            server->map[y][x].linemate++;
+            serv->map[y][x].resources.linemate++;
             break;
         case DERAUMERE:
-            server->map[y][x].deraumere++;
+            serv->map[y][x].resources.deraumere++;
             break;
         case SIBUR:
-            server->map[y][x].sibur++;
+            serv->map[y][x].resources.sibur++;
             break;
         default:
-            place_resource_rare(server, x, y, resource_type);
+            place_resource_rare(serv, x, y, resource_type);
     }
 }
 
 /**
  * @brief Distribute resources across the map.
  *
- * @param server A pointer to the server structure.
+ * @param serv A pointer to the server structure.
  * @param resource_type The type of resource to distribute.
  * @param total_resources The total number of resources to distribute.
  */
-void distribute_resources(server_t *server,
+void distribute_resources(server_t *serv,
     int resource_type, int total_resources)
 {
     int x = 0;
     int y = 0;
 
     for (int j = 0; j < total_resources; j++) {
-        x = rand() % server->width;
-        y = rand() % server->height;
-        place_resource_common(server, x, y, resource_type);
+        x = rand() % serv->width;
+        y = rand() % serv->height;
+        place_resource_common(serv, x, y, resource_type);
     }
 }
 
@@ -86,7 +86,7 @@ void distribute_resources(server_t *server,
  *
  * @param server A pointer to the server structure.
  */
-void generate_resources(server_t *server)
+void generate_resources(server_t *serv)
 {
     int total_r = 0;
     resource_density_t resources[RESSOURCE_COUNT] = {
@@ -100,7 +100,7 @@ void generate_resources(server_t *server)
     };
 
     for (int i = 0; i < RESSOURCE_COUNT; i++) {
-        total_r = server->width * server->height * resources[i].density;
-        distribute_resources(server, i, total_r);
+        total_r = serv->width * serv->height * resources[i].density;
+        distribute_resources(serv, i, total_r);
     }
 }

@@ -20,6 +20,7 @@ void remove_egg_from_team(egg_t *egg, team_t *team)
         current_team = current_team->next_team;
     if (current_team != NULL)
         current_team->next_team = egg->next_team;
+    team->free_slots--;
 }
 
 // Remove an egg from a tile
@@ -54,7 +55,7 @@ int remove_egg(egg_t *egg)
 }
 
 // Destroy all eggs from a tile
-int destroy_eggs_from_tiles(tile_t *tile)
+int destroy_eggs_from_tiles(server_t *server, tile_t *tile)
 {
     egg_t *current_egg = NULL;
     egg_t *next_egg = NULL;
@@ -64,6 +65,7 @@ int destroy_eggs_from_tiles(tile_t *tile)
         return 0;
     current_egg = tile->eggs;
     while (current_egg != NULL) {
+        event_edi(server, current_egg);
         next_egg = current_egg->next_tile;
         remove_egg_from_team(current_egg, current_egg->team);
         remove_egg_from_tile(current_egg, tile);
@@ -75,12 +77,14 @@ int destroy_eggs_from_tiles(tile_t *tile)
     return nbr_eggs_destroyed;
 }
 
-// Destroy all eggs from the server
-void destroy_eggs(server_t *server)
+void destroy_eggs_pointer(egg_t *eggs)
 {
-    for (int x = 0; x < server->width; x++) {
-        for (int y = 0; y < server->height; y++) {
-            destroy_eggs_from_tiles(&server->map[x][y]);
-        }
+    egg_t *current = eggs;
+    egg_t *next = NULL;
+
+    while (current != NULL) {
+        next = current->next_tile;
+        free(current);
+        current = next;
     }
 }

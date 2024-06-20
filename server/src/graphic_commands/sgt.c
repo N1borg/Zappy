@@ -11,7 +11,7 @@
 int command_sgt(server_t *serv, client_t *client, char *arg)
 {
     if (arg != NULL)
-        return 1;
+        return event_sbp(client);
     dprintf(client->fd, "sgt %d\n", serv->freq);
     return 0;
 }

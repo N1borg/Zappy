@@ -12,13 +12,13 @@ void set_tile(tile_t *tile, int x, int y)
 {
     tile->x = x;
     tile->y = y;
-    tile->food = 0;
-    tile->linemate = 0;
-    tile->deraumere = 0;
-    tile->sibur = 0;
-    tile->mendiane = 0;
-    tile->phiras = 0;
-    tile->thystame = 0;
+    tile->resources.food = 0;
+    tile->resources.linemate = 0;
+    tile->resources.deraumere = 0;
+    tile->resources.sibur = 0;
+    tile->resources.mendiane = 0;
+    tile->resources.phiras = 0;
+    tile->resources.thystame = 0;
     tile->eggs = NULL;
     for (int i = 0; i < MAX_CLIENTS; i++)
         tile->players[i] = NULL;
@@ -46,16 +46,27 @@ void set_client(client_t *clients)
     clients->x = 0;
     clients->y = 0;
     clients->level = 0;
+    clients->is_incanting = false;
     clients->orientation = 0;
-    clients->food = 0;
-    clients->linemate = 0;
-    clients->deraumere = 0;
-    clients->sibur = 0;
-    clients->mendiane = 0;
-    clients->phiras = 0;
-    clients->thystame = 0;
+    clients->inv.food = 10;
+    clients->inv.linemate = 0;
+    clients->inv.deraumere = 0;
+    clients->inv.sibur = 0;
+    clients->inv.mendiane = 0;
+    clients->inv.phiras = 0;
+    clients->inv.thystame = 0;
     clients->team = NULL;
     clients->command_queue = NULL;
+}
+
+void add_new_egg(server_t *serv, client_t *client, team_t *team, tile_t *tile)
+{
+    egg_t *new_egg = add_egg(team, tile);
+
+    if (new_egg == NULL)
+        disconnect_client(serv, client);
+    else
+        event_enw(serv, client, new_egg);
 }
 
 // Initializes the server struct
@@ -74,7 +85,8 @@ void init_server(server_t *serv)
         for (int j = 0; j < serv->max_client_team; j++) {
             x = rand() % serv->width;
             y = rand() % serv->height;
-            add_egg(serv->teams[i], &serv->map[x][y]);
+            add_new_egg(serv, serv->clients[i],
+                serv->teams[i], &serv->map[x][y]);
         }
     }
 }

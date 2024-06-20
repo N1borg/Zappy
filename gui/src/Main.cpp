@@ -40,9 +40,7 @@ int main(int argc, char *argv[])
     }
 
     // Validate connection
-    if (argsParser.validateConnection(socket.receiveMessage())) {
-        std::cout << "Connection established" << std::endl;
-    } else {
+    if (!argsParser.validateConnection(socket.receiveMessage())) {
         std::cerr << "Error: Connection failed" << std::endl;
         window.close();
         return 84;
@@ -73,6 +71,7 @@ int main(int argc, char *argv[])
     map.setPhiras(5, 5, true);
     map.setThystame(6, 6, true);
 
+    window.disableCursor();
     while (!window.shouldClose())
     {
         window.parseCameraInputs();

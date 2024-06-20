@@ -16,14 +16,15 @@ int tile_size(tile_t *tile)
         if (tile->players[i])
             ret += 7;
     }
-    ret += get_nbr_eggs_on_tile(tile) * 4 + tile->food * 5 + tile->linemate * 9
-    + tile->deraumere * 10 + tile->sibur * 6 + tile->mendiane * 9
-    + tile->phiras * 7 + tile->thystame * 9;
+    ret += ((get_nbr_eggs_on_tile(tile) * 4) + (tile->resources.food * 5)
+    + (tile->resources.linemate * 9) + (tile->resources.deraumere * 10)
+    + (tile->resources.sibur * 6) + (tile->resources.mendiane * 9)
+    + (tile->resources.phiras * 7) + (tile->resources.thystame * 9));
     return (ret + 1);
 }
 
 // Return the number of chars to init the look buffer
-int buffer_len(server_t *s, client_t *client)
+int buffer_len(server_t *serv, client_t *client)
 {
     int n_char = 2;
     int loop = (client->orientation % 2);
@@ -31,15 +32,17 @@ int buffer_len(server_t *s, client_t *client)
 
     for (int i = 0; loop && i <= client->level; i++) {
         for (int j = 0; j < (i * 2 + 1); j++) {
-            n_char += tile_size(&s->map[y_to_map_y(s, client->y + i * vec)]
-                [x_to_map_x(s, client->x + ((j * -vec) + i * vec))]);
+            n_char += tile_size(&serv->map[
+            y_to_map_y(serv, client->y + i * vec)]
+            [x_to_map_x(serv, client->x + ((j * -vec) + i * vec))]);
         }
     }
     for (int i = 0; !loop && i <= client->level; i++) {
         for (int j = 0; j < (i * 2 + 1); j++) {
             n_char += tile_size(
-                &s->map[y_to_map_y(s, client->y - ((j * -vec) + i * vec))]
-                [x_to_map_x(s, client->x + i * vec)]);
+                &serv->map[
+                y_to_map_y(serv, client->y - ((j * -vec) + i * vec))]
+                [x_to_map_x(serv, client->x + i * vec)]);
         }
     }
     return n_char;

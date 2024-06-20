@@ -11,10 +11,10 @@
 void send_tile_content(server_t *serv, client_t *client, int x, int y)
 {
     dprintf(client->fd, "bct %d %d %d %d %d %d %d %d %d\n", x, y,
-        serv->map[y][x].food, serv->map[y][x].linemate,
-        serv->map[y][x].deraumere, serv->map[y][x].sibur,
-        serv->map[y][x].mendiane, serv->map[y][x].phiras,
-        serv->map[y][x].thystame);
+        serv->map[y][x].resources.food, serv->map[y][x].resources.linemate,
+        serv->map[y][x].resources.deraumere, serv->map[y][x].resources.sibur,
+        serv->map[y][x].resources.mendiane, serv->map[y][x].resources.phiras,
+        serv->map[y][x].resources.thystame);
 }
 
 // Return 1 if the string is an integer
@@ -39,18 +39,18 @@ int parse_command_args(server_t *serv, client_t *client,
 
     x = strtol(token, &endptr, 10);
     if (*endptr != '\0')
-        return 1;
+        return event_sbp(client);
     token = strtok(NULL, " ");
     if (token == NULL || !is_integer(token))
-        return 1;
+        return event_sbp(client);
     y = strtol(token, &endptr, 10);
     if (*endptr != '\0')
-        return 1;
+        return event_sbp(client);
     token = strtok(NULL, " ");
     if (token != NULL)
-        return 1;
+        return event_sbp(client);
     if (x < 0 || x >= serv->width || y < 0 || y >= serv->height)
-        return 1;
+        return event_sbp(client);
     send_tile_content(serv, client, x, y);
     return 0;
 }
@@ -62,9 +62,9 @@ int command_bct(server_t *serv, client_t *client, char *arg)
     char *endptr = NULL;
 
     if (arg == NULL)
-        return 1;
+        return event_sbp(client);
     token = strtok(arg, " ");
     if (token == NULL || !is_integer(token))
-        return 1;
+        return event_sbp(client);
     return parse_command_args(serv, client, token, endptr);
 }

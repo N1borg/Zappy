@@ -9,14 +9,7 @@
 
 #include "egg.h"
 
-#define MAX_CLIENTS 2048
-
-#ifndef FD_SETSIZE
-    #define FD_SETSIZE MAX_CLIENTS
-#else
-    #undef FD_SETSIZE
-    #define FD_SETSIZE MAX_CLIENTS
-#endif
+#define MAX_CLIENTS 100
 
 typedef enum {
     NORTH = 1,
@@ -25,8 +18,19 @@ typedef enum {
     WEST
 } orientation_t;
 
+typedef struct item_s {
+    int food;
+    int linemate;
+    int deraumere;
+    int sibur;
+    int mendiane;
+    int phiras;
+    int thystame;
+} item_t;
+
 typedef struct command_s {
     char *command;
+    int time;
     struct command_s *next;
 } command_t;
 
@@ -42,14 +46,10 @@ typedef struct client_s {
     int x;
     int y;
     int level;
+    bool is_forking;
+    bool is_incanting;
     orientation_t orientation;
-    int food;
-    int linemate;
-    int deraumere;
-    int sibur;
-    int mendiane;
-    int phiras;
-    int thystame;
+    item_t inv;
     char *team;
     command_queue_t *command_queue;
 } client_t;

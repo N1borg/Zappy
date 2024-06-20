@@ -7,58 +7,43 @@
 
 #include "server.h"
 
-// Drop object to inventory
-int command_set_stones2(server_t *serv, client_t *player, char *arg)
+// Initialize resources
+void init_resources_set(resource_t *resources,
+    server_t *serv, client_t *player)
 {
-    if (!strcmp(arg, "mendiane") && player->mendiane > 0) {
-        player->mendiane--;
-        serv->map[player->y][player->x].mendiane++;
-        return success_response(player);
-    }
-    if (!strcmp(arg, "phiras") && player->phiras > 0) {
-        player->phiras--;
-        serv->map[player->y][player->x].phiras++;
-        return success_response(player);
-    }
-    if (!!strcmp(arg, "thystame") && player->thystame > 0) {
-        player->thystame--;
-        serv->map[player->y][player->x].thystame++;
-        return success_response(player);
-    }
-    return 1;
-}
-
-// Drop object to inventory
-int command_set_stones1(server_t *serv, client_t *player, char *arg)
-{
-    if (!strcmp(arg, "linemate") && player->linemate > 0) {
-        player->linemate--;
-        serv->map[player->y][player->x].linemate++;
-        return success_response(player);
-    }
-    if (!strcmp(arg, "deraumere") && player->deraumere > 0) {
-        player->deraumere--;
-        serv->map[player->y][player->x].deraumere++;
-        return success_response(player);
-    }
-    if (!strcmp(arg, "sibur") && player->sibur > 0) {
-        player->sibur--;
-        serv->map[player->y][player->x].sibur++;
-        return success_response(player);
-    }
-    return command_set_stones2(serv, player, arg);
+    resources[0] = (resource_t){"food", 0, &player->inv.food,
+        &serv->map[player->y][player->x].resources.food};
+    resources[1] = (resource_t){"linemate", 1, &player->inv.linemate,
+        &serv->map[player->y][player->x].resources.linemate};
+    resources[2] = (resource_t){"deraumere", 2, &player->inv.deraumere,
+        &serv->map[player->y][player->x].resources.deraumere};
+    resources[3] = (resource_t){"sibur", 3, &player->inv.sibur,
+        &serv->map[player->y][player->x].resources.sibur};
+    resources[4] = (resource_t){"mendiane", 4, &player->inv.mendiane,
+        &serv->map[player->y][player->x].resources.mendiane};
+    resources[5] = (resource_t){"phiras", 5, &player->inv.phiras,
+        &serv->map[player->y][player->x].resources.phiras};
+    resources[6] = (resource_t){"thystame", 6, &player->inv.thystame,
+        &serv->map[player->y][player->x].resources.thystame};
+    resources[7] = (resource_t){NULL, -1, NULL, NULL};
 }
 
 // Drop object from inventory
 int command_set_object(server_t *serv, client_t *player, char *arg)
 {
-    if (arg == NULL || strlen(arg) <= 3)
+    resource_t resources[8];
+
+    init_resources_set(resources, serv, player);
+    if (arg == NULL)
         return 1;
-    arg++;
-    if (!strcmp(arg, "food") && player->food > 0) {
-        player->food--;
-        serv->map[player->y][player->x].food++;
-        return success_response(player);
+    for (int i = 0; resources[i].name != NULL; i++) {
+        if (!strcmp(arg, resources[i].name) &&
+            (*resources[i].player_resource) > 0) {
+            (*resources[i].player_resource)--;
+            (*resources[i].tile_resource)++;
+            event_pdr(serv, player, resources[i].graphic_name);
+            return success_response(player);
+        }
     }
-    return command_set_stones1(serv, player, arg);
+    return 1;
 }

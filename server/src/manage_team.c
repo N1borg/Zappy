@@ -33,7 +33,6 @@ int add_player_to_team(server_t *serv, client_t *player, char *team_name)
             serv->teams[i]->players[j] = player;
             player->team = serv->teams[i]->name;
             player->level = 1;
-            serv->teams[i]->free_slots--;
         } else
             return 1;
     } else
