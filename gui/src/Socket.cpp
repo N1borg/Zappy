@@ -72,10 +72,21 @@ std::string Socket::receiveMessage()
     if (_clientSocket == -1)
         throw std::runtime_error("Socket is not connected");
 
+    struct timeval tv;
+    tv.tv_sec = 3;
+    tv.tv_usec = 0;
+
+    // Define socket timeout
+    if (setsockopt(_clientSocket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof(tv)) < 0)
+        throw std::runtime_error("Failed to set socket timeout: " + std::string(strerror(errno)));
+
     char buffer[1024] = {0};
     ssize_t bytesReceived = recv(_clientSocket, buffer, 1024, 0);
-    if (bytesReceived == -1)
+    if (bytesReceived == -1) {
+        if (errno == EAGAIN || errno == EWOULDBLOCK)
+            return "";
         throw std::runtime_error("Failed to receive message: " + std::string(strerror(errno)));
+    }
     return std::string(buffer);
 }
 
