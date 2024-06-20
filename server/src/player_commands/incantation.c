@@ -42,6 +42,7 @@ int incant_all_players(server_t *serv, client_t *player)
             "Current level: %d\n", serv->map[y][x].players[i]->level);
         }
     }
+    event_pie(serv, player, "ok");
     return 0;
 }
 

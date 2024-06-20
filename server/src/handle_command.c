@@ -65,7 +65,7 @@ int handle_command_graphic(server_t *serv, client_t *client, char *buffer)
 }
 
 // Compute response based on buffer
-void compute_response(server_t *serv, client_t *client, char *buffer)
+void compute_response(server_t *serv, client_t *client, char *buffer, int time)
 {
     if (is_team(serv, buffer) == 1) {
         if (create_player(serv, client, buffer) != 0

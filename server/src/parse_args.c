@@ -29,9 +29,6 @@ void get_team_names(char **argv, team_t **teams)
     teams[i - 1] = malloc(sizeof(team_t));
     init_team(teams[i - 1], graphic_team);
     teams[i] = NULL;
-    printf("TEAM NAMES:\n");
-    for (int k = 0; teams[k]; k++)
-        printf("Team %d: %s\n", k, teams[k]->name);
 }
 
 // Get the parameters from the arguments

@@ -14,13 +14,13 @@ int command_pin(server_t *serv, client_t *client, char *arg)
     client_t *player = NULL;
 
     if (arg == NULL)
-        return 1;
+        return event_sbp(client);
     id = atoi(arg);
     if (id <= 0)
-        return 1;
+        return event_sbp(client);
     player = get_client_by_id(serv, id);
     if (player == NULL)
-        return 1;
+        return event_sbp(client);
     dprintf(client->fd, "pin %d %d %d %d %d %d %d %d %d %d\n", player->id,
     player->x, player->y, player->inv.food, player->inv.linemate,
     player->inv.deraumere, player->inv.sibur, player->inv.mendiane,

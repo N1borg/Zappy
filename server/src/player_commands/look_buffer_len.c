@@ -24,7 +24,7 @@ int tile_size(tile_t *tile)
 }
 
 // Return the number of chars to init the look buffer
-int buffer_len(server_t *s, client_t *client)
+int buffer_len(server_t *serv, client_t *client)
 {
     int n_char = 2;
     int loop = (client->orientation % 2);
@@ -32,15 +32,17 @@ int buffer_len(server_t *s, client_t *client)
 
     for (int i = 0; loop && i <= client->level; i++) {
         for (int j = 0; j < (i * 2 + 1); j++) {
-            n_char += tile_size(&s->map[y_to_map_y(s, client->y + i * vec)]
-                [x_to_map_x(s, client->x + ((j * -vec) + i * vec))]);
+            n_char += tile_size(&serv->map[
+            y_to_map_y(serv, client->y + i * vec)]
+            [x_to_map_x(serv, client->x + ((j * -vec) + i * vec))]);
         }
     }
     for (int i = 0; !loop && i <= client->level; i++) {
         for (int j = 0; j < (i * 2 + 1); j++) {
             n_char += tile_size(
-                &s->map[y_to_map_y(s, client->y - ((j * -vec) + i * vec))]
-                [x_to_map_x(s, client->x + i * vec)]);
+                &serv->map[
+                y_to_map_y(serv, client->y - ((j * -vec) + i * vec))]
+                [x_to_map_x(serv, client->x + i * vec)]);
         }
     }
     return n_char;

@@ -11,7 +11,7 @@
 int command_mct(server_t *serv, client_t *client, char *arg)
 {
     if (arg != NULL)
-        return 1;
+        return event_sbp(client);
     for (int y = 0; y < serv->height; y++) {
         for (int x = 0; x < serv->width; x++)
             send_tile_content(serv, client, x, y);

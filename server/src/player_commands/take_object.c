@@ -11,21 +11,21 @@
 void init_resources_take(resource_t *resources,
     server_t *serv, client_t *player)
 {
-    resources[0] = (resource_t){"food", &player->inv.food,
+    resources[0] = (resource_t){"food", 0, &player->inv.food,
         &serv->map[player->y][player->x].resources.food};
-    resources[1] = (resource_t){"linemate", &player->inv.linemate,
+    resources[1] = (resource_t){"linemate", 1, &player->inv.linemate,
         &serv->map[player->y][player->x].resources.linemate};
-    resources[2] = (resource_t){"deraumere", &player->inv.deraumere,
+    resources[2] = (resource_t){"deraumere", 2, &player->inv.deraumere,
         &serv->map[player->y][player->x].resources.deraumere};
-    resources[3] = (resource_t){"sibur", &player->inv.sibur,
+    resources[3] = (resource_t){"sibur", 3, &player->inv.sibur,
         &serv->map[player->y][player->x].resources.sibur};
-    resources[4] = (resource_t){"mendiane", &player->inv.mendiane,
+    resources[4] = (resource_t){"mendiane", 4, &player->inv.mendiane,
         &serv->map[player->y][player->x].resources.mendiane};
-    resources[5] = (resource_t){"phiras", &player->inv.phiras,
+    resources[5] = (resource_t){"phiras", 5, &player->inv.phiras,
         &serv->map[player->y][player->x].resources.phiras};
-    resources[6] = (resource_t){"thystame", &player->inv.thystame,
+    resources[6] = (resource_t){"thystame", 6, &player->inv.thystame,
         &serv->map[player->y][player->x].resources.thystame};
-    resources[7] = (resource_t){NULL, NULL, NULL};
+    resources[7] = (resource_t){NULL, -1, NULL, NULL};
 }
 
 // Take object to inventory
@@ -41,6 +41,7 @@ int command_take_object(server_t *serv, client_t *player, char *arg)
             (*resources[i].tile_resource) > 0) {
             (*resources[i].tile_resource)--;
             (*resources[i].player_resource)++;
+            event_pgt(serv, player, resources[i].graphic_name);
             return success_response(player);
         }
     }
