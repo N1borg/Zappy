@@ -58,6 +58,7 @@ set(SHARED_SRC
     src/Map.cpp
     src/Player.cpp
     src/Parser/ParseArguments.cpp
+    src/Parser/ParseCommands.cpp
     src/Collectables/Egg.cpp
     src/Collectables/Food.cpp
     src/Collectables/Linemate.cpp
@@ -69,6 +70,7 @@ set(SHARED_SRC
     src/Island/SmallIsland.cpp
     src/Island/MediumIsland.cpp
     src/Island/BigIsland.cpp
+    src/Commands/Commands.cpp
 )
 
 add_executable(zappy_gui ${SHARED_SRC})

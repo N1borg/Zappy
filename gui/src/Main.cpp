@@ -34,22 +34,26 @@ int main(int argc, char *argv[])
     Window window(1280, 720, "Zappy GUI");
     window.init();
 
-    if (!window.drawWaitingScreen(socket, argsParser.getMachine())) {
+    if (!window.drawWaitingScreen(socket, argsParser))
+        return 84;
+
+    socket.sendMessage("msz\n");
+    std::istringstream msg = std::istringstream(socket.receiveMessage());
+    std::string mapSz, mapWidthStr, mapHeightStr;
+    int mapWidth, mapHeight;
+
+    try {
+        msg >> mapSz >> mapWidthStr >> mapHeightStr;
+        mapWidth = std::stoi(mapWidthStr);
+        mapHeight = std::stoi(mapHeightStr);
+    } catch (const std::exception &e) {
+        std::cerr << "Error: Invalid map size" << std::endl;
         window.close();
         return 84;
     }
 
-    // Validate connection
-    if (!argsParser.validateConnection(socket.receiveMessage())) {
-        std::cerr << "Error: Connection failed" << std::endl;
-        window.close();
-        return 84;
-    }
-
-    int map_width = 10;
-    int map_height = 10;
-
-    Map map(map_width, map_height);
+    // Create map
+    Map map(mapWidth, mapHeight);
     std::vector<std::vector<Tile_t>> tiles = map.getTiles();
 
     bool selected = false;
@@ -71,9 +75,10 @@ int main(int argc, char *argv[])
     map.setPhiras(5, 5, true);
     map.setThystame(6, 6, true);
 
-    window.disableCursor();
-    while (!window.shouldClose())
-    {
+    // Starts thread for reading messages
+    socket.startThread();
+
+    while (!window.shouldClose()) {
         window.parseCameraInputs();
         window.updateCamera();
         window.beginDrawing();
@@ -92,5 +97,6 @@ int main(int argc, char *argv[])
     }
     map.unload();
     window.close();
+    socket.stopThread();
     return 0;
 }

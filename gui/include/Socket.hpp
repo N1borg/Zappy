@@ -15,6 +15,8 @@
 #include <thread>
 #include <atomic>
 
+#include "Parser/ParseCommands.hpp"
+
 class Socket {
     public:
         Socket(int port, std::string machine);
@@ -31,10 +33,16 @@ class Socket {
         std::string receiveMessage();
         void attemptConnection();
 
+        // Thread
+        void startThread();
+        void stopThread();
+        void readThread();
+
     private:
         int _port;
         std::string _machine;
         int _clientSocket;
         std::atomic<bool> _connected;
-        std::thread _connectionThread;
+        std::atomic<bool> _threadRunning;
+        std::thread _thread;
 };
