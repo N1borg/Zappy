@@ -16,6 +16,8 @@ class Commands {
         ~Commands() = default;
 
         void getMapSize(const std::string& params);
+        void getMapContent(const std::string& params);
+        void getPlayerPosition(const std::string& params);
 };
 
 #endif /* !COMMANDS_HPP_ */

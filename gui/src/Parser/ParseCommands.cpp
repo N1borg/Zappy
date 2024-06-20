@@ -10,6 +10,8 @@
 ParseCommands::ParseCommands()
 {
     _commandMap["msz"] = &Commands::getMapSize;
+    _commandMap["mct"] = &Commands::getMapContent;
+    _commandMap["ppo"] = &Commands::getPlayerPosition;
 }
 
 void ParseCommands::parse(std::string msg)
