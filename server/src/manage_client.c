@@ -63,24 +63,48 @@ void init_player(server_t *serv, client_t *player)
     event_pnw(serv, player);
 }
 
-// Create player if team_name exists else return 1
-int create_player(server_t *serv, client_t *client, char *team_name)
+// Get a random egg from a team
+static egg_t *get_random_egg(team_t *team)
 {
-    int x = rand() % serv->width;
-    int y = rand() % serv->height;
+    int count = 0;
+    egg_t *current = team->eggs;
+    int random_index = 0;
+
+    for (; current != NULL; count++)
+        current = current->next_team;
+    random_index = rand() % count;
+    current = team->eggs;
+    for (int i = 0; i < random_index; i++)
+        current = current->next_team;
+    return current;
+}
+
+// Set the position of a client based on the position of an egg
+static void set_client_pos(server_t *s, client_t *client)
+{
+    team_t *team = (*s).teams[get_team_id(s, (*client).team)];
+    egg_t *egg = get_random_egg(team);
+
+    client->x = egg->tile->x;
+    client->y = egg->tile->y;
+    remove_egg(egg);
+}
+
+// create player if team_name exists else return 1
+int create_player(server_t *s, client_t *client, char *team_name)
+{
     int i = 0;
 
-    if (client->team != NULL || add_player_to_team(serv, client, team_name))
+    if (client->team != NULL || add_player_to_team(s, client, team_name))
         return 1;
-    for (; i < MAX_CLIENTS && serv->map[y][x].players[i]; i++);
+    for (; i < MAX_CLIENTS && s->map[client->y][client->x].players[i]; i++);
     if (i == MAX_CLIENTS)
         return 1;
-    client->id = 0;
-    serv->map[y][x].players[i] = client;
-    client->x = x;
-    client->y = y;
+    set_client_pos(s, client);
+    s->map[client->y][client->x].players[i] = client;
     client->orientation = (rand() % 4) + 1;
-    if (strcmp(team_name, "GRAPHIC") != 0)
-        init_player(serv, client);
+    dprintf(client->fd, "%d\n",
+        s->teams[get_team_id(s, client->team)]->free_slots);
+    dprintf(client->fd, "%d %d\n", s->width, s->height);
     return 0;
 }
