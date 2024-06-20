@@ -20,6 +20,7 @@ void remove_egg_from_team(egg_t *egg, team_t *team)
         current_team = current_team->next_team;
     if (current_team != NULL)
         current_team->next_team = egg->next_team;
+    team->free_slots--;
 }
 
 // Remove an egg from a tile
