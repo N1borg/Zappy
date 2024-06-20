@@ -25,7 +25,7 @@ void init_resources_take(resource_t *resources,
         &serv->map[player->y][player->x].resources.phiras};
     resources[6] = (resource_t){"thystame", 6, &player->inv.thystame,
         &serv->map[player->y][player->x].resources.thystame};
-    resources[7] = (resource_t){NULL, NULL, NULL, NULL};
+    resources[7] = (resource_t){NULL, -1, NULL, NULL};
 }
 
 // Take object to inventory
