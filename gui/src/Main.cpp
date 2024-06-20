@@ -34,20 +34,8 @@ int main(int argc, char *argv[])
     Window window(1280, 720, "Zappy GUI");
     window.init();
 
-    if (!window.drawWaitingScreen(socket, argsParser.getMachine())) {
-        window.close();
+    if (!window.drawWaitingScreen(socket, argsParser))
         return 84;
-    }
-
-    // Validate connection
-    if (argsParser.validateConnection(socket.receiveMessage())) {
-        std::cout << "Connection established" << std::endl;
-        socket.sendMessage("GRAPHIC\n");
-    } else {
-        std::cerr << "Error: Connection failed" << std::endl;
-        window.close();
-        return 84;
-    }
 
     socket.sendMessage("msz\n");
     std::istringstream msg = std::istringstream(socket.receiveMessage());

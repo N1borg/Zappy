@@ -174,10 +174,23 @@ std::string Window::animateTextDots(const std::string &string, float elapsedTime
     return string + dotsStr;
 }
 
-int Window::drawWaitingScreen(Socket &socket, const std::string machine)
+void Window::drawConnection(bool isConnected, std::string ip, int elapsedTime = 0)
+{
+    Color color = isConnected ? GREEN : DARKGRAY;
+    std::string connectStatus = isConnected ? "Connected to " : "Connecting to ";
+
+    beginDrawing();
+    clearBackground(RAYWHITE);
+
+    std::string txt = animateTextDots(connectStatus + ip, elapsedTime);
+    drawText(txt.c_str(), (getScreenWidth() - MeasureText((connectStatus + ip + "...").c_str(), 20)) / 2, (getScreenHeight() - 20) / 2, 20, color);
+    endDrawing();
+}
+
+int Window::drawWaitingScreen(Socket &socket, ParseArguments &argsParser)
 {
     std::thread connectionThread(&Socket::attemptConnection, &socket);
-
+    std::string ip = argsParser.getMachine();
     float elapsedTime = 0.0f;
 
     while (!socket.isConnected()) {
@@ -186,17 +199,20 @@ int Window::drawWaitingScreen(Socket &socket, const std::string machine)
             return 0;
         }
         elapsedTime += GetFrameTime();
-
-        beginDrawing();
-        clearBackground(RAYWHITE);
-
-        std::string connectingText = animateTextDots("Connecting to " + machine, elapsedTime);
-        drawText(connectingText.c_str(), (getScreenWidth() - MeasureText(("Connecting to " + machine + "...").c_str(), 20)) / 2, (getScreenHeight() - 20) / 2, 20, DARKGRAY);
-
-        endDrawing();
+        drawConnection(false, ip, elapsedTime);
     }
-
     connectionThread.join();
+    drawConnection(true, ip);
+
+    // Validate connection
+    if (argsParser.validateConnection(socket.receiveMessage())) {
+        std::cout << "Connection established" << std::endl;
+        socket.sendMessage("GRAPHIC\n");
+    } else {
+        std::cerr << "Error: Connection failed" << std::endl;
+        close();
+        return 0;
+    }
 
     if (socket.isConnected())
         return 1;

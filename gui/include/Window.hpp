@@ -53,7 +53,8 @@ class Window {
         void drawFPS(int posX, int posY);
 
         std::string animateTextDots(const std::string &string, float elapsedTime);
-        int drawWaitingScreen(Socket &socket, const std::string machine);
+        int drawWaitingScreen(Socket &socket, ParseArguments &argsParser);
+        void drawConnection(bool isConnected, std::string ip, int elapsedTime);
 
     private:
         int _width;
