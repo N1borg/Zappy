@@ -80,6 +80,7 @@ int enqueue_command(client_t *client, char *command_str);
 char *dequeue_command(command_queue_t *queue);
 void free_command_queue(command_queue_t *queue);
 void manage_queue(client_t *client, char *buffer);
+int get_nbr_eggs_on_team(team_t *team);
 
 // player commands
 int success_response(client_t *client);

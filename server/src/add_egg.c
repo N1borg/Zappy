@@ -7,6 +7,18 @@
 
 #include "server.h"
 
+int get_nbr_eggs_on_team(team_t *team)
+{
+    egg_t *current = team->eggs;
+    int count = 0;
+
+    while (current != NULL) {
+        count += 1;
+        current = current->next_team;
+    }
+    return count;
+}
+
 // Get the number of eggs on a tile
 int get_nbr_eggs_on_tile(tile_t *tile)
 {
