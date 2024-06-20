@@ -52,6 +52,16 @@ int Window::getScreenHeight() const
     return GetScreenHeight();
 }
 
+void Window::disableCursor()
+{
+    DisableCursor();
+}
+
+bool Window::isKeyPressed(int key)
+{
+    return IsKeyPressed(key);
+}
+
 Camera3D Window::getCamera() const
 {
     return _camera;

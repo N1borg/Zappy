@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
     map.setPhiras(5, 5, true);
     map.setThystame(6, 6, true);
 
-    DisableCursor();
+    window.disableCursor();
     while (!window.shouldClose())
     {
         window.parseCameraInputs();
