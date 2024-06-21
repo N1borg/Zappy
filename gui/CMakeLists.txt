@@ -56,7 +56,7 @@ set(SHARED_SRC
     src/Socket.cpp
     src/Window.cpp
     src/Map.cpp
-    src/BaseModel.cpp
+    src/AModel.cpp
     src/Player.cpp
     src/Parser/ParseArguments.cpp
     src/Parser/ParseCommands.cpp
