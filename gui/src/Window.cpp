@@ -30,7 +30,7 @@ void Window::log(int level, const std::string &msg, ...)
 
 void Window::init()
 {
-    SetTargetFPS(60);
+    SetTargetFPS(144);
     SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_MSAA_4X_HINT | FLAG_VSYNC_HINT);
     InitWindow(_width, _height, _title.c_str());
 }
