@@ -7,4 +7,4 @@
 
 #include "Collectables/Mendiane.hpp"
 
-Mendiane::Mendiane(Model model) : BaseModel(model) {}
+Mendiane::Mendiane(Model model) : AModel(model) {}

@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include "BaseModel.hpp"
+#include "AModel.hpp"
 
-class Phiras : public BaseModel {
+class Phiras : public AModel {
 public:
     Phiras(Model model);
     ~Phiras() = default;

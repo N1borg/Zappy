@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include "BaseModel.hpp"
+#include "AModel.hpp"
 
-class Sibur : public BaseModel {
+class Sibur : public AModel {
 public:
     Sibur(Model model);
     ~Sibur() = default;

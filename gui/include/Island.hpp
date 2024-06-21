@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include "BaseModel.hpp"
+#include "AModel.hpp"
 
-class Island : public BaseModel {
+class Island : public AModel {
 public:
     Island(Model model);
     ~Island() = default;

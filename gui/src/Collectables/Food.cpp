@@ -7,4 +7,4 @@
 
 #include "Collectables/Food.hpp"
 
-Food::Food(Model model) : BaseModel(model) {}
+Food::Food(Model model) : AModel(model) {}

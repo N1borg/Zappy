@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include "BaseModel.hpp"
+#include "AModel.hpp"
 
-class Thystame : public BaseModel {
+class Thystame : public AModel {
 public:
     Thystame(Model model);
     ~Thystame() = default;

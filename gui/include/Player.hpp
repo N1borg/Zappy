@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include "BaseModel.hpp"
+#include "AModel.hpp"
 #include "Orientation.hpp"
 
-class Player : public BaseModel {
+class Player : public AModel {
 public:
     Player(Model model);
     ~Player() = default;

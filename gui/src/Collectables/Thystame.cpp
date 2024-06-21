@@ -7,4 +7,4 @@
 
 #include "Collectables/Thystame.hpp"
 
-Thystame::Thystame(Model model) : BaseModel(model) {}
+Thystame::Thystame(Model model) : AModel(model) {}

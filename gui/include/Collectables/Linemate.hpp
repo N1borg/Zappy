@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include "BaseModel.hpp"
+#include "AModel.hpp"
 
-class Linemate : public BaseModel {
+class Linemate : public AModel {
 public:
     Linemate(Model model);
     ~Linemate() = default;

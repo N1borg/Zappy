@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include "BaseModel.hpp"
+#include "AModel.hpp"
 
-class Deraumere : public BaseModel {
+class Deraumere : public AModel {
 public:
     Deraumere(Model model);
     ~Deraumere() = default;

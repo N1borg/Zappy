@@ -2,24 +2,24 @@
 ** EPITECH PROJECT, 2024
 ** B-YEP-400-LIL-4-1-zappy-romaric.loevenbruck
 ** File description:
-** BaseModel
+** AModel
 */
 
-#include "BaseModel.hpp"
+#include "AModel.hpp"
 
-BaseModel::BaseModel(Model model) : _model(model), _yRotation(0.0f) {}
+AModel::AModel(Model model) : _model(model), _yRotation(0.0f) {}
 
-void BaseModel::setRotationY(float yRotation)
+void AModel::setRotationY(float yRotation)
 {
     this->_yRotation = yRotation;
 }
 
-Model BaseModel::getModel() const
+Model AModel::getModel() const
 {
     return _model;
 }
 
-void BaseModel::draw(Vector3 position, float scale, Color tint) const
+void AModel::draw(Vector3 position, float scale, Color tint) const
 {
     Vector3 rotationAxis = {0, 1, 0};
     Vector3 scaleVector = {scale, scale, scale};
@@ -27,7 +27,7 @@ void BaseModel::draw(Vector3 position, float scale, Color tint) const
     DrawModelEx(_model, position, rotationAxis, _yRotation * RAD2DEG, scaleVector, tint);
 }
 
-void BaseModel::drawWires(Vector3 position, float scale, Color tint) const
+void AModel::drawWires(Vector3 position, float scale, Color tint) const
 {
     Vector3 rotationAxis = {0, 1, 0};
     Vector3 scaleVector = {scale, scale, scale};

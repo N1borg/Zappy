@@ -7,4 +7,4 @@
 
 #include "Grass.hpp"
 
-Grass::Grass(Model model) : BaseModel(model) {}
+Grass::Grass(Model model) : AModel(model) {}

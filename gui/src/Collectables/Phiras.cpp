@@ -7,4 +7,4 @@
 
 #include "Collectables/Phiras.hpp"
 
-Phiras::Phiras(Model model) : BaseModel(model) {}
+Phiras::Phiras(Model model) : AModel(model) {}

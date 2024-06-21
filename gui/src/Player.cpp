@@ -7,7 +7,7 @@
 
 #include "Player.hpp"
 
-Player::Player(Model model) : BaseModel(model) {}
+Player::Player(Model model) : AModel(model) {}
 
 void Player::setOrientation(Orientation orientation)
 {

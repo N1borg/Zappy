@@ -2,17 +2,17 @@
 ** EPITECH PROJECT, 2024
 ** B-YEP-400-LIL-4-1-zappy-romaric.loevenbruck
 ** File description:
-** BaseModel
+** AModel
 */
 
 #pragma once
 
 #include "IModel.hpp"
 
-class BaseModel : public IModel {
+class AModel : public IModel {
 public:
-    BaseModel(Model model);
-    ~BaseModel() = default;
+    AModel(Model model);
+    ~AModel() = default;
 
     Model getModel() const;
     void setRotationY(float yRotation) override;

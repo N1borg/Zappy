@@ -7,4 +7,4 @@
 
 #include "Collectables/Deraumere.hpp"
 
-Deraumere::Deraumere(Model model) : BaseModel(model) {}
+Deraumere::Deraumere(Model model) : AModel(model) {}

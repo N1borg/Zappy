@@ -7,7 +7,7 @@
 
 #include "Island.hpp"
 
-Island::Island(Model model) : BaseModel(model), _Selected(false) {}
+Island::Island(Model model) : AModel(model), _Selected(false) {}
 
 bool Island::isSelected() const
 {

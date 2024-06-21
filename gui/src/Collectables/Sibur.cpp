@@ -7,4 +7,4 @@
 
 #include "Collectables/Sibur.hpp"
 
-Sibur::Sibur(Model model) : BaseModel(model) {}
+Sibur::Sibur(Model model) : AModel(model) {}

@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include "BaseModel.hpp"
+#include "AModel.hpp"
 
-class Mendiane : public BaseModel {
+class Mendiane : public AModel {
 public:
     Mendiane(Model model);
     ~Mendiane() = default;

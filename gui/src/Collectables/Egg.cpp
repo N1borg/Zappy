@@ -7,4 +7,4 @@
 
 #include "Collectables/Egg.hpp"
 
-Egg::Egg(Model model) : BaseModel(model) {}
+Egg::Egg(Model model) : AModel(model) {}

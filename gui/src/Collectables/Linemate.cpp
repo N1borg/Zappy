@@ -7,4 +7,4 @@
 
 #include "Collectables/Linemate.hpp"
 
-Linemate::Linemate(Model model) : BaseModel(model) {}
+Linemate::Linemate(Model model) : AModel(model) {}

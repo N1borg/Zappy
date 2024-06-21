@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include "BaseModel.hpp"
+#include "AModel.hpp"
 
-class Grass : public BaseModel {
+class Grass : public AModel {
 public:
     Grass(Model model);
     ~Grass() = default;
