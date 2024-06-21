@@ -18,8 +18,8 @@ ParseCommands::ParseCommands()
     _commandMap["pin"] = &Commands::getPlayerInventory;
     _commandMap["pex"] = &Commands::getExpulsion;
     _commandMap["pbc"] = &Commands::getBroadcast;
-    _commandMap["pic"] = &Commands::getStartofIncantation;
-    _commandMap["pie"] = &Commands::getEndofIncantation;
+    _commandMap["pic"] = &Commands::getStartOfIncantation;
+    _commandMap["pie"] = &Commands::getEndOfIncantation;
     _commandMap["pfk"] = &Commands::getLayingEggByPlayer;
     _commandMap["pdr"] = &Commands::getResourceDropping;
     _commandMap["pgt"] = &Commands::getResourceCollecting;
