@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
     srand(time(NULL));
     if (argc == 2 && strcmp(argv[1], "-help") == 0)
         return help(argv[0], 0, &serv);
-    if (serv.port <= 0 || serv.port > 65535 || serv.width <= 0 ||
+    if (!serv.teams || serv.port <= 0 || serv.port > 65535 || serv.width <= 0 ||
     serv.width > 50 || serv.height <= 0 || serv.height > 50 || serv.freq <= 0
     || serv.max_client_team <= 0 || serv.max_client_team > 50 ||
     serv.team_nb <= 0 || serv.team_nb > 50)

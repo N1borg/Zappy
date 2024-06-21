@@ -19,18 +19,18 @@ void init_command_queue(client_t *client)
 }
 
 // Get the time of a command
-static int get_command_time(char *command_str, command_map_t *command_map)
+static int get_command_time(char *command_str, command_time_t *command_time)
 {
-    for (int i = 0; command_map[i].command != NULL; i++) {
-        if (strcmp(command_str, command_map[i].command) == 0)
-            return command_map[i].time_limit;
+    for (int i = 0; command_time[i].command != NULL; i++) {
+        if (strcmp(command_str, command_time[i].command) == 0)
+            return command_time[i].time_limit;
     }
     return 0;
 }
 
 // Enqueue a command in the command queue of the client
 static int add_command(client_t *client, char *command_str,
-    command_map_t *command_map)
+    command_time_t *command_time)
 {
     command_t *new_command = NULL;
 
@@ -38,7 +38,7 @@ static int add_command(client_t *client, char *command_str,
     if (new_command == NULL)
         return 84;
     new_command->command = strdup(command_str);
-    new_command->time = get_command_time(command_str, command_map);
+    new_command->time = get_command_time(command_str, command_time);
     if (new_command->command == NULL) {
         free(new_command);
         return 84;
@@ -57,7 +57,7 @@ static int add_command(client_t *client, char *command_str,
 
 int enqueue_command(client_t *client, char *command_str)
 {
-    command_map_t command_map[] = {
+    command_time_t command_time[] = {
         {"Forward", 7},
         {"Right", 7},
         {"Left", 7},
@@ -73,7 +73,7 @@ int enqueue_command(client_t *client, char *command_str)
         {NULL, 0}
     };
 
-    return add_command(client, command_str, command_map);
+    return add_command(client, command_str, command_time);
 }
 
 // Dequeue a command from the command queue of the client

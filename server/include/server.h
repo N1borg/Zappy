@@ -44,6 +44,11 @@ typedef struct command_map {
     int time_limit;
 } command_map_t;
 
+typedef struct command_time {
+    const char *command;
+    int time_limit;
+} command_time_t;
+
 int help(char *binary_name, int ret, server_t *serv);
 server_t parse_args(int argc, char *argv[]);
 void start_listener(server_t *serv);

@@ -20,6 +20,7 @@ int help(char *binary_name, int ret, server_t *serv)
     printf("per team (1 - 50)\n");
     printf("\tfreq\t\tis the reciprocal of time unit for execution ");
     printf("of actions (>=0)\n");
-    destroy_teams(serv->teams);
+    if (serv->teams)
+        destroy_teams(serv->teams);
     return ret;
 }
