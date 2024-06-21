@@ -9,6 +9,8 @@
 #define COMMANDS_HPP_
 
 #include <iostream>
+#include <sstream>
+#include <string>
 
 class Commands {
     public:
@@ -23,8 +25,8 @@ class Commands {
         void getPlayerLevel(const std::string& params);
         void getPlayerInventory(const std::string& params);
         void getExpulsion(const std::string& params);
-        void getStartofIncantation(const std::string& params);
-        void getEndofIncantation(const std::string& params);
+        void getStartOfIncantation(const std::string& params);
+        void getEndOfIncantation(const std::string& params);
         void getLayingEggByPlayer(const std::string& params);
         void getResourceDropping(const std::string& params);
         void getResourceCollecting(const std::string& params);
@@ -39,6 +41,8 @@ class Commands {
         void getUnknownCommand(const std::string& params);
         void getCommandParameter(const std::string& params);
         void getBroadcast(const std::string& params);
+        void getMapContent(const std::string& params);
+
 };
 
 #endif /* !COMMANDS_HPP_ */
