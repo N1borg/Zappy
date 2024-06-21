@@ -21,7 +21,8 @@ void destroy_eggs(server_t *serv)
 void destroy_clients(server_t *serv)
 {
     for (int i = 0; i < MAX_CLIENTS; i++) {
-        close(serv->clients[i]->fd);
+        if (serv->clients[i]->fd > 0)
+            close(serv->clients[i]->fd);
         free_command_queue(serv->clients[i]->command_queue);
         free(serv->clients[i]);
     }

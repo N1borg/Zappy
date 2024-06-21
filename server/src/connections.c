@@ -37,16 +37,63 @@ void client_handler(server_t *serv, client_t *client)
     }
 }
 
-// Execute the commands in the queue of the clients
-void execute_queue(server_t *serv, client_t *client)
+// If the player has a command and the time is up, consume the event
+void consume_event(server_t *serv, client_t *player, command_t *command)
 {
-    command_t *command  = dequeue_command(client->command_queue);
-
-    if (command != NULL) {
-        compute_response(serv, client, command->command, command->time);
-        free(command->command);
-        free(command);
+    if (!command) {
+        player->tick = 1;
+        return;
     }
+    player->tick = command->time;
+    compute_response(serv, player, command->command, command->time);
+    free(command->command);
+    free(command);
+}
+
+// Check if the player has a command in the queue
+void check_player_queue(client_t *player, server_t *serv)
+{
+    command_t *command = NULL;
+
+    player->tick -= 1;
+    if (player->tick <= 0) {
+        command = dequeue_command(player->command_queue);
+        consume_event(serv, player, command);
+    }
+}
+
+// Check if the player is dead
+int check_player_death(server_t *serv, client_t *player)
+{
+    player->life--;
+    if (player->life >= 0)
+        return 1;
+    if (player->inv.food == 0) {
+        event_pdi(serv, player);
+        close(player->fd);
+        return 0;
+    }
+    player->inv.food--;
+    player->life += 126;
+    return 1;
+}
+
+// Elapse the time and check for player death
+void elapse_time(server_t *serv, int *sd)
+{
+    if (serv->elapsed_time < serv->interval)
+        return;
+    for (int i = 0; i < MAX_CLIENTS; i++) {
+        *sd = serv->clients[i]->fd;
+        if (serv->clients[i]->fd <= 0)
+            continue;
+        check_player_death(serv, serv->clients[i]);
+            continue;
+        client_handler(serv, serv->clients[i]);
+        check_player_queue(serv->clients[i], serv);
+    }
+    serv->start.tv_sec = serv->current.tv_sec;
+    serv->start.tv_nsec = serv->current.tv_nsec;
 }
 
 // Start the server and listen for incoming connections
@@ -56,7 +103,8 @@ void start_listener(server_t *serv)
     int max_sd = 0;
 
     printf("Listening on port %d...\n", serv->port);
-    while (true) {
+    clock_gettime(CLOCK_REALTIME, &serv->start);
+    while (check_game_end(serv) == 0) {
         FD_ZERO(&serv->readfds);
         FD_SET(serv->master_socket, &serv->readfds);
         max_sd = serv->master_socket;
@@ -66,10 +114,9 @@ void start_listener(server_t *serv)
             printf("Select error");
         if (FD_ISSET(serv->master_socket, &serv->readfds))
             accept_client(serv);
-        for (int i = 0; i < MAX_CLIENTS; i++) {
-            sd = serv->clients[i]->fd;
-            client_handler(serv, serv->clients[i]);
-            execute_queue(serv, serv->clients[i]);
-        }
+        clock_gettime(CLOCK_REALTIME, &serv->current);
+        serv->elapsed_time = (serv->current.tv_sec - serv->start.tv_sec) *
+            1000000000 + (serv->current.tv_nsec - serv->start.tv_nsec);
+        elapse_time(serv, &sd);
     }
 }

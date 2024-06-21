@@ -28,6 +28,10 @@ typedef struct server_s {
     int width;
     int height;
     int freq;
+    double interval;
+    struct timespec start;
+    struct timespec current;
+    double elapsed_time;
     int max_client_team;
     int team_nb;
     team_t **teams;
@@ -85,6 +89,7 @@ int enqueue_command(client_t *client, char *command_str);
 command_t *dequeue_command(command_queue_t *queue);
 void free_command_queue(command_queue_t *queue);
 void manage_queue(client_t *client, char *buffer);
+int check_game_end(server_t *server);
 
 // player commands
 int success_response(client_t *client);

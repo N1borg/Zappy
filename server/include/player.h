@@ -46,6 +46,8 @@ typedef struct client_s {
     int x;
     int y;
     int level;
+    int life;
+    int tick;
     bool is_forking;
     bool is_incanting;
     orientation_t orientation;
