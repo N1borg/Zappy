@@ -16,13 +16,14 @@
 #include "Collectables/Mendiane.hpp"
 #include "Collectables/Phiras.hpp"
 #include "Collectables/Thystame.hpp"
-#include "Island/SmallIsland.hpp"
-#include "Island/MediumIsland.hpp"
-#include "Island/BigIsland.hpp"
+#include "Island.hpp"
 
 #include <math.h>
 #include <time.h>
 #include <vector>
+#include <cfloat>
+
+#include <iostream>
 
 typedef struct Tile_s {
     std::pair<Player, bool> player;
@@ -34,13 +35,11 @@ typedef struct Tile_s {
     std::pair<Mendiane, bool> mendiane;
     std::pair<Phiras, bool> phiras;
     std::pair<Thystame, bool> thystame;
-    std::pair<SmallIsland, bool> smallIsland;
-    std::pair<MediumIsland, bool> mediumIsland;
-    std::pair<BigIsland, bool> bigIsland;
+    std::pair<Island, bool> island;
 
     Tile_s(Model modelPlayer, Model modelEgg, Model modelFood, Model modelLinemate,
     Model modelDeraumere, Model modelSibur, Model modelMendiane, Model modelPhiras,
-    Model modelThystame, Model modelSmallIsland, Model modelMediumIsland, Model modelBigIsland)
+    Model modelThystame, Model modelIsland)
         : player(std::make_pair(Player(modelPlayer), false)),
             egg(std::make_pair(Egg(modelEgg), false)),
             food(std::make_pair(Food(modelFood), false)),
@@ -50,9 +49,7 @@ typedef struct Tile_s {
             mendiane(std::make_pair(Mendiane(modelMendiane), false)),
             phiras(std::make_pair(Phiras(modelPhiras), false)),
             thystame(std::make_pair(Thystame(modelThystame), false)),
-            smallIsland(std::make_pair(SmallIsland(modelSmallIsland), true)),
-            mediumIsland(std::make_pair(MediumIsland(modelMediumIsland), false)),
-            bigIsland(std::make_pair(BigIsland(modelBigIsland), false)) {}
+            island(std::make_pair(Island(modelIsland), true)) {}
 } Tile_t;
 
 class Map {
@@ -61,6 +58,7 @@ public:
     ~Map() = default;
 
     std::vector<std::vector<Tile_t>> getTiles() const;
+    Tile_t getTile(int x, int y) const;
     void setPlayer(int x, int y, bool value);
     void setEgg(int x, int y, bool value);
     void setFood(int x, int y, bool value);
@@ -70,17 +68,18 @@ public:
     void setMendiane(int x, int y, bool value);
     void setPhiras(int x, int y, bool value);
     void setThystame(int x, int y, bool value);
-    void setSmallIsland(int x, int y, bool value);
-    void setMediumIsland(int x, int y, bool value);
-    void setBigIsland(int x, int y, bool value);
+    void setIsland(int x, int y, bool value);
 
     void draw();
+    void drawTransparent();
+    void selectTile(Ray ray);
 
     void unload();
 
 private:
     int _width;
     int _height;
+
     Model _modelPlayer;
     Model _modelEgg;
     Model _modelFood;
@@ -90,9 +89,7 @@ private:
     Model _modelMendiane;
     Model _modelPhiras;
     Model _modelThystame;
-    Model _modelSmallIsland;
-    Model _modelMediumIsland;
-    Model _modelBigIsland;
+    Model _modelIsland;
 
     std::vector<std::vector<Tile_t>> _tiles;
 };

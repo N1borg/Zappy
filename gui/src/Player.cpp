@@ -8,3 +8,8 @@
 #include "Player.hpp"
 
 Player::Player(Model model) : BaseModel(model) {}
+
+void Player::setOrientation(Orientation orientation)
+{
+    this->_yRotation = static_cast<int>(orientation) * 90.0f;
+}

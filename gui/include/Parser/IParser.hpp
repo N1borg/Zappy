@@ -5,12 +5,8 @@
 ** IParser
 */
 
-#ifndef IPARSER_HPP_
-#define IPARSER_HPP_
-
+#pragma once
 class IParser {
     public:
         virtual ~IParser() = default;
 };
-
-#endif /* !IPARSER_HPP_ */

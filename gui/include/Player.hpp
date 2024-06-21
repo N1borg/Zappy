@@ -8,9 +8,15 @@
 #pragma once
 
 #include "BaseModel.hpp"
+#include "Orientation.hpp"
 
 class Player : public BaseModel {
 public:
     Player(Model model);
     ~Player() = default;
+
+    void setOrientation(Orientation orientation);
+
+private:
+    Orientation _orientation;
 };

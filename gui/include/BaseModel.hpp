@@ -14,10 +14,12 @@ public:
     BaseModel(Model model);
     ~BaseModel() = default;
 
-    void draw(Vector3 position, float scale, Color tint) const override;
-    void drawWires(Vector3 position, float scale, Color tint) const override;
+    Model getModel() const;
 
     void setRotationY(float yRotation) override;
+
+    void draw(Vector3 position, float scale, Color tint) const override;
+    void drawWires(Vector3 position, float scale, Color tint) const override;
 
 protected:
     Model _model;

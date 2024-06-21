@@ -46,7 +46,7 @@ else()
 endif()
 
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_FLAGS "-W -Wall -Wextra -Wpedantic -Wshadow -Wformat=2 -Wformat-security -I ./include/ -g")
+set(CMAKE_CXX_FLAGS "-W -Wall -Wextra -Wpedantic -Wshadow -Wformat=2 -Wformat-security -I ./include/")
 
 include_directories(include)
 
@@ -68,9 +68,7 @@ set(SHARED_SRC
     src/Collectables/Mendiane.cpp
     src/Collectables/Phiras.cpp
     src/Collectables/Thystame.cpp
-    src/Island/SmallIsland.cpp
-    src/Island/MediumIsland.cpp
-    src/Island/BigIsland.cpp
+    src/Island.cpp
     src/Commands/Commands.cpp
 )
 

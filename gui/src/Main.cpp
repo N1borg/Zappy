@@ -68,6 +68,8 @@ int main(int argc, char *argv[])
     Map map(mapWidth, mapHeight);
     std::vector<std::vector<Tile_t>> tiles = map.getTiles();
 
+    window.setCameraPosition({(mapWidth / 2.0f) * 10.0f, 20, (mapHeight / 2.0f) * 10.0f});
+
     map.setPlayer(1, 3, true);
     map.setPlayer(1, 8, true);
     map.setPlayer(4, 8, true);
@@ -89,18 +91,23 @@ int main(int argc, char *argv[])
     socket.startThread();
 
     while (!window.shouldClose()) {
+        if (window.isMouseButtonPressed(MOUSE_LEFT_BUTTON) || window.isKeyPressed(KEY_ENTER))
+            map.selectTile(GetMouseRay({window.getScreenWidth() / 2.0f, window.getScreenHeight() / 2.0f}, window.getCamera()));
+
         window.parseCameraInputs();
         window.updateCamera();
         window.beginDrawing();
-        window.clearBackground(RAYWHITE);
+        window.clearBackground(SKYBLUE);
 
         window.beginMode3D();
         window.drawGrid(20, 10.0f);
         map.draw();
+        map.drawTransparent();
         window.endMode3D();
 
         window.drawText(TextFormat("X:%f Y:%f Z:%f", window.getCamera().position.x, window.getCamera().position.y, window.getCamera().position.z), 10, 40, 20, GRAY);
 
+        window.drawCrosshair();
         window.drawFPS(10, 10);
         window.endDrawing();
     }

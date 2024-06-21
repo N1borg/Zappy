@@ -5,9 +5,7 @@
 ** ParseCommands
 */
 
-#ifndef PARSECOMMANDS_HPP_
-#define PARSECOMMANDS_HPP_
-
+#pragma once
 #include <functional>
 #include <unordered_map>
 #include <iostream>
@@ -25,5 +23,3 @@ class ParseCommands {
         typedef void (Commands::*CommandFunc)(const std::string&);
         std::unordered_map<std::string, CommandFunc> _commandMap;
 };
-
-#endif /* !PARSECOMMANDS_HPP_ */
