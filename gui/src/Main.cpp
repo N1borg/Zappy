@@ -43,9 +43,11 @@ int main(int argc, char *argv[])
     int mapWidth, mapHeight;
 
     try {
-        msg >> mapSz >> mapWidthStr >> mapHeightStr;
-        mapWidth = std::stoi(mapWidthStr);
-        mapHeight = std::stoi(mapHeightStr);
+        // msg >> mapSz >> mapWidthStr >> mapHeightStr;
+        // mapWidth = std::stoi(mapWidthStr);
+        // mapHeight = std::stoi(mapHeightStr);
+        mapWidth = 20;
+        mapHeight = 20;
     } catch (const std::exception &e) {
         window.log(LOG_ERROR, "INIT: Invalid map size");
         window.close();

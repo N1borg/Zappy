@@ -186,25 +186,28 @@ void Window::drawFPS(int posX, int posY)
 
 std::string Window::animateTextDots(const std::string &string, float elapsedTime)
 {
-    int dots = static_cast<int>(floor(elapsedTime * 4.0f)) % 4;
-    std::string dotsStr(dots, '.');
-    return string + dotsStr;
+    int numDots = static_cast<int>(elapsedTime) % 4;
+    std::string dots(numDots, '.');
+    return string + dots;
 }
 
-void Window::drawConnection(bool isConnected, std::string ip, bool isReconnecting = false, int elapsedTime = 0)
+void Window::drawConnection(bool isConnected, std::string ip, bool isReconnecting, int elapsedTime)
 {
     Color color = isConnected ? GREEN : DARKGRAY;
     std::string connectStatus = isConnected ? "Connected to " : "Connecting to ";
+    std::string connectDots = animateTextDots(connectStatus + ip, elapsedTime);
+    std::string reconnecting = "Connection lost, reconnecting";
 
     beginDrawing();
     clearBackground(RAYWHITE);
 
-    std::string txt = animateTextDots(connectStatus + ip, elapsedTime);
-    drawText(txt.c_str(), (getScreenWidth() - MeasureText((connectStatus + ip + "...").c_str(), 20)) / 2, (getScreenHeight() - 20) / 2, 20, color);
+    drawText(connectDots.c_str(), (getScreenWidth() - MeasureText((connectStatus + ip + "...").c_str(), 20)) / 2, (getScreenHeight() - 20) / 2, 20, color);
 
     // If reconnecting, display a message
-    if (isReconnecting)
-        drawText("Connection lost, reconnecting...", (getScreenWidth() - MeasureText("Connection lost, reconnecting...", 20)) / 2, (getScreenHeight() - 20) / 2 + 40, 20, RED);
+    if (isReconnecting) {
+        connectDots = animateTextDots(reconnecting, elapsedTime);
+        drawText(connectDots.c_str(), (getScreenWidth() - MeasureText("Connection lost, reconnecting...", 20)) / 2, (getScreenHeight() - 20) / 2 + 40, 20, RED);
+    }
     endDrawing();
 }
 
@@ -223,7 +226,7 @@ int Window::drawWaitingScreen(Socket &socket, ParseArguments &argsParser, bool i
         drawConnection(false, ip, isReconnecting, elapsedTime);
     }
     connectionThread.join();
-    drawConnection(true, ip, isReconnecting);
+    drawConnection(true, ip, isReconnecting, elapsedTime);
 
     // Validate connection
     if (argsParser.validateConnection(socket.receiveMessage())) {
