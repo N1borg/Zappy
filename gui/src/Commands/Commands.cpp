@@ -15,11 +15,6 @@ void Commands::getMapSize(const std::string &params)
     std::cout << "Map size: Width = " << width << ", Height = " << height << std::endl;
 }
 
-void Commands::getMapContent(const std::string& params)
-{
-    std::cout  << "Map content: " << params << std::endl;
-}
-
 void Commands::getPlayerPosition(const std::string& params)
 {
     std::istringstream iss(params);
@@ -58,7 +53,8 @@ void Commands::getPlayerLevel(const std::string& params)
     std::istringstream iss(params);
     int playerNumber, level;
     iss >> playerNumber >> level;
-    std::cout << "Player #" << playerNumber << " is at level " << level << std::endl;}
+    std::cout << "Player #" << playerNumber << " is at level " << level << std::endl;
+}
 
 void Commands::getPlayerInventory(const std::string& params)
 {
