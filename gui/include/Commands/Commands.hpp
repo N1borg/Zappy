@@ -9,6 +9,8 @@
 #define COMMANDS_HPP_
 
 #include <iostream>
+#include <sstream>
+#include <string>
 
 class Commands {
     public:
