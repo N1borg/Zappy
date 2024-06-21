@@ -63,11 +63,14 @@ public:
     void drawFPS(int posX, int posY);
 
     std::string animateTextDots(const std::string &string, float elapsedTime);
-    int drawWaitingScreen(Socket &socket, const std::string machine);
-private:
-    int _width;
-    int _height;
-    std::string _title;
-    Camera _camera;
-    int _cameraMode;
+    int drawWaitingScreen(Socket &socket, ParseArguments &argsParser, bool isReconnecting);
+    void drawConnection(bool isConnected, std::string ip, bool isReconnecting, int elapsedTime);
+
+    void log(int level, const std::string &msg, ...);
+    private:
+        int _width;
+        int _height;
+        std::string _title;
+        Camera _camera;
+        int _cameraMode;
 };

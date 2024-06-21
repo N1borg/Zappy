@@ -58,36 +58,50 @@ bool Socket::connectSocket()
 
 void Socket::sendMessage(const std::string &message)
 {
-    if (_clientSocket == -1)
-        throw std::runtime_error("Socket is not connected");
+    try {
+        if (_clientSocket == -1)
+            throw std::runtime_error("Socket is not connected");
 
-    ssize_t bytesSent = send(_clientSocket, message.c_str(), message.size(), 0);
-    if (bytesSent == -1)
-        throw std::runtime_error("Failed to send message: " + std::string(strerror(errno)));
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        ssize_t bytesSent = send(_clientSocket, message.c_str(), message.size(), 0);
+        if (bytesSent == -1)
+            throw std::runtime_error("Failed to send message: " + std::string(strerror(errno)));
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    } catch (const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+    }
 }
 
 std::string Socket::receiveMessage()
 {
-    if (_clientSocket == -1)
-        throw std::runtime_error("Socket is not connected");
+    try {
+        if (_clientSocket == -1)
+            throw std::runtime_error("Socket is not connected");
 
-    struct timeval tv;
-    tv.tv_sec = 3;
-    tv.tv_usec = 0;
+        fd_set readfds;
+        struct timeval tv;
+        char buffer[1024] = {0};
+        int retval;
 
-    // Define socket timeout
-    if (setsockopt(_clientSocket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof(tv)) < 0)
-        throw std::runtime_error("Failed to set socket timeout: " + std::string(strerror(errno)));
+        FD_ZERO(&readfds);
+        FD_SET(_clientSocket, &readfds);
 
-    char buffer[1024] = {0};
-    ssize_t bytesReceived = recv(_clientSocket, buffer, 1024, 0);
-    if (bytesReceived == -1) {
-        if (errno == EAGAIN || errno == EWOULDBLOCK)
-            return "";
-        throw std::runtime_error("Failed to receive message: " + std::string(strerror(errno)));
+        // tv.tv_sec = 0;
+        // tv.tv_usec = 0;
+
+        retval = select(_clientSocket + 1, &readfds, 0, 0, NULL);// &tv);
+        if (retval != -1 && FD_ISSET(_clientSocket, &readfds)) {
+            ssize_t bytesReceived = recv(_clientSocket, buffer, 1024, 0);
+            if (bytesReceived == -1) {
+                if (errno == EAGAIN || errno == EWOULDBLOCK)
+                    return "";
+                throw std::runtime_error("Failed to receive message: " + std::string(strerror(errno)));
+            }
+        }
+        return std::string(buffer);
+    } catch (const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+        return "";
     }
-    return std::string(buffer);
 }
 
 void Socket::attemptConnection()
@@ -115,14 +129,27 @@ void Socket::stopThread()
 void Socket::readThread()
 {
     ParseCommands cmdParser;
+    fd_set readfds;
+    struct timeval tv;
+    int retval;
 
     while (_threadRunning) {
         if (!_connected)
             attemptConnection();
-        std::string message = receiveMessage();
-        if (message.empty())
-            _connected = false;
-        else
-            cmdParser.parse(message);
+
+        FD_ZERO(&readfds);
+        FD_SET(_clientSocket, &readfds);
+
+        tv.tv_sec = 0;
+        tv.tv_usec = 0;
+
+        retval = select(_clientSocket + 1, &readfds, 0, 0, &tv);
+        if (retval != -1 && FD_ISSET(_clientSocket, &readfds)) {
+            std::string message = receiveMessage();
+            if (message.empty())
+                _connected = false;
+            else
+                cmdParser.parse(message);
+        }
     }
 }

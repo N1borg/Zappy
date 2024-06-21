@@ -20,9 +20,17 @@ Window::Window(int width, int height, std::string title)
     setCameraMode(CAMERA_FREE);
 }
 
+void Window::log(int level, const std::string &msg, ...)
+{
+    va_list args;
+    va_start(args, msg);
+    TraceLog(level, msg.c_str(), args);
+    va_end(args);
+}
+
 void Window::init()
 {
-    SetTargetFPS(60);
+    SetTargetFPS(144);
     SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_MSAA_4X_HINT | FLAG_VSYNC_HINT);
     InitWindow(_width, _height, _title.c_str());
 }
@@ -237,15 +245,35 @@ void Window::drawFPS(int posX, int posY)
 
 std::string Window::animateTextDots(const std::string &string, float elapsedTime)
 {
-    int dots = static_cast<int>(floor(elapsedTime * 4.0f)) % 4;
-    std::string dotsStr(dots, '.');
-    return string + dotsStr;
+    int numDots = static_cast<int>(elapsedTime) % 4;
+    std::string dots(numDots, '.');
+    return string + dots;
 }
 
-int Window::drawWaitingScreen(Socket &socket, const std::string machine)
+void Window::drawConnection(bool isConnected, std::string ip, bool isReconnecting, int elapsedTime)
+{
+    Color color = isConnected ? GREEN : DARKGRAY;
+    std::string connectStatus = isConnected ? "Connected to " : "Connecting to ";
+    std::string connectDots = animateTextDots(connectStatus + ip, elapsedTime);
+    std::string reconnecting = "Connection lost, reconnecting";
+
+    beginDrawing();
+    clearBackground(RAYWHITE);
+
+    drawText(connectDots.c_str(), (getScreenWidth() - MeasureText((connectStatus + ip + "...").c_str(), 20)) / 2, (getScreenHeight() - 20) / 2, 20, color);
+
+    // If reconnecting, display a message
+    if (isReconnecting) {
+        connectDots = animateTextDots(reconnecting, elapsedTime);
+        drawText(connectDots.c_str(), (getScreenWidth() - MeasureText("Connection lost, reconnecting...", 20)) / 2, (getScreenHeight() - 20) / 2 + 40, 20, RED);
+    }
+    endDrawing();
+}
+
+int Window::drawWaitingScreen(Socket &socket, ParseArguments &argsParser, bool isReconnecting = false)
 {
     std::thread connectionThread(&Socket::attemptConnection, &socket);
-
+    std::string ip = argsParser.getMachine();
     float elapsedTime = 0.0f;
 
     while (!socket.isConnected()) {
@@ -254,17 +282,19 @@ int Window::drawWaitingScreen(Socket &socket, const std::string machine)
             return 0;
         }
         elapsedTime += GetFrameTime();
-
-        beginDrawing();
-        clearBackground(RAYWHITE);
-
-        std::string connectingText = animateTextDots("Connecting to " + machine, elapsedTime);
-        drawText(connectingText.c_str(), (getScreenWidth() - MeasureText(("Connecting to " + machine + "...").c_str(), 20)) / 2, (getScreenHeight() - 20) / 2, 20, DARKGRAY);
-
-        endDrawing();
+        drawConnection(false, ip, isReconnecting, elapsedTime);
     }
-
     connectionThread.join();
+    drawConnection(true, ip, isReconnecting, elapsedTime);
+
+    // Validate connection
+    if (argsParser.validateConnection(socket.receiveMessage()))
+        socket.sendMessage("GRAPHIC\n");
+    else {
+        std::cerr << "Error: Connection failed" << std::endl;
+        close();
+        return 0;
+    }
 
     if (socket.isConnected())
         return 1;

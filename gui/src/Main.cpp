@@ -34,19 +34,8 @@ int main(int argc, char *argv[])
     Window window(1280, 720, "Zappy GUI");
     window.init();
 
-    if (!window.drawWaitingScreen(socket, argsParser.getMachine())) {
-        window.close();
+    if (!window.drawWaitingScreen(socket, argsParser, false))
         return 84;
-    }
-
-    // Validate connection
-    if (argsParser.validateConnection(socket.receiveMessage())) {
-        socket.sendMessage("GRAPHIC\n");
-    } else {
-        std::cerr << "Error: Connection failed" << std::endl;
-        window.close();
-        return 84;
-    }
 
     socket.sendMessage("msz\n");
     std::istringstream msg = std::istringstream(socket.receiveMessage());
@@ -58,7 +47,7 @@ int main(int argc, char *argv[])
         mapWidth = std::stoi(mapWidthStr);
         mapHeight = std::stoi(mapHeightStr);
     } catch (const std::exception &e) {
-        std::cerr << "Error: Invalid map size" << std::endl;
+        window.log(LOG_ERROR, "INIT: Invalid map size");
         window.close();
         return 84;
     }
@@ -91,6 +80,13 @@ int main(int argc, char *argv[])
 
     window.disableCursor();
     while (!window.shouldClose()) {
+        // Check socket disconnection
+        if (!socket.isConnected()) {
+            window.log(LOG_ERROR, "Connection lost");
+            if (!window.drawWaitingScreen(socket, argsParser, true))
+                break;
+        }
+
         if (window.isMouseButtonPressed(MOUSE_LEFT_BUTTON) || window.isKeyPressed(KEY_ENTER))
             map.selectTile(GetMouseRay({window.getScreenWidth() / 2.0f, window.getScreenHeight() / 2.0f}, window.getCamera()));
 

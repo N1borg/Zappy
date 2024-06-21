@@ -10,8 +10,29 @@
 ParseCommands::ParseCommands()
 {
     _commandMap["msz"] = &Commands::getMapSize;
-    _commandMap["mct"] = &Commands::getMapContent;
+    _commandMap["bct"] = &Commands::getTileContent;
+    _commandMap["tna"] = &Commands::getTeamsName;
+    _commandMap["pnw"] = &Commands::getConnectionNewPlayer;
     _commandMap["ppo"] = &Commands::getPlayerPosition;
+    _commandMap["plv"] = &Commands::getPlayerLevel;
+    _commandMap["pin"] = &Commands::getPlayerInventory;
+    _commandMap["pex"] = &Commands::getExpulsion;
+    _commandMap["pbc"] = &Commands::getBroadcast;
+    _commandMap["pic"] = &Commands::getStartOfIncantation;
+    _commandMap["pie"] = &Commands::getEndOfIncantation;
+    _commandMap["pfk"] = &Commands::getLayingEggByPlayer;
+    _commandMap["pdr"] = &Commands::getResourceDropping;
+    _commandMap["pgt"] = &Commands::getResourceCollecting;
+    _commandMap["pdi"] = &Commands::getPlayerDeath;
+    _commandMap["enw"] = &Commands::getEggLaidByPlayer;
+    _commandMap["ebo"] = &Commands::getPlayerConnectionInEgg;
+    _commandMap["edi"] = &Commands::getEggDeath;
+    _commandMap["sgt"] = &Commands::getTimeUnitRequest;
+    _commandMap["sst"] = &Commands::getTimeUnitModification;
+    _commandMap["seg"] = &Commands::getEndOfGame;
+    _commandMap["smg"] = &Commands::getServerMessage;
+    _commandMap["suc"] = &Commands::getUnknownCommand;
+    _commandMap["sbp"] = &Commands::getCommandParameter;
 }
 
 void ParseCommands::parse(std::string msg)
