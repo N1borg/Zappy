@@ -85,10 +85,11 @@ def main():
                     print(f'Unexpected response for map size from server: {response}')
 
             ai = AI(name, s, slots, int(x), int(y))
-            ai.name_choosing()
-            ai.i_love_food()
+            # ai.name_choosing()
+            # ai.i_love_food()
             # ai.lvl2()
             # ai.lvl3()
+            ai.launch_loop()
 
 
     except Exception as e:
