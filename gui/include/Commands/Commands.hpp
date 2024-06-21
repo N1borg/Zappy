@@ -10,11 +10,11 @@
 #include <iostream>
 
 class Commands {
-    public:
-        Commands() = default;
-        ~Commands() = default;
+public:
+    Commands() = default;
+    ~Commands() = default;
 
-        void getMapSize(const std::string& params);
-        void getMapContent(const std::string& params);
-        void getPlayerPosition(const std::string& params);
+    void getMapSize(const std::string& params);
+    void getMapContent(const std::string& params);
+    void getPlayerPosition(const std::string& params);
 };

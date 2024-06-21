@@ -23,8 +23,6 @@
 #include <vector>
 #include <cfloat>
 
-#include <iostream>
-
 typedef struct Tile_s {
     std::pair<Player, bool> player;
     std::pair<Egg, bool> egg;
@@ -75,7 +73,6 @@ public:
     void selectTile(Ray ray);
 
     void unload();
-
 private:
     int _width;
     int _height;

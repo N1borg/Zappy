@@ -7,7 +7,8 @@
 
 #pragma once
 
-#include <iostream>
+#include "Parser/ParseCommands.hpp"
+
 #include <cstring>
 #include <sys/socket.h>
 #include <arpa/inet.h>
@@ -15,34 +16,32 @@
 #include <thread>
 #include <atomic>
 
-#include "Parser/ParseCommands.hpp"
-
 class Socket {
-    public:
-        Socket(int port, std::string machine);
-        ~Socket();
+public:
+    Socket(int port, std::string machine);
+    ~Socket();
 
-        void setPort(int port);
-        int getPort() const;
-        void setMachine(std::string machine);
-        std::string getMachine() const;
-        bool isConnected() const;
+    void setPort(int port);
+    int getPort() const;
+    void setMachine(std::string machine);
+    std::string getMachine() const;
+    bool isConnected() const;
 
-        bool connectSocket();
-        void sendMessage(const std::string &message);
-        std::string receiveMessage();
-        void attemptConnection();
+    // Socket
+    bool connectSocket();
+    void sendMessage(const std::string &message);
+    std::string receiveMessage();
+    void attemptConnection();
 
-        // Thread
-        void startThread();
-        void stopThread();
-        void readThread();
-
-    private:
-        int _port;
-        std::string _machine;
-        int _clientSocket;
-        std::atomic<bool> _connected;
-        std::atomic<bool> _threadRunning;
-        std::thread _thread;
+    // Thread
+    void startThread();
+    void stopThread();
+    void readThread();
+private:
+    int _port;
+    std::string _machine;
+    int _clientSocket;
+    std::atomic<bool> _connected;
+    std::atomic<bool> _threadRunning;
+    std::thread _thread;
 };

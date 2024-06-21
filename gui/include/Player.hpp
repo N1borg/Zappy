@@ -16,7 +16,6 @@ public:
     ~Player() = default;
 
     void setOrientation(Orientation orientation);
-
 private:
     Orientation _orientation;
 };
