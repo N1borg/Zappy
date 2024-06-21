@@ -27,6 +27,7 @@ set(SHARED_SRC
     src/command_queue.c
     src/manage_food.c
     src/game_end.c
+    src/ticks.c
     src/player_commands/success_response.c
     src/player_commands/broadcast.c
     src/player_commands/eject.c

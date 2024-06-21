@@ -37,65 +37,6 @@ void client_handler(server_t *serv, client_t *client)
     }
 }
 
-// If the player has a command and the time is up, consume the event
-void consume_event(server_t *serv, client_t *player, command_t *command)
-{
-    if (!command) {
-        player->tick = 1;
-        return;
-    }
-    player->tick = command->time;
-    compute_response(serv, player, command->command, command->time);
-    free(command->command);
-    free(command);
-}
-
-// Check if the player has a command in the queue
-void check_player_queue(client_t *player, server_t *serv)
-{
-    command_t *command = NULL;
-
-    player->tick -= 1;
-    if (player->tick <= 0) {
-        command = dequeue_command(player->command_queue);
-        consume_event(serv, player, command);
-    }
-}
-
-// Check if the player is dead
-int check_player_death(server_t *serv, client_t *player)
-{
-    player->life--;
-    if (player->life >= 0)
-        return 1;
-    if (player->inv.food == 0) {
-        event_pdi(serv, player);
-        close(player->fd);
-        return 0;
-    }
-    player->inv.food--;
-    player->life += 126;
-    return 1;
-}
-
-// Elapse the time and check for player death
-void elapse_time(server_t *serv, int *sd)
-{
-    if (serv->elapsed_time < serv->interval)
-        return;
-    for (int i = 0; i < MAX_CLIENTS; i++) {
-        *sd = serv->clients[i]->fd;
-        if (serv->clients[i]->fd <= 0)
-            continue;
-        check_player_death(serv, serv->clients[i]);
-            continue;
-        client_handler(serv, serv->clients[i]);
-        check_player_queue(serv->clients[i], serv);
-    }
-    serv->start.tv_sec = serv->current.tv_sec;
-    serv->start.tv_nsec = serv->current.tv_nsec;
-}
-
 // Start the server and listen for incoming connections
 void start_listener(server_t *serv)
 {
