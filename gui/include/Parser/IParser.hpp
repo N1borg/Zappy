@@ -7,7 +7,9 @@
 
 #pragma once
 
+#include <iostream>
+
 class IParser {
-    public:
-        virtual ~IParser() = default;
+public:
+    virtual ~IParser() = default;
 };

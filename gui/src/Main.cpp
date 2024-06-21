@@ -40,19 +40,34 @@ int main(int argc, char *argv[])
     }
 
     // Validate connection
-    if (!argsParser.validateConnection(socket.receiveMessage())) {
+    if (argsParser.validateConnection(socket.receiveMessage())) {
+        socket.sendMessage("GRAPHIC\n");
+    } else {
         std::cerr << "Error: Connection failed" << std::endl;
         window.close();
         return 84;
     }
 
-    int map_width = 10;
-    int map_height = 10;
+    socket.sendMessage("msz\n");
+    std::istringstream msg = std::istringstream(socket.receiveMessage());
+    std::string mapSz, mapWidthStr, mapHeightStr;
+    int mapWidth, mapHeight;
 
-    Map map(map_width, map_height);
+    try {
+        msg >> mapSz >> mapWidthStr >> mapHeightStr;
+        mapWidth = std::stoi(mapWidthStr);
+        mapHeight = std::stoi(mapHeightStr);
+    } catch (const std::exception &e) {
+        std::cerr << "Error: Invalid map size" << std::endl;
+        window.close();
+        return 84;
+    }
+
+    // Create map
+    Map map(mapWidth, mapHeight);
     std::vector<std::vector<Tile_t>> tiles = map.getTiles();
 
-    bool selected = false;
+    window.setCameraPosition({(mapWidth / 2.0f) * 10.0f, 20, (mapHeight / 2.0f) * 10.0f});
 
     map.setPlayer(1, 3, true);
     map.setPlayer(1, 8, true);
@@ -71,26 +86,33 @@ int main(int argc, char *argv[])
     map.setPhiras(5, 5, true);
     map.setThystame(6, 6, true);
 
+    // Starts thread for reading messages
+    socket.startThread();
+
     window.disableCursor();
-    while (!window.shouldClose())
-    {
+    while (!window.shouldClose()) {
+        if (window.isMouseButtonPressed(MOUSE_LEFT_BUTTON) || window.isKeyPressed(KEY_ENTER))
+            map.selectTile(GetMouseRay({window.getScreenWidth() / 2.0f, window.getScreenHeight() / 2.0f}, window.getCamera()));
+
         window.parseCameraInputs();
         window.updateCamera();
         window.beginDrawing();
-        window.clearBackground(RAYWHITE);
+        window.clearBackground(SKYBLUE);
 
         window.beginMode3D();
         window.drawGrid(20, 10.0f);
         map.draw();
+        map.drawTransparent();
         window.endMode3D();
 
         window.drawText(TextFormat("X:%f Y:%f Z:%f", window.getCamera().position.x, window.getCamera().position.y, window.getCamera().position.z), 10, 40, 20, GRAY);
-        if (selected)
-            window.drawText("MODEL SELECTED", window.getScreenWidth() - 110, 10, 10, GREEN);
+
+        window.drawCrosshair();
         window.drawFPS(10, 10);
         window.endDrawing();
     }
     map.unload();
     window.close();
+    socket.stopThread();
     return 0;
 }

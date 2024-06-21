@@ -7,17 +7,15 @@
 
 #pragma once
 
-#include "IModel.hpp"
+#include "AModel.hpp"
+#include "Orientation.hpp"
 
-class Player : public IModel {
-    public:
-        Player(Model model);
-        ~Player() = default;
+class Player : public AModel {
+public:
+    Player(Model model);
+    ~Player() = default;
 
-        void draw(Vector3 position, float scale, Color tint) const override;
-        void setRotationY(float yRotation);
-
-    private:
-        Model _model;
-        float _yRotation;
+    void setOrientation(Orientation orientation);
+private:
+    Orientation _orientation;
 };

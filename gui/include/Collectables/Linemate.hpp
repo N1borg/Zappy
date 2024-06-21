@@ -7,17 +7,10 @@
 
 #pragma once
 
-#include "IModel.hpp"
+#include "AModel.hpp"
 
-class Linemate : public IModel {
-    public:
-        Linemate(Model model);
-        ~Linemate() = default;
-
-        void draw(Vector3 position, float scale, Color tint) const override;
-        void setRotationY(float yRotation);
-
-    private:
-        Model _model;
-        float _yRotation;
+class Linemate : public AModel {
+public:
+    Linemate(Model model);
+    ~Linemate() = default;
 };

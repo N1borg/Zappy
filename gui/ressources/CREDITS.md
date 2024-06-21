@@ -1,7 +1,5 @@
 Apple by jeremy [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza (https://poly.pizza/m/4tOmpD9-xsV)
 Island by J-Toastie [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza (https://poly.pizza/m/C03O8OQq6O)
-Medium Island by J-Toastie [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza (https://poly.pizza/m/YFs6J9xPdZ)
-Large Island by J-Toastie [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza (https://poly.pizza/m/jLjH1jMIpH)
 Chicken Egg by sirkitree [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza (https://poly.pizza/m/0ylMw3Mzedx)
 BlockMan by Robert Mark [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza (https://poly.pizza/m/bHcxXYw8lnl)
 Crystal by iPoly3D (https://poly.pizza/m/WzWPKHFMkL)
