@@ -29,6 +29,7 @@ typedef struct server_s {
     int height;
     int freq;
     double interval;
+    struct timeval timeout;
     struct timespec start;
     struct timespec current;
     double elapsed_time;

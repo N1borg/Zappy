@@ -50,7 +50,7 @@ void start_listener(server_t *serv)
         FD_SET(serv->master_socket, &serv->readfds);
         max_sd = serv->master_socket;
         add_child_socket(serv, &sd, &max_sd);
-        if ((select((max_sd + 1), &serv->readfds, NULL, NULL, NULL) < 0)
+        if ((select((max_sd + 1), &serv->readfds, NULL, NULL, &serv->timeout) < 0)
             && (errno != EINTR))
             printf("Select error");
         if (FD_ISSET(serv->master_socket, &serv->readfds))

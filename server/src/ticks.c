@@ -19,9 +19,9 @@ void check_player_queue(client_t *player, server_t *serv)
     }
     player->tick++;
     if (player->tick >= player->current_command->time) {
-        compute_response(serv, player, command->command);
-        free(command->command);
-        free(command);
+        compute_response(serv, player, player->current_command->command);
+        free(player->current_command->command);
+        free(player->current_command);
         player->tick = 0;
     }
 }

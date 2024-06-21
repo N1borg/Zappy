@@ -50,6 +50,7 @@ void set_client(client_t *clients)
     clients->tick = 0;
     clients->current_command = NULL;
     clients->is_incanting = false;
+    clients->is_forking = false;
     clients->orientation = 0;
     clients->inv.food = 10;
     clients->inv.linemate = 0;
