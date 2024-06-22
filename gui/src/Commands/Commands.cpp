@@ -20,7 +20,8 @@ void Commands::getPlayerPosition(const std::string& params)
     std::istringstream iss(params);
     int playerNumber, x, y, orientation;
     iss >> playerNumber >> x >> y >> orientation;
-    std::cout << "Player #" << playerNumber << " is at (" << x << ", " << y << ") facing orientation " << orientation << std::endl;}
+    std::cout << "Player #" << playerNumber << " is at (" << x << ", " << y << ") facing orientation " << orientation << std::endl;
+}
 
 void Commands::getTileContent(const std::string& params)
 {
@@ -62,7 +63,8 @@ void Commands::getPlayerInventory(const std::string& params)
     std::string teamName;
     while (iss >> teamName) {
         std::cout << "Team name: " << teamName << std::endl;
-    }}
+    }
+}
 
 void Commands::getExpulsion(const std::string& params)
 {

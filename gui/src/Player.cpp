@@ -7,9 +7,18 @@
 
 #include "Player.hpp"
 
-Player::Player(Model model) : AModel(model) {}
+Player::Player(Model model, Team team) : AModel(model), _team(team)
+{
+    _islandPositionX = 0.0f;
+    _islandPositionZ = 0.0f;
+}
+
+Team Player::getTeam() const
+{
+    return _team;
+}
 
 void Player::setOrientation(Orientation orientation)
 {
-    this->_yRotation = static_cast<int>(orientation) * 90.0f;
+    _yRotation = static_cast<int>(orientation) * 90.0f;
 }

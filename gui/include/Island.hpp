@@ -17,5 +17,5 @@ public:
     bool isSelected() const;
     void setSelected(bool selected);
 private:
-    bool _Selected;
+    bool _selected;
 };

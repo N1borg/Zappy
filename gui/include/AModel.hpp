@@ -15,11 +15,16 @@ public:
     ~AModel() = default;
 
     Model getModel() const;
+    void setIslandPosition(int islandPosition) override;
+    int getIslandPositionX() const override;
+    int getIslandPositionZ() const override;
     void setRotationY(float yRotation) override;
 
     void draw(Vector3 position, float scale, Color tint) const override;
     void drawWires(Vector3 position, float scale, Color tint) const override;
 protected:
     Model _model;
+    float _islandPositionX;
+    float _islandPositionZ;
     float _yRotation;
 };

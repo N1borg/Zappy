@@ -56,8 +56,11 @@ set(SHARED_SRC
     src/Socket.cpp
     src/Window.cpp
     src/Map.cpp
-    src/BaseModel.cpp
+    src/AModel.cpp
     src/Player.cpp
+    src/Island.cpp
+    src/Grass.cpp
+    src/Team.cpp
     src/Parser/ParseArguments.cpp
     src/Parser/ParseCommands.cpp
     src/Collectables/Egg.cpp
@@ -68,7 +71,6 @@ set(SHARED_SRC
     src/Collectables/Mendiane.cpp
     src/Collectables/Phiras.cpp
     src/Collectables/Thystame.cpp
-    src/Island.cpp
     src/Commands/Commands.cpp
 )
 

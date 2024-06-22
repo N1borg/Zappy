@@ -53,27 +53,49 @@ int main(int argc, char *argv[])
     }
 
     // Create map
+    Team team1("team1");
+    team1.setTeamColor(RED);
+    Team team2("team2");
+    team2.setTeamColor(GREEN);
+    Team team3("team3");
+    team3.setTeamColor(BLUE);
+
     Map map(mapWidth, mapHeight);
     std::vector<std::vector<Tile_t>> tiles = map.getTiles();
 
-    window.setCameraPosition({(mapWidth / 2.0f) * 10.0f, 20, (mapHeight / 2.0f) * 10.0f});
+    window.setCameraPosition({0.0f, 20.0f, 0.0f});
+    window.setCameraTarget({(mapWidth / 2.0f) * 10.0f, 0.0f, (mapHeight / 2.0f) * 10.0f});
 
-    map.setPlayer(1, 3, true);
-    map.setPlayer(1, 8, true);
-    map.setPlayer(4, 8, true);
-    map.setPlayer(5, 1, true);
+    Model playerModel = LoadModel("gui/resources/player.glb");
+    Model eggModel = LoadModel("gui/resources/egg.glb");
+
+    Player player1(playerModel, team1);
+    Player player2(playerModel, team2);
+    Egg egg1(eggModel, team1);
+    Egg egg2(eggModel, team2);
+    map.setPlayer(1, 3, player1);
     map.setFood(2, 3, true);
     map.setFood(1, 5, true);
     map.setFood(4, 2, true);
     map.setFood(5, 1, true);
-    map.setEgg(4, 3, true);
-    map.setEgg(3, 5, true);
+    map.setEgg(4, 3, egg1);
+    map.setEgg(3, 5, egg2);
     map.setLinemate(1, 1, true);
     map.setDeraumere(2, 2, true);
     map.setSibur(3, 3, true);
     map.setMendiane(4, 4, true);
     map.setPhiras(5, 5, true);
     map.setThystame(6, 6, true);
+
+    map.setPlayer(0, 0, player2);
+    map.setEgg(0, 0, egg1);
+    map.setFood(0, 0, true);
+    map.setLinemate(0, 0, true);
+    map.setDeraumere(0, 0, true);
+    map.setSibur(0, 0, true);
+    map.setMendiane(0, 0, true);
+    map.setPhiras(0, 0, true);
+    map.setThystame(0, 0, true);
 
     // Starts thread for reading messages
     socket.startThread();
@@ -102,6 +124,8 @@ int main(int argc, char *argv[])
         window.endMode3D();
 
         window.drawText(TextFormat("X:%f Y:%f Z:%f", window.getCamera().position.x, window.getCamera().position.y, window.getCamera().position.z), 10, 40, 20, GRAY);
+
+        window.drawText(TextFormat("Map size: (%d, %d)", map.getWidth(), map.getHeight()), 10, 60, 20, GRAY);
 
         window.drawCrosshair();
         window.drawFPS(10, 10);

@@ -8,9 +8,14 @@
 #pragma once
 
 #include "AModel.hpp"
+#include "Team.hpp"
 
 class Egg : public AModel {
 public:
-    Egg(Model model);
+    Egg(Model _model, Team team);
     ~Egg() = default;
+
+    Team getTeam() const;
+private:
+    Team _team;
 };

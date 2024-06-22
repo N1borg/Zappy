@@ -276,6 +276,8 @@ int Window::drawWaitingScreen(Socket &socket, ParseArguments &argsParser, bool i
     std::string ip = argsParser.getMachine();
     float elapsedTime = 0.0f;
 
+    // Wait for connection
+    EnableCursor();
     while (!socket.isConnected()) {
         if (shouldClose()) {
             connectionThread.detach();

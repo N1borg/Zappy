@@ -7,4 +7,14 @@
 
 #include "Collectables/Egg.hpp"
 
-Egg::Egg(Model model) : AModel(model) {}
+Egg::Egg(Model model, Team team) : AModel(model), _team(team)
+{
+    _yRotation = 0.0f;
+    _islandPositionX = 0.0f;
+    _islandPositionZ = 0.0f;
+}
+
+Team Egg::getTeam() const
+{
+    return _team;
+}

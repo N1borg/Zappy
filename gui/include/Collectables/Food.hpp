@@ -13,4 +13,6 @@ class Food : public AModel {
 public:
     Food(Model model);
     ~Food() = default;
+
+    void setIslandPosition(int islandPosition) override;
 };
