@@ -10,6 +10,7 @@
 #include "Socket.hpp"
 #include "Window.hpp"
 #include "Map.hpp"
+#include "Orientation.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -52,15 +53,29 @@ int main(int argc, char *argv[])
         return 84;
     }
 
+    socket.sendMessage("sgt\n");
+    msg = std::istringstream(socket.receiveMessage());
+    std::string timeUnitReq, timeUnitStr;
+    int timeUnit;
+
+    try {
+        msg >> timeUnitReq >> timeUnitStr;
+        timeUnit = std::stoi(timeUnitStr);
+    } catch (const std::exception &e) {
+        window.log(LOG_ERROR, "INIT: Invalid frequence");
+        window.close();
+        return 84;
+    }
+
     // Create map
     Team team1("team1");
     team1.setTeamColor(RED);
     Team team2("team2");
-    team2.setTeamColor(GREEN);
+    team2.setTeamColor(YELLOW);
     Team team3("team3");
     team3.setTeamColor(BLUE);
 
-    Map map(mapWidth, mapHeight);
+    Map map(mapWidth, mapHeight, timeUnit);
     std::vector<std::vector<Tile_t>> tiles = map.getTiles();
 
     window.setCameraPosition({0.0f, 20.0f, 0.0f});
@@ -69,33 +84,35 @@ int main(int argc, char *argv[])
     Model playerModel = LoadModel("gui/resources/player.glb");
     Model eggModel = LoadModel("gui/resources/egg.glb");
 
-    Player player1(playerModel, team1);
-    Player player2(playerModel, team2);
-    Egg egg1(eggModel, team1);
-    Egg egg2(eggModel, team2);
-    map.setPlayer(1, 3, player1);
-    map.setFood(2, 3, true);
-    map.setFood(1, 5, true);
-    map.setFood(4, 2, true);
-    map.setFood(5, 1, true);
-    map.setEgg(4, 3, egg1);
-    map.setEgg(3, 5, egg2);
-    map.setLinemate(1, 1, true);
-    map.setDeraumere(2, 2, true);
-    map.setSibur(3, 3, true);
-    map.setMendiane(4, 4, true);
-    map.setPhiras(5, 5, true);
-    map.setThystame(6, 6, true);
+    Player player1(playerModel, 0, 1, 3, (Orientation) 0, team1);
+    Player player2(playerModel, 1, 0, 0, (Orientation) 1, team2);
+    Egg egg1(eggModel, 0, 0, 0, 0, team1);
+    Egg egg2(eggModel, 1, 2, 4, 5, team3);
+    map.addPlayer(1, 3, player1);
+    map.addFood(2, 3);
+    map.addFood(1, 5);
+    map.addFood(4, 2);
+    map.addFood(5, 1);
+    map.addEgg(4, 3, egg1);
+    map.addEgg(3, 5, egg2);
+    map.addLinemate(1, 1);
+    map.addDeraumere(2, 2);
+    map.addSibur(3, 3);
+    map.addMendiane(4, 4);
+    map.addPhiras(5, 5);
+    map.addThystame(6, 6);
 
-    map.setPlayer(0, 0, player2);
-    map.setEgg(0, 0, egg1);
-    map.setFood(0, 0, true);
-    map.setLinemate(0, 0, true);
-    map.setDeraumere(0, 0, true);
-    map.setSibur(0, 0, true);
-    map.setMendiane(0, 0, true);
-    map.setPhiras(0, 0, true);
-    map.setThystame(0, 0, true);
+    map.addPlayer(0, 0, player2);
+    map.addEgg(0, 0, egg1);
+    map.addFood(0, 0);
+    map.addLinemate(0, 0);
+    map.addDeraumere(0, 0);
+    map.addSibur(0, 0);
+    map.addMendiane(0, 0);
+    map.addPhiras(0, 0);
+    map.addThystame(0, 0);
+
+    bool isTileSelected = false;
 
     // Starts thread for reading messages
     socket.startThread();
@@ -110,25 +127,24 @@ int main(int argc, char *argv[])
         }
 
         if (window.isMouseButtonPressed(MOUSE_LEFT_BUTTON) || window.isKeyPressed(KEY_ENTER))
-            map.selectTile(GetMouseRay({window.getScreenWidth() / 2.0f, window.getScreenHeight() / 2.0f}, window.getCamera()));
+            isTileSelected = map.selectTile(GetMouseRay({window.getScreenWidth() / 2.0f, window.getScreenHeight() / 2.0f}, window.getCamera()));
 
         window.parseCameraInputs();
         window.updateCamera();
         window.beginDrawing();
-        window.clearBackground(SKYBLUE);
+            window.clearBackground(SKYBLUE);
 
-        window.beginMode3D();
-        window.drawGrid(20, 10.0f);
-        map.draw();
-        map.drawTransparent();
-        window.endMode3D();
+            window.beginMode3D();
+                window.drawGrid(20, 10.0f);
+                map.draw();
+                map.drawTransparent();
+            window.endMode3D();
 
-        window.drawText(TextFormat("X:%f Y:%f Z:%f", window.getCamera().position.x, window.getCamera().position.y, window.getCamera().position.z), 10, 40, 20, GRAY);
-
-        window.drawText(TextFormat("Map size: (%d, %d)", map.getWidth(), map.getHeight()), 10, 60, 20, GRAY);
-
-        window.drawCrosshair();
-        window.drawFPS(10, 10);
+            window.drawCrosshair();
+            window.drawFPS(10, 2);
+            window.drawGeneralInfo(map);
+            if (isTileSelected)
+                window.drawTileInfo(map.getSelectedTile());
         window.endDrawing();
     }
     map.unload();

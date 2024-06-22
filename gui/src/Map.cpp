@@ -7,8 +7,10 @@
 
 #include "Map.hpp"
 
-Map::Map(int width, int height) : _width(width), _height(height)
+Map::Map(int width, int height, int frequency) : _width(width), _height(height), _frequency(frequency)
 {
+    _modelPlayer = LoadModel("gui/resources/player.glb");
+    _modelEgg = LoadModel("gui/resources/egg.glb");
     _modelFood = LoadModel("gui/resources/food.glb");
     _modelLinemate = LoadModel("gui/resources/linemate.glb");
     _modelDeraumere = LoadModel("gui/resources/deraumere.glb");
@@ -63,6 +65,66 @@ int Map::getHeight() const
     return _height;
 }
 
+void Map::setFrequency(int frequency)
+{
+    _frequency = frequency;
+}
+
+int Map::getFrequency() const
+{
+    return _frequency;
+}
+
+int Map::getNbPlayers() const
+{
+    return _nbPlayers;
+}
+
+int Map::getNbTeams() const
+{
+    return _nbTeams;
+}
+
+int Map::getNbEggs() const
+{
+    return _nbEggs;
+}
+
+int Map::getNbFood() const
+{
+    return _nbFood;
+}
+
+int Map::getNbLinemate() const
+{
+    return _nbLinemate;
+}
+
+int Map::getNbDeraumere() const
+{
+    return _nbDeraumere;
+}
+
+int Map::getNbSibur() const
+{
+    return _nbSibur;
+}
+
+int Map::getNbMendiane() const
+{
+    return _nbMendiane;
+}
+
+int Map::getNbPhiras() const
+{
+    return _nbPhiras;
+}
+
+int Map::getNbThystame() const
+{
+    return _nbThystame;
+}
+
 std::vector<std::vector<Tile_t>> Map::getTiles() const
 {
     return _tiles;
@@ -73,59 +135,128 @@ Tile_t Map::getTile(int x, int y) const
     return _tiles[x][y];
 }
 
-void Map::setPlayer(int x, int y, Player player)
+void Map::addPlayer(int x, int y, Player player)
 {
+    for (Player p : _tiles[x][y].players) {
+        if (p.getId() == player.getId())
+            return;
+    }
     _tiles[x][y].players.push_back(player);
+    _nbPlayers += 1;
 }
 
-void Map::setEgg(int x, int y, Egg egg)
+void Map::delPlayer(int x, int y, Player player)
 {
+    for (std::size_t i = 0; i < _tiles[x][y].players.size(); i++) {
+        if (_tiles[x][y].players[i].getId() == player.getId()) {
+            _tiles[x][y].players.erase(_tiles[x][y].players.begin() + i);
+            _nbPlayers -= 1;
+        }
+    }
+}
+
+void Map::addEgg(int x, int y, Egg egg)
+{
+    for (Egg e : _tiles[x][y].eggs) {
+        if (e.getId() == egg.getId())
+            return;
+    }
     _tiles[x][y].eggs.push_back(egg);
+    _nbEggs += 1;
 }
 
-void Map::setFood(int x, int y, bool value)
+void Map::delEgg(int x, int y, Egg egg)
 {
-    _tiles[x][y].food.second = value;
+    for (std::size_t i = 0; i < _tiles[x][y].eggs.size(); i++) {
+        if (_tiles[x][y].eggs[i].getId() == egg.getId()) {
+            _tiles[x][y].eggs.erase(_tiles[x][y].eggs.begin() + i);
+            _nbEggs -= 1;
+        }
+    }
 }
 
-void Map::setLinemate(int x, int y, bool value)
+void Map::addFood(int x, int y)
 {
-    _tiles[x][y].linemate.second = value;
+    _tiles[x][y].food.second += 1;
+    _nbFood += 1;
 }
 
-void Map::setDeraumere(int x, int y, bool value)
+void Map::delFood(int x, int y)
 {
-    _tiles[x][y].deraumere.second = value;
+    _tiles[x][y].food.second -= 1;
+    _nbFood -= 1;
 }
 
-void Map::setSibur(int x, int y, bool value)
+void Map::addLinemate(int x, int y)
 {
-    _tiles[x][y].sibur.second = value;
+    _tiles[x][y].linemate.second += 1;
+    _nbLinemate += 1;
 }
 
-void Map::setMendiane(int x, int y, bool value)
+void Map::delLinemate(int x, int y)
 {
-    _tiles[x][y].mendiane.second = value;
+    _tiles[x][y].linemate.second -= 1;
+    _nbLinemate -= 1;
 }
 
-void Map::setPhiras(int x, int y, bool value)
+void Map::addDeraumere(int x, int y)
 {
-    _tiles[x][y].phiras.second = value;
+    _tiles[x][y].deraumere.second += 1;
+    _nbDeraumere += 1;
 }
 
-void Map::setThystame(int x, int y, bool value)
+void Map::delDeraumere(int x, int y)
 {
-    _tiles[x][y].thystame.second = value;
+    _tiles[x][y].deraumere.second -= 1;
+    _nbDeraumere -= 1;
 }
 
-void Map::setIsland(int x, int y, bool value)
+void Map::addSibur(int x, int y)
 {
-    _tiles[x][y].island.second = value;
+    _tiles[x][y].sibur.second += 1;
+    _nbSibur += 1;
 }
 
-void Map::setGrass(int x, int y, bool value)
+void Map::delSibur(int x, int y)
 {
-    _tiles[x][y].grass.second = value;
+    _tiles[x][y].sibur.second -= 1;
+    _nbSibur -= 1;
+}
+
+void Map::addMendiane(int x, int y)
+{
+    _tiles[x][y].mendiane.second += 1;
+    _nbMendiane += 1;
+}
+
+void Map::delMendiane(int x, int y)
+{
+    _tiles[x][y].mendiane.second -= 1;
+    _nbMendiane -= 1;
+}
+
+void Map::addPhiras(int x, int y)
+{
+    _tiles[x][y].phiras.second += 1;
+    _nbPhiras += 1;
+}
+
+void Map::delPhiras(int x, int y)
+{
+    _tiles[x][y].phiras.second -= 1;
+    _nbPhiras -= 1;
+}
+
+void Map::addThystame(int x, int y)
+{
+    _tiles[x][y].thystame.second += 1;
+    _nbThystame += 1;
+}
+
+void Map::delThystame(int x, int y)
+{
+    _tiles[x][y].thystame.second -= 1;
+    _nbThystame -= 1;
 }
 
 void Map::draw()
@@ -153,20 +284,16 @@ void Map::draw()
                 tile.food.first.drawWires({x * 10.0f + tile.food.first.getIslandPositionX(), 8.91f + scatter, z * 10.0f + tile.food.first.getIslandPositionZ()}, 0.1f, BLACK);
             }
             if (tile.linemate.second) {
-                tile.linemate.first.draw({x * 10.0f + tile.linemate.first.getIslandPositionX(), 9.8f + scatter, z * 10.0f + tile.linemate.first.getIslandPositionZ()}, 20.0f, WHITE);
-                tile.linemate.first.drawWires({x * 10.0f + tile.linemate.first.getIslandPositionX(), 9.8f + scatter, z * 10.0f + tile.linemate.first.getIslandPositionZ()}, 20.0f, BLACK);
+                tile.linemate.first.draw({x * 10.0f + tile.linemate.first.getIslandPositionX(), 8.9f + scatter, z * 10.0f + tile.linemate.first.getIslandPositionZ()}, 20.0f, WHITE);
+                tile.linemate.first.drawWires({x * 10.0f + tile.linemate.first.getIslandPositionX(), 8.9f + scatter, z * 10.0f + tile.linemate.first.getIslandPositionZ()}, 20.0f, BLACK);
             }
             if (tile.deraumere.second) {
-                tile.deraumere.first.draw({x * 10.0f + tile.deraumere.first.getIslandPositionX(), 9.8f + scatter, z * 10.0f + tile.deraumere.first.getIslandPositionZ()}, 20.0f, WHITE);
-                tile.deraumere.first.drawWires({x * 10.0f + tile.deraumere.first.getIslandPositionX(), 9.8f + scatter, z * 10.0f + tile.deraumere.first.getIslandPositionZ()}, 20.0f, BLACK);
+                tile.deraumere.first.draw({x * 10.0f + tile.deraumere.first.getIslandPositionX(), 8.9f + scatter, z * 10.0f + tile.deraumere.first.getIslandPositionZ()}, 20.0f, WHITE);
+                tile.deraumere.first.drawWires({x * 10.0f + tile.deraumere.first.getIslandPositionX(), 8.9f + scatter, z * 10.0f + tile.deraumere.first.getIslandPositionZ()}, 20.0f, BLACK);
             }
             if (tile.mendiane.second) {
-                tile.mendiane.first.draw({x * 10.0f + tile.mendiane.first.getIslandPositionX(), 9.8f + scatter, z * 10.0f + tile.mendiane.first.getIslandPositionZ()}, 300.0f, WHITE);
-                tile.mendiane.first.drawWires({x * 10.0f + tile.mendiane.first.getIslandPositionX(), 9.8f + scatter, z * 10.0f + tile.mendiane.first.getIslandPositionZ()}, 300.0f, BLACK);
-            }
-            if (tile.phiras.second) {
-                tile.phiras.first.draw({x * 10.0f + tile.phiras.first.getIslandPositionX(), 9.8f + scatter, z * 10.0f + tile.phiras.first.getIslandPositionZ()}, 300.0f, WHITE);
-                tile.phiras.first.drawWires({x * 10.0f + tile.phiras.first.getIslandPositionX(), 9.8f + scatter, z * 10.0f + tile.phiras.first.getIslandPositionZ()}, 300.0f, BLACK);
+                tile.mendiane.first.draw({x * 10.0f + tile.mendiane.first.getIslandPositionX(), 9.4f + scatter, z * 10.0f + tile.mendiane.first.getIslandPositionZ()}, 300.0f, WHITE);
+                tile.mendiane.first.drawWires({x * 10.0f + tile.mendiane.first.getIslandPositionX(), 9.4f + scatter, z * 10.0f + tile.mendiane.first.getIslandPositionZ()}, 300.0f, BLACK);
             }
             for (Egg egg : tile.eggs) {
                 egg.draw({x * 10.0f, 9.8f + scatter, z * 10.0f}, 5.0f, egg.getTeam().getTeamColor());
@@ -199,27 +326,33 @@ void Map::drawTransparent()
             if (tile.food.second && isSelected)
                 tile.food.first.drawWires({x * 10.0f + tile.food.first.getIslandPositionX(), 8.91f + scatter, z * 10.0f + tile.food.first.getIslandPositionZ()}, 0.1f, { 0, 0, 0, (unsigned char)alpha });
             if (tile.linemate.second && isSelected)
-                tile.linemate.first.drawWires({x * 10.0f + tile.linemate.first.getIslandPositionX(), 9.8f + scatter, z * 10.0f + tile.linemate.first.getIslandPositionZ()}, 20.0f, { 0, 0, 0, (unsigned char)alpha });
+                tile.linemate.first.drawWires({x * 10.0f + tile.linemate.first.getIslandPositionX(), 8.9f + scatter, z * 10.0f + tile.linemate.first.getIslandPositionZ()}, 20.0f, { 0, 0, 0, (unsigned char)alpha });
             if (tile.deraumere.second && isSelected)
-                tile.deraumere.first.drawWires({x * 10.0f + tile.deraumere.first.getIslandPositionX(), 9.8f + scatter, z * 10.0f + tile.deraumere.first.getIslandPositionZ()}, 20.0f, { 0, 0, 0, (unsigned char)alpha });
+                tile.deraumere.first.drawWires({x * 10.0f + tile.deraumere.first.getIslandPositionX(), 8.9f + scatter, z * 10.0f + tile.deraumere.first.getIslandPositionZ()}, 20.0f, { 0, 0, 0, (unsigned char)alpha });
             if (tile.sibur.second) {
                 if (isSelected)
-                    tile.sibur.first.drawWires({x * 10.0f + tile.sibur.first.getIslandPositionX(), 9.8f + scatter, z * 10.0f + tile.sibur.first.getIslandPositionZ()}, 55.0f, { 0, 0, 0, (unsigned char)alpha });
+                    tile.sibur.first.drawWires({x * 10.0f + tile.sibur.first.getIslandPositionX(), 8.9f + scatter, z * 10.0f + tile.sibur.first.getIslandPositionZ()}, 55.0f, { 0, 0, 0, (unsigned char)alpha });
                 else {
-                    tile.sibur.first.draw({x * 10.0f + tile.sibur.first.getIslandPositionX(), 9.8f + scatter, z * 10.0f + tile.sibur.first.getIslandPositionZ()}, 55.0f, {255, 255, 255, 127});
-                    tile.sibur.first.drawWires({x * 10.0f + tile.sibur.first.getIslandPositionX(), 9.8f + scatter, z * 10.0f + tile.sibur.first.getIslandPositionZ()}, 55.0f, BLACK);
+                    tile.sibur.first.draw({x * 10.0f + tile.sibur.first.getIslandPositionX(), 8.9f + scatter, z * 10.0f + tile.sibur.first.getIslandPositionZ()}, 55.0f, {255, 255, 255, 127});
+                    tile.sibur.first.drawWires({x * 10.0f + tile.sibur.first.getIslandPositionX(), 8.9f + scatter, z * 10.0f + tile.sibur.first.getIslandPositionZ()}, 55.0f, BLACK);
                 }
             }
             if (tile.mendiane.second && isSelected)
-                tile.mendiane.first.drawWires({x * 10.0f + tile.mendiane.first.getIslandPositionX(), 9.8f + scatter, z * 10.0f + tile.mendiane.first.getIslandPositionZ()}, 300.0f, { 0, 0, 0, (unsigned char)alpha });
-            if (tile.phiras.second && isSelected)
-                tile.phiras.first.drawWires({x * 10.0f + tile.phiras.first.getIslandPositionX(), 9.8f + scatter, z * 10.0f + tile.phiras.first.getIslandPositionZ()}, 300.0f, { 0, 0, 0, (unsigned char)alpha });
+                tile.mendiane.first.drawWires({x * 10.0f + tile.mendiane.first.getIslandPositionX(), 9.4f + scatter, z * 10.0f + tile.mendiane.first.getIslandPositionZ()}, 300.0f, { 0, 0, 0, (unsigned char)alpha });
+            if (tile.phiras.second) {
+                if (isSelected)
+                    tile.phiras.first.drawWires({x * 10.0f + tile.phiras.first.getIslandPositionX(), 9.3f + scatter, z * 10.0f + tile.phiras.first.getIslandPositionZ()}, 4.0f, { 0, 0, 0, (unsigned char)alpha });
+                else {
+                    tile.phiras.first.draw({x * 10.0f + tile.phiras.first.getIslandPositionX(), 9.3f + scatter, z * 10.0f + tile.phiras.first.getIslandPositionZ()}, 4.0f, {255, 255, 255, 200});
+                    tile.phiras.first.drawWires({x * 10.0f + tile.phiras.first.getIslandPositionX(), 9.3f + scatter, z * 10.0f + tile.phiras.first.getIslandPositionZ()}, 4.0f, BLACK);
+                }
+            }
             if (tile.thystame.second) {
                 if (isSelected)
-                    tile.thystame.first.drawWires({x * 10.0f + tile.thystame.first.getIslandPositionX(), 9.8f + scatter, z * 10.0f + tile.thystame.first.getIslandPositionZ()}, 20.0f, { 0, 0, 0, (unsigned char)alpha });
+                    tile.thystame.first.drawWires({x * 10.0f + tile.thystame.first.getIslandPositionX(), 8.9f + scatter, z * 10.0f + tile.thystame.first.getIslandPositionZ()}, 20.0f, { 0, 0, 0, (unsigned char)alpha });
                 else {
-                    tile.thystame.first.draw({x * 10.0f + tile.thystame.first.getIslandPositionX(), 9.8f + scatter, z * 10.0f + tile.thystame.first.getIslandPositionZ()}, 20.0f, {255, 255, 255, 200});
-                    tile.thystame.first.drawWires({x * 10.0f + tile.thystame.first.getIslandPositionX(), 9.8f + scatter, z * 10.0f + tile.thystame.first.getIslandPositionZ()}, 20.0f, BLACK);
+                    tile.thystame.first.draw({x * 10.0f + tile.thystame.first.getIslandPositionX(), 8.9f + scatter, z * 10.0f + tile.thystame.first.getIslandPositionZ()}, 20.0f, {255, 255, 255, 200});
+                    tile.thystame.first.drawWires({x * 10.0f + tile.thystame.first.getIslandPositionX(), 8.9f + scatter, z * 10.0f + tile.thystame.first.getIslandPositionZ()}, 20.0f, BLACK);
                 }
             }
             for (Egg egg : tile.eggs) {
@@ -232,11 +365,12 @@ void Map::drawTransparent()
     }
 }
 
-void Map::selectTile(Ray ray)
+bool Map::selectTile(Ray ray)
 {
     RayCollision closestCollision;
     closestCollision.distance = FLT_MAX;
     bool hasHit = false;
+    bool isSelected = false;
     double time = GetTime();
 
     for (int x = 0; x < _width; x++) {
@@ -269,14 +403,27 @@ void Map::selectTile(Ray ray)
                 };
 
                 RayCollision collision = GetRayCollisionBox(ray, box);
-                if (collision.hit && collision.distance == closestCollision.distance && tile.island.first.isSelected() == false)
+                if (collision.hit && collision.distance == closestCollision.distance && tile.island.first.isSelected() == false) {
                     tile.island.first.setSelected(true);
-                else
+                    isSelected = true;
+                } else
                     tile.island.first.setSelected(false);
             } else
                 _tiles[x][z].island.first.setSelected(false);
         }
     }
+    return isSelected;
+}
+
+Tile_t Map::getSelectedTile() const
+{
+    for (int x = 0; x < _width; x++) {
+        for (int z = 0; z < _height; z++) {
+            if (_tiles[x][z].island.first.isSelected())
+                return _tiles[x][z];
+        }
+    }
+    return _tiles[0][0];
 }
 
 void Map::unload()

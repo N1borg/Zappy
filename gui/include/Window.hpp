@@ -9,6 +9,7 @@
 
 #include "Parser/ParseArguments.hpp"
 #include "Socket.hpp"
+#include "Map.hpp"
 
 #include <raylib.h>
 #include <math.h>
@@ -61,6 +62,8 @@ class Window {
         void drawGrid(int slices, float spacing);
         void drawText(const char *text, int posX, int posY, int fontSize, Color color);
         void drawFPS(int posX, int posY);
+        void drawGeneralInfo(Map map);
+        void drawTileInfo(Tile_t tile);
  
         std::string animateTextDots(const std::string &string, float elapsedTime);
         int drawWaitingScreen(Socket &socket, ParseArguments &argsParser, bool isReconnecting);
