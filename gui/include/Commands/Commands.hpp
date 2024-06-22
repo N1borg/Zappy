@@ -12,9 +12,9 @@
 #include <string>
 
 class Commands {
-public:
-    Commands() = default;
-    ~Commands() = default;
+    public:
+        Commands() = default;
+        ~Commands() = default;
 
         void getMapSize(const std::string& params);
         void getPlayerPosition(const std::string& params);
