@@ -159,10 +159,15 @@ class AI:
 
         if response[0] == "[":
             if cmd == "Inventory":
+                
                 self.inventory = self.parse_inventory(response)
+                # print(f"_________INV {response} vs {self.inventory}")
             elif cmd == "Look":
-                if response != "[]":
-                    self.look = self.parse_look(response)
+                self.look = self.parse_look(response)
+                if self.look:
+                    self.prev_look = self.look
+                elif not self.look:
+                    self.look = self.prev_look
 
         elif response == "ko":
             if cmd in cmd_okko:
@@ -202,6 +207,9 @@ class AI:
             return 8
 
     def walk(self, tile_nb):
+        with self.lock:
+            self.queue = []
+        # print(self.queue)
         fwd_lvl = self.get_tile_lvl(tile_nb)
 
         for i in range(fwd_lvl):
@@ -224,69 +232,101 @@ class AI:
     def search_object(self, obj_string):
         # self.command("Look", "")
         # print(self.look if self.look else "heyr")
-        if self.look:
-            for i in range(0, len(self.look)):
-                if obj_string in self.look[i].keys():
-                    # returns a tile and quantity
-                    return i, self.look[i][obj_string]
+        for i in range(0, len(self.look)):
+            if obj_string in self.look[i].keys():
+                # returns a tile and quantity
+                return i, self.look[i][obj_string]
         return False, False
 
     def get_object(self, obj_name, amount):
         curr_fwd = 0
-        self.queue = []
+        with self.lock:
+            self.queue = []
         
         while self.inventory[obj_name] < amount:
             # self.queue = []
-            
-            self.command("Look", "")
-            print(self.look)
-            
-            if self.look:
-                if obj_name in self.look[0]:
-                    for i in range(self.look[0][obj_name]):
-                        self.command("Take", obj_name)
+            # print(self.look)
+            # self.command("Look", "")
+            # print(self.look)
+            # tile_nb, obj_nb = -1, -1
+            if self.grace.is_set():
+                with self.lock:
+                        self.queue = []
+                # print("Graceful shutdown initiated. Exiting get_object.")
+                break
+            if obj_name in self.look[0]:
+                with self.lock:
+                    self.queue = []
+                # print(f"____INV {self.inventory}")
+                for i in range(self.look[0][obj_name]):
+                    self.command("Take", obj_name)
+                # self.grace.wait(2.0)
+            # self.command("Inventory", "")
+            if self.inventory[obj_name] >= amount:
+                # print("here")
+                with self.lock:
+                    self.queue = []
+                break
+            if self.inventory['food'] < 4:
+                self.get_object('food', 7)
 
-            # if self.inventory['food'] < 4:
-            #     self.get_object('food', 7)
-
-            # tile_nb, obj_nb = self.search_object(obj_name)
-            # # print(tile_nb, obj_nb)
-            # if not tile_nb or not obj_nb:
-            #     if curr_fwd >= self.map_x or curr_fwd >= self.map_y:
-            #         # print("_______NO OBJ ROW")
-            #         self.command("Right", "")
-            #         for i in range(3):
-            #             self.command("Forward", "")
-            #         self.command("Left", "")
-            #         curr_fwd = 0
-            #     else:
-            #         # print("_______NO OBJ")
-            #         self.command("Forward", "")
-            #         curr_fwd += 1
-                    
-            # else:
-            #     # print("_______NORMAL")
-            #     self.queue = []
-            #     self.walk(tile_nb)
-            #     for i in range(obj_nb):
-            #         self.command("Take", obj_name)
-            #     # print(self.queue)
-            #     time.sleep(3)
-            # # self.command("Inventory", "")
-            # if self.inventory[obj_name] >= amount:
-                return
+            tile_nb, obj_nb = self.search_object(obj_name)
+            if tile_nb and obj_nb:
+                # print("_______NORMAL")
+                with self.lock:
+                    self.queue = []
+                self.walk(tile_nb)
+                for i in range(obj_nb):
+                    self.command("Take", obj_name)
+                    # self.command("Inventory", "")
+                # print(self.queue)
+                self.grace.wait(0.5)
+            # print(f"______________AMOUNT EXIT: {self.inventory[obj_name] >= amount} with {self.inventory[obj_name]} and {amount}\n_________WITH {self.inventory}") 
+            elif not tile_nb and not obj_nb:
+                if curr_fwd >= self.map_x or curr_fwd >= self.map_y:
+                    with self.lock:
+                        self.queue = []
+                    self.command("Right", "")
+                    # print("_______NO OBJ ROW")
+                    for i in range(3):
+                        self.command("Forward", "")
+                    self.command("Left", "")
+                    curr_fwd = 0
+                else:
+                    with self.lock:
+                        self.queue = []
+                        self.command("Forward", "")
+                    # print("_______NO OBJ")
+                    # self.command("Look", "")
+                    curr_fwd += 1
+            if self.inventory[obj_name] >= amount:
+                # print("___________HERE")
+                with self.lock:
+                    self.queue = []
+                break
+        with self.lock:
+            self.queue = []
             
     
     def incantate(self):
         # self.command("Look", "")
-        if self.level + 1 == 2 and self.proposed_incantation == False:
-            conditions_dict = incantation_levels[self.level + 1]
-            if self.inventory['linemate'] >= 1:
-                # print("Im going here without mom's permission")
-                self.command("Set", "linemate")
-                self.command("Incantation", "")
-                self.proposed_incantation = True
+        old_lvl = self.level
+        while True:
+            # if self.grace.is_set():
+            #     print("Graceful shutdown initiated. Exiting incantate.")
+            #     return
+            if self.level != old_lvl:
+                break
+            if self.level + 1 == 2 and self.proposed_incantation == False:
+                conditions_dict = incantation_levels[self.level + 1]
+                if self.inventory['linemate'] >= 1:
+                    # print("Im going here without mom's permission")
+                    self.command("Set", "linemate")
+                    self.command("Incantation", "")
+                    self.proposed_incantation = True
+            
                 # time.sleep(1)
+        print("BROKEEEEEEEEEEEE")
 
     def receive_management(self):
         while not self.grace.is_set():
@@ -299,7 +339,7 @@ class AI:
     def send_management(self):
         while not self.grace.is_set():
             with self.lock:
-                if len(self.sent_queue) < 2:
+                if len(self.sent_queue) < 3:
                     count = 2
                     while self.queue and count > 0: 
                         action = self.queue.pop()
@@ -322,11 +362,15 @@ class AI:
     def look_management(self):
         while not self.grace.is_set():
             # self.queue = []
-            self.command("Look", "")
+            # self.command("Look", "")
+            if "Look" not in self.sent_queue:
+                self.sent_queue.insert(0, "Look")
+                send_message(self.socket, "Look")
+            if "Inventory" not in self.sent_queue:
+                self.sent_queue.insert(0, "Inventory")
+                send_message(self.socket, "Inventory")
             self.grace.wait(0.1)
-            # print("CCCCCCCCCCccc")
-            # print(f"______QUEUE {queue}")
-            # time.sleep(2)
+
             if self.grace.is_set():
                 break
             
@@ -335,8 +379,8 @@ class AI:
         while not self.grace.is_set():
             self.command("Inventory", "")
             # self.command("Look", "")
-            self.grace.wait(0.01)
-            # time.sleep(2)
+            # self.grace.wait(0.3)
+            time.sleep(5)
             if self.grace.is_set():
                 break
     
@@ -344,11 +388,11 @@ class AI:
         t_send = threading.Thread(target=self.send_management, args=())
         t_receive = threading.Thread(target=self.receive_management, args=())
         t_look = threading.Thread(target=self.look_management, args=())
-        t_inv = threading.Thread(target=self.inv_management, args=())
+        # t_inv = threading.Thread(target=self.inv_management, args=())
 
         t_receive.start()
         t_send.start()
-        # t_look.start()
+        t_look.start()
         # t_inv.start()
         
         # active = threading.active_count()
@@ -356,29 +400,36 @@ class AI:
         # time.sleep(5)
         try:
             self.lvl2()
-            # self.command("Take", "linemate")
-            # self.command("Look", "")
-            # self.command("Forward","")
-            # time.sleep(5)
+        # try:
+        #     self.incantate()
+        #     # self.command("Take", "linemate")
+        #     # self.command("Look", "")
+        #     # self.command("Forward","")
+        #     # time.sleep(5)
             
         except KeyboardInterrupt:
             print("Interrupted by user. Stopping threads...")
-            self.stop()
         
         # t_inv.join()
-        # t_look.join()
+        # while not self.grace.is_set():
+        self.stop()
+        self.stop()
+        self.stop()
+        self.stop()
+        t_look.join()
         t_send.join()
         t_receive.join()
     
     def lvl2(self):
-        self.command("Look", "")
+        # self.command("Look", "")
+        while not self.look:
+            self.command("Look", "")
         self.get_object("linemate", 1)
-        # while True:
+        with self.lock:
+            self.queue = []
+  
         self.incantate()
-        #     # print("+++++ LVL ", self.level)
-        #     if self.incantation_done:
-        #         self.level = 2
-        #         # time.sleep(5)
-        #         return
-        # # t_receive.join()
+        print("_________EXIT")
+        return
+
 
