@@ -7,17 +7,10 @@
 
 #pragma once
 
-#include "IModel.hpp"
+#include "AModel.hpp"
 
-class Sibur : public IModel {
-    public:
-        Sibur(Model model);
-        ~Sibur() = default;
-
-        void draw(Vector3 position, float scale, Color tint) const override;
-        void setRotationY(float yRotation);
-
-    private:
-        Model _model;
-        float _yRotation;
+class Sibur : public AModel {
+public:
+    Sibur(Model model);
+    ~Sibur() = default;
 };

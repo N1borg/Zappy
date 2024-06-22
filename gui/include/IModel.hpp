@@ -15,5 +15,7 @@ public:
     virtual ~IModel() = default;
 
     virtual void draw(Vector3 position, float scale, Color tint) const = 0;
+    virtual void drawWires(Vector3 position, float scale, Color tint) const = 0;
+
     virtual void setRotationY(float yRotation) = 0;
 };

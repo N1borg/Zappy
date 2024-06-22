@@ -7,14 +7,14 @@
 
 #pragma once
 
-#include <functional>
-#include <unordered_map>
-#include <iostream>
-#include <string>
-
+#include "IParser.hpp"
 #include "Commands/Commands.hpp"
 
-class ParseCommands {
+#include <functional>
+#include <unordered_map>
+#include <string>
+
+class ParseCommands : public IParser {
     public:
         ParseCommands();
         ~ParseCommands() = default;

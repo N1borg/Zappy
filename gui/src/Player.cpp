@@ -7,17 +7,9 @@
 
 #include "Player.hpp"
 
-Player::Player(Model model) : _model(model) {}
+Player::Player(Model model) : AModel(model) {}
 
-void Player::draw(Vector3 position, float scale, Color tint) const
+void Player::setOrientation(Orientation orientation)
 {
-    Vector3 rotationAxis = {0, 1, 0};
-    Vector3 scaleVector = {scale, scale, scale};
-
-    DrawModelEx(_model, position, rotationAxis, _yRotation * RAD2DEG, scaleVector, tint);
-}
-
-void Player::setRotationY(float yRotation)
-{
-    this->_yRotation = yRotation;
+    this->_yRotation = static_cast<int>(orientation) * 90.0f;
 }

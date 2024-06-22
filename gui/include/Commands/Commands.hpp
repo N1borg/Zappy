@@ -5,8 +5,7 @@
 ** Commands
 */
 
-#ifndef COMMANDS_HPP_
-#define COMMANDS_HPP_
+#pragma once
 
 #include <iostream>
 #include <sstream>
@@ -42,5 +41,3 @@ class Commands {
         void getCommandParameter(const std::string& params);
         void getBroadcast(const std::string& params);
 };
-
-#endif /* !COMMANDS_HPP_ */

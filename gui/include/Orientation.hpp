@@ -2,15 +2,14 @@
 ** EPITECH PROJECT, 2024
 ** B-YEP-400-LIL-4-1-zappy-romaric.loevenbruck
 ** File description:
-** Food
+** Orientation
 */
 
 #pragma once
 
-#include "AModel.hpp"
-
-class Food : public AModel {
-public:
-    Food(Model model);
-    ~Food() = default;
+enum class Orientation {
+    North = 0,
+    East = 1,
+    South = 2,
+    West = 3
 };

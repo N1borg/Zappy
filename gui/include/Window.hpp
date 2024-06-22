@@ -7,12 +7,12 @@
 
 #pragma once
 
+#include "Parser/ParseArguments.hpp"
+#include "Socket.hpp"
+
 #include <raylib.h>
 #include <math.h>
 #include <string>
-
-#include "Parser/ParseArguments.hpp"
-#include "Socket.hpp"
 
 class Window {
     public:
@@ -26,8 +26,17 @@ class Window {
         void setTargetFPS(int fps);
         int getScreenWidth() const;
         int getScreenHeight() const;
+        void enableCursor();
         void disableCursor();
+        bool isCursorHidden();
         bool isKeyPressed(int key);
+        bool isKeyReleased(int key);
+        bool isKeyDown(int key);
+        bool isKeyUp(int key);
+        bool isMouseButtonPressed(int button);
+        bool isMouseButtonReleased(int button);
+        bool isMouseButtonDown(int button);
+        bool isMouseButtonUp(int button);
 
         // Raylib Camera functions
         Camera3D getCamera() const;
@@ -47,15 +56,15 @@ class Window {
         void beginMode3D();
         void endMode3D();
         void clearBackground(Color color);
+        void drawCrosshair();
         void drawPlane(Vector3 position, Vector2 size, Color color);
         void drawGrid(int slices, float spacing);
         void drawText(const char *text, int posX, int posY, int fontSize, Color color);
         void drawFPS(int posX, int posY);
-
+ 
         std::string animateTextDots(const std::string &string, float elapsedTime);
         int drawWaitingScreen(Socket &socket, ParseArguments &argsParser, bool isReconnecting);
         void drawConnection(bool isConnected, std::string ip, bool isReconnecting, int elapsedTime);
-
         void log(int level, const std::string &msg, ...);
 
     private:

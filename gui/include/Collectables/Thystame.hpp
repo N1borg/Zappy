@@ -7,17 +7,10 @@
 
 #pragma once
 
-#include "IModel.hpp"
+#include "AModel.hpp"
 
-class Thystame : public IModel {
-    public:
-        Thystame(Model model);
-        ~Thystame() = default;
-
-        void draw(Vector3 position, float scale, Color tint) const override;
-        void setRotationY(float yRotation);
-
-    private:
-        Model _model;
-        float _yRotation;
+class Thystame : public AModel {
+public:
+    Thystame(Model model);
+    ~Thystame() = default;
 };

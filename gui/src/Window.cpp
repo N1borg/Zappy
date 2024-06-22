@@ -60,14 +60,59 @@ int Window::getScreenHeight() const
     return GetScreenHeight();
 }
 
+void Window::enableCursor()
+{
+    EnableCursor();
+}
+
 void Window::disableCursor()
 {
     DisableCursor();
 }
 
+bool Window::isCursorHidden()
+{
+    return IsCursorHidden();
+}
+
 bool Window::isKeyPressed(int key)
 {
     return IsKeyPressed(key);
+}
+
+bool Window::isKeyReleased(int key)
+{
+    return IsKeyReleased(key);
+}
+
+bool Window::isKeyDown(int key)
+{
+    return IsKeyDown(key);
+}
+
+bool Window::isKeyUp(int key)
+{
+    return IsKeyUp(key);
+}
+
+bool Window::isMouseButtonPressed(int button)
+{
+    return IsMouseButtonPressed(button);
+}
+
+bool Window::isMouseButtonReleased(int button)
+{
+    return IsMouseButtonReleased(button);
+}
+
+bool Window::isMouseButtonDown(int button)
+{
+    return IsMouseButtonDown(button);
+}
+
+bool Window::isMouseButtonUp(int button)
+{
+    return IsMouseButtonUp(button);
 }
 
 Camera3D Window::getCamera() const
@@ -162,6 +207,20 @@ void Window::endMode3D()
 void Window::clearBackground(Color color)
 {
     ClearBackground(color);
+}
+
+void Window::drawCrosshair()
+{
+
+    int centerX = getScreenWidth() / 2;
+    int centerY = getScreenHeight() / 2;
+    int crosshairSize = 10; // Size of the crosshair lines
+    int crosshairThickness = 2; // Thickness of the crosshair lines
+
+    // Horizontal line
+    DrawRectangle(centerX - crosshairSize, centerY - crosshairThickness / 2, 2 * crosshairSize, crosshairThickness, {0, 0, 0, 127});
+    // Vertical line
+    DrawRectangle(centerX - crosshairThickness / 2, centerY - crosshairSize, crosshairThickness, 2 * crosshairSize, {0, 0, 0, 127});
 }
 
 void Window::drawPlane(Vector3 position, Vector2 size, Color color)
