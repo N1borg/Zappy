@@ -45,9 +45,8 @@ else()
     set(RAYLIB_LIB ${raylib_LIBRARIES})
 endif()
 
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_FLAGS "-W -Wall -Wextra -Wpedantic -Wshadow -Wformat=2 -Wformat-security -I ./include/")
 
+set(CMAKE_CXX_FLAGS "-W -Wall -Wextra -Wpedantic -Wshadow -Wformat=2 -Wformat-security -I ./include/")
 include_directories(include)
 
 set(SHARED_SRC

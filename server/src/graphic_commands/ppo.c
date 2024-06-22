@@ -14,13 +14,13 @@ int command_ppo(server_t *serv, client_t *client, char *arg)
     client_t *player = NULL;
 
     if (arg == NULL)
-        return 1;
+        return event_sbp(client);
     id = atoi(arg);
     if (id <= 0)
-        return 1;
+        return event_sbp(client);
     player = get_client_by_id(serv, id);
     if (player == NULL)
-        return 1;
+        return event_sbp(client);
     dprintf(client->fd, "ppo %d %d %d %d\n", player->id,
         player->x, player->y, player->orientation);
     return 0;

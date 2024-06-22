@@ -44,16 +44,21 @@ typedef struct command_map {
     int time_limit;
 } command_map_t;
 
+typedef struct command_time {
+    const char *command;
+    int time_limit;
+} command_time_t;
+
 int help(char *binary_name, int ret, server_t *serv);
 server_t parse_args(int argc, char *argv[]);
-int start_listener(server_t *serv);
+void start_listener(server_t *serv);
 int init_socket(server_t *serv);
 int init_listener(server_t *serv);
 void accept_client(server_t *serv);
 void disconnect_client(server_t *serv, client_t *client);
 void destroy_map(tile_t **map);
 void init_server(server_t *serv);
-void compute_response(server_t *serv, client_t *client, char *buffer);
+void compute_response(server_t *serv, client_t *client, char *buffer, int time);
 int is_team(server_t *serv, char *team_name);
 int is_player(server_t *serv, int socket);
 int tablen(team_t **tab);
@@ -74,10 +79,10 @@ int get_nbr_eggs_on_tile(tile_t *tile);
 egg_t *add_egg(team_t *team, tile_t *tile);
 int remove_egg(egg_t *egg);
 int destroy_eggs_from_tiles(server_t *server, tile_t *tile);
-void destroy_eggs(server_t *serv);
+void destroy_eggs_pointer(egg_t *eggs);
 void init_command_queue(client_t *client);
 int enqueue_command(client_t *client, char *command_str);
-char *dequeue_command(command_queue_t *queue);
+command_t *dequeue_command(command_queue_t *queue);
 void free_command_queue(command_queue_t *queue);
 void manage_queue(client_t *client, char *buffer);
 
@@ -121,7 +126,7 @@ void event_pfk(server_t *serv, client_t *player);
 void event_pgt(server_t *serv, client_t *player, int ressource);
 void event_pnw(server_t *serv, client_t *player);
 void event_pie(server_t *serv, client_t *player, char *result);
-void event_sbp(client_t *client);
+int event_sbp(client_t *client);
 void event_seg(server_t *serv, char *team);
 void event_smg(server_t *serv, char *msg);
 void event_suc(client_t *client);

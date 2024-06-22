@@ -11,7 +11,7 @@
 int command_tna(server_t *serv, client_t *client, char *arg)
 {
     if (arg != NULL)
-        return 1;
+        return event_sbp(client);
     for (int i = 0; serv->teams[i] != NULL
         && strcmp(serv->teams[i]->name, "GRAPHIC") != 0; i++) {
         dprintf(client->fd, "tna %s\n", serv->teams[i]->name);
