@@ -181,6 +181,15 @@ Color Map::getTeamColor(std::string team) const
     return WHITE;
 }
 
+Team Map::getTeamByPlayerId(int id) const
+{
+    for (Player p : _players) {
+        if (p.getId() == id)
+            return p.getTeam();
+    }
+    return _teams[0];
+}
+
 void Map::addPlayer(int id, int x, int y, Orientation orientation, int level, std::string team)
 {
     for (Player p : _tiles[x][y].players) {

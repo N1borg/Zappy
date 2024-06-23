@@ -88,7 +88,7 @@ std::string Socket::receiveMessage()
         // tv.tv_sec = 0;
         // tv.tv_usec = 0;
 
-        retval = select(_clientSocket + 1, &readfds, 0, 0, NULL);// &tv);
+        retval = select(_clientSocket + 1, &readfds, 0, 0, 0);// &tv);
         if (retval != -1 && FD_ISSET(_clientSocket, &readfds)) {
             ssize_t bytesReceived = recv(_clientSocket, buffer, 1024, 0);
             if (bytesReceived == -1) {
@@ -113,9 +113,10 @@ void Socket::attemptConnection()
     }
 }
 
-void Socket::startThread()
+void Socket::startThread(std::shared_ptr<Map> map)
 {
     _threadRunning = true;
+    _map = map;
     _thread = std::thread(&Socket::readThread, this);
 }
 
@@ -149,7 +150,7 @@ void Socket::readThread()
             if (message.empty())
                 _connected = false;
             else
-                cmdParser.parse(message);
+                cmdParser.parse(message, _map);
         }
     }
 }

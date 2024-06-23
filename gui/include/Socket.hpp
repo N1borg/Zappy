@@ -34,7 +34,7 @@ public:
     void attemptConnection();
 
     // Thread
-    void startThread();
+    void startThread(std::shared_ptr<Map> map);
     void stopThread();
     void readThread();
 private:
@@ -44,4 +44,5 @@ private:
     std::atomic<bool> _connected;
     std::atomic<bool> _threadRunning;
     std::thread _thread;
+    std::shared_ptr<Map> _map;
 };

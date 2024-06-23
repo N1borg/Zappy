@@ -10,34 +10,37 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <memory>
+
+class Map;
 
 class Commands {
     public:
         Commands() = default;
         ~Commands() = default;
 
-        void getMapSize(const std::string& params);
-        void getPlayerPosition(const std::string& params);
-        void getTileContent(const std::string& params);
-        void getTeamsName(const std::string& params);
-        void getConnectionNewPlayer(const std::string& params);
-        void getPlayerLevel(const std::string& params);
-        void getPlayerInventory(const std::string& params);
-        void getExpulsion(const std::string& params);
-        void getStartOfIncantation(const std::string& params);
-        void getEndOfIncantation(const std::string& params);
-        void getLayingEggByPlayer(const std::string& params);
-        void getResourceDropping(const std::string& params);
-        void getResourceCollecting(const std::string& params);
-        void getPlayerDeath(const std::string& params);
-        void getEggLaidByPlayer(const std::string& params);
-        void getPlayerConnectionInEgg(const std::string& params);
-        void getEggDeath(const std::string& params);
-        void getTimeUnitRequest(const std::string& params);
-        void getTimeUnitModification(const std::string& params);
-        void getEndOfGame(const std::string& params);
-        void getServerMessage(const std::string& params);
-        void getUnknownCommand(const std::string& params);
-        void getCommandParameter(const std::string& params);
-        void getBroadcast(const std::string& params);
+        void getMapSize(const std::string &params, std::shared_ptr<Map> &map);
+        void getPlayerPosition(const std::string &params, std::shared_ptr<Map> &map);
+        void getTileContent(const std::string &params, std::shared_ptr<Map> &map);
+        void getTeamsName(const std::string &params, std::shared_ptr<Map> &map);
+        void getConnectionNewPlayer(const std::string &params, std::shared_ptr<Map> &map);
+        void getPlayerLevel(const std::string &params, std::shared_ptr<Map> &map);
+        void getPlayerInventory(const std::string &params, std::shared_ptr<Map> &map);
+        void getExpulsion(const std::string &params, std::shared_ptr<Map> &map);
+        void getStartOfIncantation(const std::string &params, std::shared_ptr<Map> &map);
+        void getEndOfIncantation(const std::string &params, std::shared_ptr<Map> &map);
+        void getLayingEggByPlayer(const std::string &params, std::shared_ptr<Map> &map);
+        void getResourceDropping(const std::string &params, std::shared_ptr<Map> &map);
+        void getResourceCollecting(const std::string &params, std::shared_ptr<Map> &map);
+        void getPlayerDeath(const std::string &params, std::shared_ptr<Map> &map);
+        void getEggLaidByPlayer(const std::string &params, std::shared_ptr<Map> &map);
+        void getPlayerConnectionInEgg(const std::string &params, std::shared_ptr<Map> &map);
+        void getEggDeath(const std::string &params, std::shared_ptr<Map> &map);
+        void getTimeUnitRequest(const std::string &params, std::shared_ptr<Map> &map);
+        void getTimeUnitModification(const std::string &params, std::shared_ptr<Map> &map);
+        void getEndOfGame(const std::string &params, std::shared_ptr<Map> &map);
+        void getServerMessage(const std::string &params, std::shared_ptr<Map> &map);
+        void getUnknownCommand(const std::string &params, std::shared_ptr<Map> &map);
+        void getCommandParameter(const std::string &params, std::shared_ptr<Map> &map);
+        void getBroadcast(const std::string &params, std::shared_ptr<Map> &map);
 };

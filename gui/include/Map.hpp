@@ -80,6 +80,7 @@ public:
     Tile_t getTile(int x, int y) const;
     std::vector<Team> getTeams() const;
     Color getTeamColor(std::string team) const;
+    Team getTeamByPlayerId(int id) const;
     void addPlayer(int id, int x, int y, Orientation orientation, int level, std::string team);
     void movePlayer(int id, int x, int y, Orientation orientation);
     void delPlayer(int id);

@@ -35,7 +35,7 @@ ParseCommands::ParseCommands()
     _commandMap["sbp"] = &Commands::getCommandParameter;
 }
 
-void ParseCommands::parse(std::string msg)
+void ParseCommands::parse(std::string msg, std::shared_ptr<Map> &map)
 {
     std::string command, params;
     size_t pos = msg.find(' ');
@@ -47,7 +47,7 @@ void ParseCommands::parse(std::string msg)
 
     auto it = _commandMap.find(command);
     if (it != _commandMap.end())
-        std::invoke(it->second, Commands(), params);
+        std::invoke(it->second, Commands(), params, map);
     else
         std::cerr << "Commande inconnue: " << command << std::endl;
 }
