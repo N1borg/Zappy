@@ -22,15 +22,9 @@ void Commands::getMapSize(const std::string &params, Game &game)
     int width, height;
     iss >> width >> height;
 
-    // try {
-    //     // msg >> mapSz >> mapWidthStr >> mapHeightStr;
-    //     // mapWidth = std::stoi(mapWidthStr);
-    //     // mapHeight = std::stoi(mapHeightStr);
-    // } catch (const std::exception &e) {
-    //     window.log(LOG_ERROR, "INIT: Invalid map size");
-    //     window.close();
-    //     return 84;
-    // }
+    game.getMap()->setWidth(width);
+    game.getMap()->setHeight(height);
+    game.setMapSizeReceived(true);
     std::cout << "Map size: " << width << "x" << height << std::endl;
 }
 

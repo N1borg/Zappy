@@ -8,10 +8,11 @@
 #ifndef GAME_HPP_
 #define GAME_HPP_
 
-#include <Window.hpp>
-#include <Socket.hpp>
-#include <Map.hpp>
+#include "Window.hpp"
+#include "Socket.hpp"
+#include "Map.hpp"
 #include "Commands/Commands.hpp"
+#include "RaylibWrapper.hpp"
 
 class Game {
     public:
@@ -22,6 +23,7 @@ class Game {
         // Other
         void init();
         void stop();
+        void render(float elapsedTime);
 
         // Getters
         Window *getWindow();
@@ -39,6 +41,7 @@ class Game {
         bool _isError = false;
         bool _welcomeReceived = false;
         bool _mapSizeReceived = false;
+        bool _isConnected = false;
 };
 
 #endif /* !GAME_HPP_ */

@@ -20,100 +20,13 @@ Window::Window(int width, int height, std::string title)
     setCameraMode(CAMERA_FREE);
 }
 
-void Window::log(int level, const std::string &msg, ...)
-{
-    va_list args;
-    va_start(args, msg);
-    TraceLog(level, msg.c_str(), args);
-    va_end(args);
-}
-
 void Window::init()
 {
-    SetTargetFPS(144);
-    SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_MSAA_4X_HINT | FLAG_VSYNC_HINT);
-    InitWindow(_width, _height, _title.c_str());
+    RaylibWrapper::setTargetFPS(144);
+    RaylibWrapper::setConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_MSAA_4X_HINT | FLAG_VSYNC_HINT);
+    RaylibWrapper::initWindow(_width, _height, _title.c_str());
 }
 
-void Window::close()
-{
-    CloseWindow();
-}
-
-bool Window::shouldClose()
-{
-    return WindowShouldClose();
-}
-
-void Window::setTargetFPS(int fps)
-{
-    SetTargetFPS(fps);
-}
-
-int Window::getScreenWidth() const
-{
-    return GetScreenWidth();
-}
-
-int Window::getScreenHeight() const
-{
-    return GetScreenHeight();
-}
-
-void Window::enableCursor()
-{
-    EnableCursor();
-}
-
-void Window::disableCursor()
-{
-    DisableCursor();
-}
-
-bool Window::isCursorHidden()
-{
-    return IsCursorHidden();
-}
-
-bool Window::isKeyPressed(int key)
-{
-    return IsKeyPressed(key);
-}
-
-bool Window::isKeyReleased(int key)
-{
-    return IsKeyReleased(key);
-}
-
-bool Window::isKeyDown(int key)
-{
-    return IsKeyDown(key);
-}
-
-bool Window::isKeyUp(int key)
-{
-    return IsKeyUp(key);
-}
-
-bool Window::isMouseButtonPressed(int button)
-{
-    return IsMouseButtonPressed(button);
-}
-
-bool Window::isMouseButtonReleased(int button)
-{
-    return IsMouseButtonReleased(button);
-}
-
-bool Window::isMouseButtonDown(int button)
-{
-    return IsMouseButtonDown(button);
-}
-
-bool Window::isMouseButtonUp(int button)
-{
-    return IsMouseButtonUp(button);
-}
 
 Camera3D Window::getCamera() const
 {
@@ -155,14 +68,9 @@ void Window::setCameraProjection(int projection)
     _camera.projection = projection;
 }
 
-void Window::updateCamera()
-{
-    UpdateCamera(&_camera, getCameraMode());
-}
-
 void Window::parseCameraInputs()
 {
-    switch (GetKeyPressed()) {
+    switch (RaylibWrapper::getKeyPressed()) {
         case KEY_ONE:
             setCameraMode(CAMERA_FIRST_PERSON);
             setCameraUp({ 0.0f, 1.0f, 0.0f });
@@ -184,63 +92,16 @@ void Window::parseCameraInputs()
     }
 }
 
-void Window::beginDrawing()
-{
-    BeginDrawing();
-}
-
-void Window::endDrawing()
-{
-    EndDrawing();
-}
-
-void Window::beginMode3D()
-{
-    BeginMode3D(_camera);
-}
-
-void Window::endMode3D()
-{
-    EndMode3D();
-}
-
-void Window::clearBackground(Color color)
-{
-    ClearBackground(color);
-}
-
 void Window::drawCrosshair()
 {
 
-    int centerX = getScreenWidth() / 2;
-    int centerY = getScreenHeight() / 2;
-    int crosshairSize = 10; // Size of the crosshair lines
-    int crosshairThickness = 2; // Thickness of the crosshair lines
+    int centerX = RaylibWrapper::getScreenWidth() / 2;
+    int centerY = RaylibWrapper::getScreenHeight() / 2;
+    int crosshairSize = 10;
+    int crosshairThickness = 2;
 
-    // Horizontal line
-    DrawRectangle(centerX - crosshairSize, centerY - crosshairThickness / 2, 2 * crosshairSize, crosshairThickness, {0, 0, 0, 127});
-    // Vertical line
-    DrawRectangle(centerX - crosshairThickness / 2, centerY - crosshairSize, crosshairThickness, 2 * crosshairSize, {0, 0, 0, 127});
-}
-
-void Window::drawPlane(Vector3 position, Vector2 size, Color color)
-{
-    DrawPlane(position, size, color);
-}
-
-void Window::drawGrid(int slices, float spacing)
-{
-    DrawGrid(slices, spacing);
-}
-
-void Window::drawText(const char *text, int posX, int posY, int fontSize, Color color)
-{
-    DrawText(text, posX, posY, fontSize, color);
-}
-
-void Window::drawFPS(int posX, int posY)
-{
-    DrawFPS(posX, posY);
+    RaylibWrapper::drawRectangle(centerX - crosshairSize, centerY - crosshairThickness / 2, 2 * crosshairSize, crosshairThickness, {0, 0, 0, 127});
+    RaylibWrapper::drawRectangle(centerX - crosshairThickness / 2, centerY - crosshairSize, crosshairThickness, 2 * crosshairSize, {0, 0, 0, 127});
 }
 
 std::string Window::animateTextDots(const std::string &string, float elapsedTime)
@@ -250,43 +111,46 @@ std::string Window::animateTextDots(const std::string &string, float elapsedTime
     return string + dots;
 }
 
-void Window::drawConnectionText(bool isConnected, std::string ip, bool isReconnecting, int elapsedTime)
+void Window::drawConnectionText(std::string ip, bool isReconnecting, int elapsedTime)
 {
-    Color color = isConnected ? GREEN : DARKGRAY;
-    std::string connectStatus = isConnected ? "Connected to " : "Connecting to ";
-    std::string connectDots = animateTextDots(connectStatus + ip, elapsedTime);
-    std::string reconnecting = "Connection lost, reconnecting";
+    std::string connectStatus = "Connecting to " + ip;
+    std::string displayText = isReconnecting ? "Connection lost to " + ip : connectStatus;
+    std::string animatedText = animateTextDots(displayText, elapsedTime);
+    Color displayColor = isReconnecting ? RED : DARKGRAY;
 
-    beginDrawing();
-    clearBackground(RAYWHITE);
+    RaylibWrapper::beginDrawing();
+    RaylibWrapper::clearBackground(RAYWHITE);
 
-    drawText(connectDots.c_str(), (getScreenWidth() - MeasureText((connectStatus + ip + "...").c_str(), 20)) / 2, (getScreenHeight() - 20) / 2, 20, color);
-
-    // If reconnecting, display a message
-    if (isReconnecting) {
-        connectDots = animateTextDots(reconnecting, elapsedTime);
-        drawText(connectDots.c_str(), (getScreenWidth() - MeasureText("Connection lost, reconnecting...", 20)) / 2, (getScreenHeight() - 20) / 2 + 40, 20, RED);
-    }
-    endDrawing();
+    int textWidth = RaylibWrapper::measureText(animatedText.c_str(), 20);
+    RaylibWrapper::drawText(animatedText.c_str(), (RaylibWrapper::getScreenWidth() - textWidth) / 2, (RaylibWrapper::getScreenHeight() - 20) / 2, 20, displayColor);
+    RaylibWrapper::endDrawing();
 }
 
-int Window::drawWaitingScreen(Socket &socket, std::string ip, bool isReconnecting = false)
+int Window::waitingConnection(Socket &socket, std::string ip, bool isReconnecting = false)
 {
-    std::thread connectionThread(&Socket::attemptConnection, &socket);
+    std::thread connectionThread;
+    if (!connectionThread.joinable())
+        connectionThread = std::thread(&Socket::attemptConnection, &socket);
+
     float elapsedTime = 0.0f;
-
-    while (!socket.isConnected()) {
-        if (shouldClose()) {
-            connectionThread.detach();
-            return 0;
-        }
-        elapsedTime += GetFrameTime();
-        drawConnectionText(false, ip, isReconnecting, elapsedTime);
+    while (!socket.isConnected() && !RaylibWrapper::shouldClose()) {
+        elapsedTime += RaylibWrapper::getFrameTime();
+        drawConnectionText(ip, isReconnecting, elapsedTime);
     }
-    connectionThread.join();
-    drawConnectionText(true, ip, isReconnecting, elapsedTime);
 
+    connectionThread.join();
     if (socket.isConnected())
         return 1;
     return 0;
+}
+
+void Window::waitingScreen(float elapsedTime)
+{
+    RaylibWrapper::beginDrawing();
+    RaylibWrapper::clearBackground(RAYWHITE);
+
+    std::string animatedTxt = animateTextDots("Waiting to server", elapsedTime);
+    int textWidth = RaylibWrapper::measureText(animatedTxt.c_str(), 20);
+    RaylibWrapper::drawText(animatedTxt.c_str(), (RaylibWrapper::getScreenWidth() - textWidth) / 2, RaylibWrapper::getScreenHeight() / 2, 20, GREEN);
+    RaylibWrapper::endDrawing();
 }

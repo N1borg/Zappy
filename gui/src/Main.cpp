@@ -48,13 +48,16 @@ int main(int argc, char *argv[])
     // // map.setPhiras(5, 5, true);
     // // map.setThystame(6, 6, true);
 
-    while (!game.getWindow()->shouldClose()) {
-        // Check socket disconnection
+    float elapsedTime = 0.0f;
+    while (!RaylibWrapper::shouldClose()) {
         if (!socket.isConnected()) {
-            game.getWindow()->log(LOG_ERROR, "Connection lost");
-            if (!game.getWindow()->drawWaitingScreen(socket, parser.getMachine(), true))
+            RaylibWrapper::log(LOG_ERROR, "Connection lost");
+            if (!game.getWindow()->waitingConnection(socket, parser.getMachine(), true))
                 break;
         }
+
+        game.render(elapsedTime);
+        elapsedTime += RaylibWrapper::getFrameTime();
 
     //     // if (window.isMouseButtonPressed(MOUSE_LEFT_BUTTON) || window.isKeyPressed(KEY_ENTER))
     //     //     map.selectTile(GetMouseRay({window.getScreenWidth() / 2.0f, window.getScreenHeight() / 2.0f}, window.getCamera()));

@@ -18,15 +18,29 @@ void Game::init()
     _window->init();
     _socket->startThread(this);
 
-    if (!_window->drawWaitingScreen(*_socket, _socket->getMachine(), false))
+    if (!_window->waitingConnection(*_socket, _socket->getMachine(), false))
         _isError = true;
 }
 
 void Game::stop()
 {
+    RaylibWrapper::closeWindow();
     _socket->stopThread();
-    _window->close();
     _map->unload();
+}
+
+void Game::render(float elapsedTime)
+{
+    RaylibWrapper::beginDrawing();
+    RaylibWrapper::clearBackground(RAYWHITE);
+
+    if (!_welcomeReceived || !_mapSizeReceived) {
+        _window->waitingScreen(elapsedTime);
+    } else {
+        _map->draw();
+    }
+
+    RaylibWrapper::endDrawing();
 }
 
 Window *Game::getWindow()
