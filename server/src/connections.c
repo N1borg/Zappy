@@ -37,18 +37,6 @@ void client_handler(server_t *serv, client_t *client)
     }
 }
 
-// Execute the commands in the queue of the clients
-void execute_queue(server_t *serv, client_t *client)
-{
-    command_t *command  = dequeue_command(client->command_queue);
-
-    if (command != NULL) {
-        compute_response(serv, client, command->command, command->time);
-        free(command->command);
-        free(command);
-    }
-}
-
 // Start the server and listen for incoming connections
 void start_listener(server_t *serv)
 {
@@ -56,20 +44,20 @@ void start_listener(server_t *serv)
     int max_sd = 0;
 
     printf("Listening on port %d...\n", serv->port);
-    while (true) {
+    clock_gettime(CLOCK_REALTIME, &serv->start);
+    while (check_game_end(serv) == 0) {
         FD_ZERO(&serv->readfds);
         FD_SET(serv->master_socket, &serv->readfds);
         max_sd = serv->master_socket;
         add_child_socket(serv, &sd, &max_sd);
-        if ((select((max_sd + 1), &serv->readfds, NULL, NULL, NULL) < 0)
+        if ((select((max_sd + 1), &serv->readfds, NULL, NULL, &serv->timeout) < 0)
             && (errno != EINTR))
             printf("Select error");
         if (FD_ISSET(serv->master_socket, &serv->readfds))
             accept_client(serv);
-        for (int i = 0; i < MAX_CLIENTS; i++) {
-            sd = serv->clients[i]->fd;
-            client_handler(serv, serv->clients[i]);
-            execute_queue(serv, serv->clients[i]);
-        }
+        clock_gettime(CLOCK_REALTIME, &serv->current);
+        serv->elapsed_time = (serv->current.tv_sec - serv->start.tv_sec) *
+            1000000000 + (serv->current.tv_nsec - serv->start.tv_nsec);
+        elapse_time(serv, &sd);
     }
 }
