@@ -118,14 +118,14 @@ std::string Window::animateTextDots(const std::string &string, float elapsedTime
 void Window::drawConnectionText(std::string ip, bool isReconnecting, int elapsedTime)
 {
     std::string connectStatus = "Connecting to " + ip;
-    std::string displayText = isReconnecting ? "Connection lost to " + ip : connectStatus;
+    std::string displayText = isReconnecting ? "Connection lost: " + ip: connectStatus;
     std::string animatedText = animateTextDots(displayText, elapsedTime);
     Color displayColor = isReconnecting ? RED : DARKGRAY;
 
     RaylibWrapper::beginDrawing();
     RaylibWrapper::clearBackground(RAYWHITE);
 
-    int textWidth = RaylibWrapper::measureText(animatedText.c_str(), 20);
+    int textWidth = RaylibWrapper::measureText(isReconnecting ? ("Connection lost: " + ip).c_str(): connectStatus.c_str(), 20);
     RaylibWrapper::drawText(animatedText.c_str(), (RaylibWrapper::getScreenWidth() - textWidth) / 2, (RaylibWrapper::getScreenHeight() - 20) / 2, 20, displayColor);
     RaylibWrapper::endDrawing();
 }
@@ -153,8 +153,8 @@ void Window::waitingScreen(float elapsedTime)
     RaylibWrapper::beginDrawing();
     RaylibWrapper::clearBackground(RAYWHITE);
 
-    std::string animatedTxt = animateTextDots("Waiting to server", elapsedTime);
-    int textWidth = RaylibWrapper::measureText(animatedTxt.c_str(), 20);
+    std::string animatedTxt = animateTextDots("Waiting for server", elapsedTime);
+    int textWidth = RaylibWrapper::measureText("Waiting for server...", 20);
     RaylibWrapper::drawText(animatedTxt.c_str(), (RaylibWrapper::getScreenWidth() - textWidth) / 2, RaylibWrapper::getScreenHeight() / 2, 20, GREEN);
     RaylibWrapper::endDrawing();
 }
@@ -163,5 +163,5 @@ void Window::playMusic(const char *path)
 {
     _music = RaylibWrapper::loadMusicStream(path);
     RaylibWrapper::playMusicStream(_music);
-    RaylibWrapper::setMusicVolume(_music, 0.1f);
+    RaylibWrapper::setMusicVolume(_music, 10.0f);
 }
