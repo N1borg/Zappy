@@ -51,7 +51,7 @@ void elapse_time(server_t *serv, int *sd, struct timespec *start)
     clock_gettime(CLOCK_REALTIME, &current);
     elapsed_time = (current.tv_sec - start->tv_sec) *
         1000000000 + (current.tv_nsec - start->tv_nsec);
-    if (elapsed_time < serv->interval)
+    if (elapsed_time < 1000000000 / serv->freq)
         return;
     for (int i = 0; i < MAX_CLIENTS; i++) {
         if (serv->clients[i]->fd <= 0)

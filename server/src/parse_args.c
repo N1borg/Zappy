@@ -41,10 +41,8 @@ void get_param(server_t *serv, int argc, char *argv[])
             serv->width = atoi(argv[i + 1]);
         if (strcmp(argv[i], "-y") == 0 && argv[i + 1] != NULL)
             serv->height = atoi(argv[i + 1]);
-        if (strcmp(argv[i], "-f") == 0 && argv[i + 1] != NULL) {
+        if (strcmp(argv[i], "-f") == 0 && argv[i + 1] != NULL)
             serv->freq = atoi(argv[i + 1]);
-            serv->interval = 1000000000 / serv->freq;
-        }
         if (strcmp(argv[i], "-c") == 0 && argv[i + 1] != NULL)
             serv->max_client_team = atoi(argv[i + 1]);
         if (strcmp(argv[i], "-n") == 0 && argv[i + 1] != NULL) {
