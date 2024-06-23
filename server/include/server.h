@@ -58,7 +58,8 @@ void accept_client(server_t *serv);
 void disconnect_client(server_t *serv, client_t *client);
 void destroy_map(tile_t **map);
 void init_server(server_t *serv);
-void compute_response(server_t *serv, client_t *client, char *buffer, int time);
+void compute_response(server_t *serv, client_t *client,
+    char *buffer, int time);
 int is_team(server_t *serv, char *team_name);
 int is_player(server_t *serv, int socket);
 int tablen(team_t **tab);

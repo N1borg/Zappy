@@ -85,6 +85,7 @@ static void set_client_pos(server_t *s, client_t *client)
     team_t *team = (*s).teams[get_team_id(s, (*client).team)];
     egg_t *egg = get_random_egg(team);
 
+    client->orientation = (rand() % 4) + 1;
     client->x = egg->tile->x;
     client->y = egg->tile->y;
     remove_egg(egg);
@@ -97,20 +98,20 @@ int init_client(server_t *s, client_t *client, char *team_name)
 
     if (client->team != NULL)
         return 1;
-    if (strcmp(team_name, "GRAPHIC") == 0) {
-        if (add_graphic_to_team(s, client))
+    if (strcmp(team_name, "GRAPHIC") == 0 && add_graphic_to_team(s, client))
             return 1;
-    } else if (add_player_to_team(s, client, team_name) == 0) {
-        for (; i < MAX_CLIENTS && s->map[client->y][client->x].players[i]; i++);
+    if (strcmp(team_name, "GRAPHIC") != 0) {
+        if (add_player_to_team(s, client, team_name) == 0)
+            return 1;
+        for (; i < MAX_CLIENTS &&
+            s->map[client->y][client->x].players[i]; i++);
         if (i == MAX_CLIENTS)
             return 1;
         set_client_pos(s, client);
         s->map[client->y][client->x].players[i] = client;
-        client->orientation = (rand() % 4) + 1;
         dprintf(client->fd, "%d\n",
             s->teams[get_team_id(s, client->team)]->free_slots);
         dprintf(client->fd, "%d %d\n", s->width, s->height);
-    } else
-        return 1;
+    }
     return 0;
 }
