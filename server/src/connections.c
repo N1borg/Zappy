@@ -52,7 +52,7 @@ void start_listener(server_t *serv)
         add_child_socket(serv, &sd, &max_sd);
         if ((select((max_sd + 1), &serv->readfds, NULL, NULL,
             &serv->timeout) < 0) && (errno != EINTR))
-            printf("Select error");
+            perror("Select error");
         if (FD_ISSET(serv->master_socket, &serv->readfds))
             accept_client(serv);
         clock_gettime(CLOCK_REALTIME, &serv->current);
