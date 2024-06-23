@@ -47,7 +47,6 @@ incantation_levels = {
 
 class AI:
     def __init__(self, teamname, socket, c_nbr, map_x, map_y):
-        # Initial arguments
         self.socket = socket
         self.team = teamname
         self.connect_nbr = c_nbr
@@ -57,6 +56,7 @@ class AI:
 
         self.level = 1
         self.inventory = {"food": 10, "linemate": 0, "deraumere": 0, "sibur": 0, "mendiane": 0, "phiras": 0, "thystame": 0}
+        self.shared_inventory = self.inventory
         self.look = []
         self.prev_look = self.look
 
@@ -76,6 +76,7 @@ class AI:
         
         self.lock = threading.Lock()
         self.grace = threading.Event()
+        self.cancel_get = False
 
     def parse_look(self, look_str):
         look_str = look_str.strip('[]')
@@ -99,6 +100,18 @@ class AI:
 
         result_dict = {key: int(value) for key, value in pairs}
         return result_dict
+    
+    def sum_dictionaries(self, dict1, dict2):
+        result = {}
+        for key in dict1:
+            if key in dict2:
+                result[key] = dict1[key] + dict2[key]
+            else:
+                result[key] = dict1[key]
+        for key in dict2:
+            if key not in result:
+                result[key] = dict2[key]
+        return result
 
     def broadcast_receive(self, response):
         inc_list = ["inc2", "inc3", "inc4", "inc5", "inc6", "inc7"]
@@ -115,7 +128,6 @@ class AI:
             message = ""
             print(f"Error: {e}")
 
-        print(f"________________DIR {self.direction}")
         int(self.direction)
         message = message.split("/!/")
         if isinstance(message, list) and len(message) == 3:
@@ -126,12 +138,19 @@ class AI:
         if self.team != team:
             print("Other team broadcast, ignoring")
             return 1
-    
-        elif cmd in inc_list:
-            self.find_incantation()
-        elif cmd == "oute" and self.proposed_incantation:
-            self.command("Broadcast", f"{self.team}/!/{self.name}/!/icila")
-            
+
+
+        if cmd[0] == '?':
+            self.command("Broadcast", f"{self.team}/!/{self.name}/!/^{self.inventory.get(cmd[1:], 0)}.{cmd[1:]}")
+        elif cmd[0] == '^':
+            cmd = cmd[1:]
+            parts = cmd.split(".")
+            if parts[1] in incantation_levels[self.level + 1] and int(parts[0]) >= incantation_levels[self.level + 1].get(parts[1], 0):
+                self.cancel_get = True
+        elif cmd[0] == 'I':
+            self.shared_inventory = self.sum_dictionaries(self.shared_inventory, self.inventory)
+            inv = self.inventory_from_string(cmd[1:])
+            self.shared_inventory = self.sum_dictionaries(self.shared_inventory, inv)
 
  
     def command(self, cmd, arg):
@@ -165,7 +184,6 @@ class AI:
 
         if response[0] == "[":
             if cmd == "Inventory":
-                
                 self.inventory = self.parse_inventory(response)
             elif cmd == "Look":
                 self.look = self.parse_look(response)
@@ -180,14 +198,13 @@ class AI:
             else:
                 print(f"Unexpected response from {cmd} command: {response}")
 
-        elif response == "ok":
-            if cmd == "Incantation":
-                response = receive_response(self.socket)
-                print(response)
-                response = receive_response(self.socket)
-                print(response)
-                self.level = int(response.split("Current level: ")[1])
-                self.incantation_done = True
+        elif cmd == "Incantation":
+            self.level += 1
+            self.incantation_done = True
+            response = receive_response(self.socket)
+            print(response)
+            response = receive_response(self.socket)
+            print(response)
         elif cmd == "Connect_nbr":
             self.connect_nbr_tmp = int(response)
 
@@ -215,7 +232,6 @@ class AI:
     def walk(self, tile_nb):
         with self.lock:
             self.queue = []
-        # print(self.queue)
         fwd_lvl = self.get_tile_lvl(tile_nb)
 
         for i in range(fwd_lvl):
@@ -246,7 +262,7 @@ class AI:
         with self.lock:
             self.queue = []
         
-        while self.inventory.get(obj_name, 0) < amount:
+        while self.inventory.get(obj_name, 0) < amount and not self.cancel_get:
             if self.grace.is_set():
                 with self.lock:
                     self.queue = []
@@ -260,11 +276,13 @@ class AI:
                 else:
                     self.command("Take", obj_name)
     
-            if obj_name in self.inventory and self.inventory.get(obj_name, 0) >= amount:
+            if obj_name in self.inventory and self.inventory.get(obj_name, 0) >= amount or self.cancel_get:
                 with self.lock:
                     self.queue = []
                 break
             if self.inventory.get('food', 0) < 4 and obj_name != 'food':
+                with self.lock:
+                    self.queue = []
                 self.get_object('food', 7)
 
             tile_nb, obj_nb = self.search_object(obj_name)
@@ -287,9 +305,9 @@ class AI:
                 else:
                     with self.lock:
                         self.queue = []
-                        self.command("Forward", "")
+                    self.command("Forward", "")
                     curr_fwd += 1
-            if self.inventory.get(obj_name, 0)  >= amount:
+            if self.inventory.get(obj_name, 0)  >= amount or self.cancel_get:
                 with self.lock:
                     self.queue = []
                 break
@@ -299,9 +317,9 @@ class AI:
             
     
     def incantate(self):
-        old_lvl = self.level
-        while not self.grace.is_set():
-            if self.level != old_lvl:
+        old_lvl = 1
+        while not self.incantation_done:
+            if self.level != old_lvl or self.incantation_done:
                 break
             if self.level + 1 == 2 and self.proposed_incantation == False:
                 conditions_dict = incantation_levels[self.level + 1]
@@ -336,8 +354,6 @@ class AI:
         
     def look_management(self):
         while not self.grace.is_set() and not self.dead:
-            # self.queue = []
-            # self.command("Look", "")
             if self.grace.is_set():
                 break
             if "Look" not in self.sent_queue and not self.grace.is_set():
@@ -350,13 +366,9 @@ class AI:
                 send_message(self.socket, "Inventory")
             self.grace.wait(0.1)
 
-            
-    
     def inv_management(self):
         while not self.grace.is_set():
             self.command("Inventory", "")
-            # self.command("Look", "")
-            # self.grace.wait(0.3)
             time.sleep(5)
             if self.grace.is_set():
                 break
@@ -370,10 +382,10 @@ class AI:
         t_receive.start()
         t_send.start()
         t_look.start()
-        # t_inv.start()
         
         try:
             self.lvl2()
+            # self.lvl3()
 
         except KeyboardInterrupt:
             print("Interrupted by user. Stopping threads...")
@@ -397,6 +409,38 @@ class AI:
             self.queue = []
     
         self.incantate()
+        
+    def inventory_to_string(self):
+        return "|".join(f"{key[0]} {value}" for key, value in self.inventory.items())
+        
+    reverse_abbreviations = {
+        "l": "linemate",
+        "s": "sibur",
+        "m": "mendiane",
+        "p": "phiras",
+        "t": "thystame"
+    }
 
+    def inventory_from_string(self, string):
+        elements = string.split('|')
+        
+        parsed_dict = {}
+        
+        for element in elements:
+            abbrev, value = element.split()
+            key = reverse_abbreviations[abbrev]
+            parsed_dict[key] = int(value)
+        
+        return parsed_dict
 
-
+    def lvl3(self):
+        needed_stones = incantation_levels[self.level + 1]
+        while not self.dead:
+            for key, value in needed_stones.items():
+                if key == "player":
+                    continue
+                if needed_stones[key] > 0:
+                    self.command("Broadcast", f"{self.team}/!/{self.name}/!/?{key}")
+                    self.grace.wait(0.5)
+                    self.get_object(key, value)
+            self.command("Broadcast", f"{self.team}/!/{self.name}/!/I{inventory_to_string()}")
