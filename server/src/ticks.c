@@ -5,7 +5,7 @@
 ** ticks.c
 */
 
-#include "../include/server.h"
+#include "server.h"
 
 // Check if the player has a command in the queue
 void check_player_queue(client_t *player, server_t *serv)

@@ -5,8 +5,7 @@
 ** Game
 */
 
-#ifndef GAME_HPP_
-#define GAME_HPP_
+#pragma once
 
 #include "Window.hpp"
 #include "Socket.hpp"
@@ -48,5 +47,3 @@ class Game {
         bool _isConnected = false;
         int _timeUnit = 0;
 };
-
-#endif /* !GAME_HPP_ */

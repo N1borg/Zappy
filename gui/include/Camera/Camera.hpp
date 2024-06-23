@@ -5,8 +5,7 @@
 ** Camera
 */
 
-#ifndef CAMERA_HPP_
-#define CAMERA_HPP_
+#pragma once
 
 #include "RaylibWrapper.hpp"
 
@@ -29,5 +28,3 @@ class CameraObject {
         int _cameraMode;
         Camera3D *_cameraObj;
 };
-
-#endif /* !CAMERA_HPP_ */

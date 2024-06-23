@@ -47,7 +47,6 @@ void Commands::getMapSize(const std::string &params, Game &game)
     // map.setThystame(6, 6, true);
 
     game.setMapSizeReceived(true);
-    std::cout << "Map size: " << width << "x" << height << std::endl;
 }
 
 void Commands::getPlayerPosition(const std::string &params, Game &game)

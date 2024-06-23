@@ -5,7 +5,7 @@
 ** game_end.c
 */
 
-#include "../include/server.h"
+#include "server.h"
 
 // Get the number of eggs on a team
 int get_nbr_eggs_on_team(team_t *team)
