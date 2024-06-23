@@ -7,16 +7,36 @@
 
 #include "AModel.hpp"
 
-AModel::AModel(Model model) : _model(model), _yRotation(0.0f) {}
-
-void AModel::setRotationY(float yRotation)
-{
-    this->_yRotation = yRotation;
-}
+AModel::AModel(Model model) : _model(model), _islandPositionX(0.0f), _islandPositionZ(0.0f), _yRotation(0.0f) {}
 
 Model AModel::getModel() const
 {
     return _model;
+}
+
+void AModel::setIslandPosition(int islandPosition = 0)
+{
+    float distance = 4.0f;
+    float angle = islandPosition * (M_PI / 3);
+
+    // Calculate X and Z positions using parametric equations of a circle
+    _islandPositionX = distance * sin(angle);
+    _islandPositionZ = distance * cos(angle);
+}
+
+int AModel::getIslandPositionX() const
+{
+    return _islandPositionX;
+}
+
+int AModel::getIslandPositionZ() const
+{
+    return _islandPositionZ;
+}
+
+void AModel::setRotationY(float yRotation)
+{
+    _yRotation = yRotation;
 }
 
 void AModel::draw(Vector3 position, float scale, Color tint) const

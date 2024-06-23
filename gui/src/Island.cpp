@@ -7,14 +7,14 @@
 
 #include "Island.hpp"
 
-Island::Island(Model model) : AModel(model), _Selected(false) {}
+Island::Island(Model model) : AModel(model), _selected(false) {}
 
 bool Island::isSelected() const
 {
-    return _Selected;
+    return _selected;
 }
 
 void Island::setSelected(bool selected)
 {
-    _Selected = selected;
+    _selected = selected;
 }

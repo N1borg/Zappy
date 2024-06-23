@@ -45,8 +45,9 @@ else()
     set(RAYLIB_LIB ${raylib_LIBRARIES})
 endif()
 
-
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS "-W -Wall -Wextra -Wpedantic -Wshadow -Wformat=2 -Wformat-security -I ./include/")
+
 include_directories(include)
 
 set(SHARED_SRC
@@ -59,6 +60,9 @@ set(SHARED_SRC
     src/Map.cpp
     src/AModel.cpp
     src/Player.cpp
+    src/Island.cpp
+    src/Grass.cpp
+    src/Team.cpp
     src/Parser/ParseArguments.cpp
     src/Parser/ParseCommands.cpp
     src/Collectables/Egg.cpp
@@ -69,7 +73,6 @@ set(SHARED_SRC
     src/Collectables/Mendiane.cpp
     src/Collectables/Phiras.cpp
     src/Collectables/Thystame.cpp
-    src/Island.cpp
     src/Commands/Commands.cpp
 )
 

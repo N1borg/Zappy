@@ -85,10 +85,10 @@ std::string Socket::receiveMessage()
         FD_ZERO(&readfds);
         FD_SET(_clientSocket, &readfds);
 
-        tv.tv_sec = 0;
-        tv.tv_usec = 0;
+        // tv.tv_sec = 0;
+        // tv.tv_usec = 0;
 
-        retval = select(_clientSocket + 1, &readfds, 0, 0, &tv);
+        retval = select(_clientSocket + 1, &readfds, 0, 0, NULL);// &tv);
         if (retval != -1 && FD_ISSET(_clientSocket, &readfds)) {
             ssize_t bytesReceived = recv(_clientSocket, buffer, 1024, 0);
             if (bytesReceived == -1) {
