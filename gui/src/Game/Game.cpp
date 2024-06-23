@@ -96,6 +96,16 @@ Map *Game::getMap()
     return _map;
 }
 
+int Game::getTimeUnit() const
+{
+    return _timeUnit;
+}
+
+std::vector<Team> Game::getTeams()
+{
+    return _teams;
+}
+
 bool Game::hasError() const
 {
     return _isError;
@@ -129,4 +139,9 @@ void Game::setTimeUnitReceived(bool timeUnitReceived)
 void Game::setTimeUnit(int timeUnit)
 {
     _timeUnit = timeUnit;
+}
+
+void Game::addTeam(Team team)
+{
+    _teams.push_back(team);
 }

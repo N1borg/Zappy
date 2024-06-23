@@ -7,25 +7,26 @@
 
 #pragma once
 
-#include <raylib.h>
+#include "RaylibWrapper.hpp"
+
 #include <string>
 
-class Team
-{
-public:
-    Team(std::string name);
-    ~Team() = default;
+class Team {
+    public:
+        Team(std::string name);
+        ~Team() = default;
 
-    std::string getTeamName() const;
-    void setNumberPlayers(int numberPlayers);
-    int getNumberPlayers() const;
-    void setNumberEggs(int numberEggs);
-    int getNumberEggs() const;
-    void setTeamColor(Color color);
-    Color getTeamColor() const;
-private:
-    std::string _name;
-    Color _teamColor = WHITE;
-    int _numberPlayers;
-    int _numberEggs;
+        void setNumberPlayers(int numberPlayers);
+        void setNumberEggs(int numberEggs);
+        void setTeamColor(Color color);
+
+        std::string getTeamName() const;
+        int getNumberPlayers() const;
+        int getNumberEggs() const;
+        Color getTeamColor() const;
+    private:
+        std::string _name;
+        Color _teamColor = WHITE;
+        int _numberPlayers;
+        int _numberEggs;
 };

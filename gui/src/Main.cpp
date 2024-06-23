@@ -41,25 +41,6 @@ int main(int argc, char *argv[])
     game.stop();
     return 0;
 
-    // // Create map
-    // std::vector<Team> teams;
-    // Team team1("team1");
-    // teams.push_back(team1);
-    // Team team2("team2");
-    // teams.push_back(team2);
-    // Team team3("team3");
-    // teams.push_back(team3);
-    // Team team4("team4");
-    // teams.push_back(team4);
-    // Team team5("team5");
-    // teams.push_back(team5);
-    // Team team6("team6");
-    // teams.push_back(team6);
-    // Team team7("team7");
-    // teams.push_back(team7);
-    // Team team8("team8");
-    // teams.push_back(team8);
-
     // Map map(mapWidth, mapHeight, timeUnit, teams);
     // std::vector<std::vector<Tile_t>> tiles = map.getTiles();
 

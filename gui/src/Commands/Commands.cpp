@@ -13,7 +13,6 @@ void Commands::validateWelcome(const std::string &params, Game &game)
     std::cout << "Welcome to Zappy!" << params << std::endl;
     game.getSocket()->sendMessage("GRAPHIC\n");
     game.getSocket()->sendMessage("msz\n");
-    // game.getSocket()->sendMessage("bct\n");
     game.getSocket()->sendMessage("tna\n");
     game.getSocket()->sendMessage("sgt\n");
     game.setWelcomeReceived(true);
@@ -25,29 +24,9 @@ void Commands::getMapSize(const std::string &params, Game &game)
     int width, height;
     iss >> width >> height;
 
-    // // Create map
-    // Map map(mapWidth, mapHeight);
-    // std::vector<std::vector<Tile_t>> tiles = map.getTiles();
-
-    // window.setCameraPosition({(mapWidth / 2.0f) * 10.0f, 20, (mapHeight / 2.0f) * 10.0f});
-
-    // map.setPlayer(1, 3, true);
-    // map.setPlayer(1, 8, true);
-    // map.setPlayer(4, 8, true);
-    // map.setPlayer(5, 1, true);
-    // map.setFood(2, 3, true);
-    // map.setFood(1, 5, true);
-    // map.setFood(4, 2, true);
-    // map.setFood(5, 1, true);
-    // map.setEgg(4, 3, true);
-    // map.setEgg(3, 5, true);
-    // map.setLinemate(1, 1, true);
-    // map.setDeraumere(2, 2, true);
-    // map.setSibur(3, 3, true);
-    // map.setMendiane(4, 4, true);
-    // map.setPhiras(5, 5, true);
-    // map.setThystame(6, 6, true);
-
+    game.getMap()->setWidth(width);
+    game.getMap()->setHeight(height);
+    game.getSocket()->sendMessage("bct\n");
     game.setMapSizeReceived(true);
 }
 
@@ -73,7 +52,27 @@ void Commands::getTeamsName(const std::string &params, Game &game)
     std::istringstream iss(params);
     std::string teamName;
     while (iss >> teamName) {
-        std::cout << "Team name: " << teamName << std::endl;
+        Team newTeam(teamName);
+
+        Color colors[] = {RED, GREEN, BLUE, YELLOW, PURPLE, LIGHTGRAY, ORANGE, BEIGE, MAROON, LIME, DARKBLUE, GOLD, PINK, VIOLET, BROWN, DARKGRAY, DARKPURPLE};
+        Color color = colors[rand() % 17];
+        bool colorFound = false;
+
+        // Check if color is already taken
+        while (!colorFound) {
+            colorFound = true;
+            for (auto &team : game.getTeams()) {
+                Color teamColor = team.getTeamColor();
+                if ((teamColor.r == color.r) && (teamColor.g == color.g) && (teamColor.b == color.b)) {
+                    color = colors[rand() % 17];
+                    colorFound = false;
+                    break;
+                }
+            }
+        }
+
+        newTeam.setTeamColor(color);
+        game.addTeam(newTeam);
     }
     game.setPlayersReceived(true);
 }

@@ -56,7 +56,7 @@ typedef struct Tile_s {
 
 class Map {
 public:
-    Map(int width, int height, int frequency, std::vector<Team> teams);
+    Map(int width, int height);
     Map() = default;
     ~Map() = default;
 
@@ -115,12 +115,10 @@ public:
 private:
     int _width;
     int _height;
-    int _frequency;
     bool _isGameRunning;
     bool _isTileSelected;
 
     int _nbPlayers;
-    int _nbTeams;
     int _nbEggs;
     int _nbFood;
     int _nbLinemate;
@@ -130,7 +128,6 @@ private:
     int _nbPhiras;
     int _nbThystame;
 
-    std::vector<Team> _teams;
     std::vector<Player> _players;
 
     Model _modelPlayer;

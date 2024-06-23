@@ -67,6 +67,7 @@ class RaylibWrapper {
         static const char *textFormat(const char *text, ...) { va_list args; va_start(args, text); return TextFormat(text, args); va_end(args); }
 
         // Other
+        static int getRandValue(int min, int max) { return GetRandomValue(min, max); }
         static float getFrameTime() { return GetFrameTime(); }
         static Ray getMouseRay(Vector2 mousePosition, Camera3D camera) { return GetMouseRay(mousePosition, camera); }
         static void log(int level, const char *msg, ...) { va_list args; va_start(args, msg); TraceLog(level, msg, args); va_end(args); }

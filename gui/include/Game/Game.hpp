@@ -12,6 +12,7 @@
 #include "Map.hpp"
 #include "Commands/Commands.hpp"
 #include "RaylibWrapper.hpp"
+#include "Team.hpp"
 
 class Game {
     public:
@@ -31,6 +32,7 @@ class Game {
         Map *getMap();
         bool hasError() const;
         int getTimeUnit() const;
+        std::vector<Team> getTeams();
 
         // Setters
         void setWelcomeReceived(bool welcomeReceived);
@@ -39,8 +41,10 @@ class Game {
         void setPlayersReceived(bool playersReceived);
         void setTimeUnitReceived(bool timeUnitReceived);
         void setTimeUnit(int timeUnit);
+        void addTeam(Team team);
 
     protected:
+        std::vector<Team> _teams;
         Window *_window;
         Socket *_socket;
         Map *_map;

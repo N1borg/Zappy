@@ -60,33 +60,33 @@ void Window::drawGeneralInfo(Map map)
     Camera camera = *getCamera()->getCameraObj();
     int cameraMode = getCamera()->getCameraMode();
 
-    RaylibWrapper::drawRectangleRounded({2.0f, 2.0f, 250, 312.0f + map.getNbTeams() * 20.0f}, 0.1, 10, {255, 255, 255, 150});
-    RaylibWrapper::drawRectangleRoundedLines({2.0f, 2.0f, 250, 312.0f + map.getNbTeams() * 20.0f}, 0.1, 10, BLACK);
-    RaylibWrapper::drawText(RaylibWrapper::textFormat("X:%.2f Y:%.2f Z:%.2f", camera.position.x, camera.position.y, camera.position.z), 10, 10, 20, GRAY);
-    RaylibWrapper::drawText(RaylibWrapper::textFormat("Map size: (%d, %d)", map.getWidth(), map.getHeight()), 10, 30, 20, GRAY);
-    RaylibWrapper::drawText(RaylibWrapper::textFormat("Frequency: %d", map.getFrequency()), 10, 50, 20, GRAY);
-    RaylibWrapper::drawText(RaylibWrapper::textFormat("Camera mode: %d", cameraMode), 10, 70, 20, GRAY);
-    RaylibWrapper::drawText(RaylibWrapper::textFormat("Is Game running: %d", map.isGameRunning()), 10, 90, 20, GRAY);
-    RaylibWrapper::drawText(RaylibWrapper::textFormat("Teams (%d):", map.getNbTeams()), 10, 110, 20, GRAY);
-    int i = drawTeamNames(map);
-    RaylibWrapper::drawText(RaylibWrapper::textFormat("Players: %d", map.getNbPlayers()), 10, 130 + i * 20, 20, GRAY);
-    RaylibWrapper::drawText(RaylibWrapper::textFormat("Eggs: %d", map.getNbEggs()), 10, 150 + i * 20, 20, GRAY);
-    RaylibWrapper::drawText(RaylibWrapper::textFormat("Food: %d", map.getNbFood()), 10, 170 + i * 20, 20, GRAY);
-    RaylibWrapper::drawText(RaylibWrapper::textFormat("Linemate: %d", map.getNbLinemate()), 10, 190 + i * 20, 20, GRAY);
-    RaylibWrapper::drawText(RaylibWrapper::textFormat("Deraumere: %d", map.getNbDeraumere()), 10, 210 + i * 20, 20, GRAY);
-    RaylibWrapper::drawText(RaylibWrapper::textFormat("Sibur: %d", map.getNbSibur()), 10, 230 + i * 20, 20, GRAY);
-    RaylibWrapper::drawText(RaylibWrapper::textFormat("Mendiane: %d", map.getNbMendiane()), 10, 250 + i * 20, 20, GRAY);
-    RaylibWrapper::drawText(RaylibWrapper::textFormat("Phiras: %d", map.getNbPhiras()), 10, 270 + i * 20, 20, GRAY);
-    RaylibWrapper::drawText(RaylibWrapper::textFormat("Thystame: %d", map.getNbThystame()), 10, 290 + i * 20, 20, GRAY);
+    // RaylibWrapper::drawRectangleRounded({2.0f, 2.0f, 250, 312.0f + map.getNbTeams() * 20.0f}, 0.1, 10, {255, 255, 255, 150});
+    // RaylibWrapper::drawRectangleRoundedLines({2.0f, 2.0f, 250, 312.0f + map.getNbTeams() * 20.0f}, 0.1, 10, BLACK);
+    // RaylibWrapper::drawText(RaylibWrapper::textFormat("X:%.2f Y:%.2f Z:%.2f", camera.position.x, camera.position.y, camera.position.z), 10, 10, 20, GRAY);
+    // RaylibWrapper::drawText(RaylibWrapper::textFormat("Map size: (%d, %d)", map.getWidth(), map.getHeight()), 10, 30, 20, GRAY);
+    // RaylibWrapper::drawText(RaylibWrapper::textFormat("Frequency: %d", map.getFrequency()), 10, 50, 20, GRAY);
+    // RaylibWrapper::drawText(RaylibWrapper::textFormat("Camera mode: %d", cameraMode), 10, 70, 20, GRAY);
+    // RaylibWrapper::drawText(RaylibWrapper::textFormat("Is Game running: %d", map.isGameRunning()), 10, 90, 20, GRAY);
+    // RaylibWrapper::drawText(RaylibWrapper::textFormat("Teams (%d):", map.getNbTeams()), 10, 110, 20, GRAY);
+    // int i = drawTeamNames(map);
+    // RaylibWrapper::drawText(RaylibWrapper::textFormat("Players: %d", map.getNbPlayers()), 10, 130 + i * 20, 20, GRAY);
+    // RaylibWrapper::drawText(RaylibWrapper::textFormat("Eggs: %d", map.getNbEggs()), 10, 150 + i * 20, 20, GRAY);
+    // RaylibWrapper::drawText(RaylibWrapper::textFormat("Food: %d", map.getNbFood()), 10, 170 + i * 20, 20, GRAY);
+    // RaylibWrapper::drawText(RaylibWrapper::textFormat("Linemate: %d", map.getNbLinemate()), 10, 190 + i * 20, 20, GRAY);
+    // RaylibWrapper::drawText(RaylibWrapper::textFormat("Deraumere: %d", map.getNbDeraumere()), 10, 210 + i * 20, 20, GRAY);
+    // RaylibWrapper::drawText(RaylibWrapper::textFormat("Sibur: %d", map.getNbSibur()), 10, 230 + i * 20, 20, GRAY);
+    // RaylibWrapper::drawText(RaylibWrapper::textFormat("Mendiane: %d", map.getNbMendiane()), 10, 250 + i * 20, 20, GRAY);
+    // RaylibWrapper::drawText(RaylibWrapper::textFormat("Phiras: %d", map.getNbPhiras()), 10, 270 + i * 20, 20, GRAY);
+    // RaylibWrapper::drawText(RaylibWrapper::textFormat("Thystame: %d", map.getNbThystame()), 10, 290 + i * 20, 20, GRAY);
 }
 
 int Window::drawTeamNames(Map map)
 {
     int i = 0;
-    for (auto &team : map.getTeams()) {
-        RaylibWrapper::drawText(RaylibWrapper::textFormat("  %s: p(%d) e(%d)", team.getTeamName().c_str(), team.getNumberPlayers(), team.getNumberEggs()), 10, 140 + i * 20, 20, team.getTeamColor());
-        i++;
-    }
+    // for (auto &team : map.getTeams()) {
+    //     RaylibWrapper::drawText(RaylibWrapper::textFormat("  %s: p(%d) e(%d)", team.getTeamName().c_str(), team.getNumberPlayers(), team.getNumberEggs()), 10, 140 + i * 20, 20, team.getTeamColor());
+    //     i++;
+    // }
     return i;
 }
 

@@ -7,11 +7,10 @@
 
 #include "Map.hpp"
 
-Map::Map(int width, int height, int frequency, std::vector<Team> teams) : _width(width), _height(height), _frequency(frequency), _teams(teams)
+Map::Map(int width, int height) : _width(width), _height(height)
 {
     _isGameRunning = true;
     _nbPlayers = 0;
-    _nbTeams = teams.size();
     _nbEggs = 0;
     _nbFood = 0;
     _nbLinemate = 0;
@@ -65,16 +64,6 @@ Map::Map(int width, int height, int frequency, std::vector<Team> teams) : _width
         }
         _tiles.push_back(row);
     }
-
-    Color colors[] = {RED, GREEN, BLUE, YELLOW, PURPLE, LIGHTGRAY, ORANGE, BEIGE, MAROON, LIME, DARKBLUE, GOLD, PINK, VIOLET, BROWN, DARKGRAY, DARKPURPLE};
- 
-    // Assign colors to each team
-    int numColors = sizeof(colors) / sizeof(colors[0]);
-    int shift = GetRandomValue(0, _teams.size() - 1);
-    for (size_t i = 0; i < _teams.size(); i++) {
-        _teams[i].setTeamColor(colors[(shift + i) % numColors]);
-        shift++;
-    }
 }
 
 int Map::getWidth() const
@@ -85,16 +74,6 @@ int Map::getWidth() const
 int Map::getHeight() const
 {
     return _height;
-}
-
-void Map::setFrequency(int frequency)
-{
-    _frequency = frequency;
-}
-
-int Map::getFrequency() const
-{
-    return _frequency;
 }
 
 bool Map::isGameRunning() const
@@ -115,11 +94,6 @@ void Map::setGameRunning(bool isGameRunning)
 int Map::getNbPlayers() const
 {
     return _nbPlayers;
-}
-
-int Map::getNbTeams() const
-{
-    return _nbTeams;
 }
 
 int Map::getNbEggs() const
@@ -172,37 +146,23 @@ Tile_t Map::getTile(int x, int y) const
     return _tiles[x][y];
 }
 
-std::vector<Team> Map::getTeams() const
-{
-    return _teams;
-}
-
-Color Map::getTeamColor(std::string team) const
-{
-    for (Team t : _teams) {
-        if (t.getTeamName() == team)
-            return t.getTeamColor();
-    }
-    return WHITE;
-}
-
-void Map::addPlayer(int id, int x, int y, Orientation orientation, int level, std::string team)
-{
-    for (Player p : _tiles[x][y].players) {
-        if (p.getId() == id)
-            return;
-    }
-    for (size_t i = 0; i < _teams.size(); i++) {
-        if (_teams[i].getTeamName() == team) {
-            Player player(_modelPlayer, id, x, y, orientation, _teams[i]);
-            player.setLevel(level);
-            _tiles[x][y].players.push_back(player);
-            _nbPlayers += 1;
-            _players.push_back(player);
-            _teams[i].setNumberPlayers(_teams[i].getNumberPlayers() + 1);
-        }
-    }
-}
+// void Map::addPlayer(int id, int x, int y, Orientation orientation, int level, std::string team)
+// {
+//     for (Player p : _tiles[x][y].players) {
+//         if (p.getId() == id)
+//             return;
+//     }
+//     for (size_t i = 0; i < _teams.size(); i++) {
+//         if (_teams[i].getTeamName() == team) {
+//             Player player(_modelPlayer, id, x, y, orientation, _teams[i]);
+//             player.setLevel(level);
+//             _tiles[x][y].players.push_back(player);
+//             _nbPlayers += 1;
+//             _players.push_back(player);
+//             _teams[i].setNumberPlayers(_teams[i].getNumberPlayers() + 1);
+//         }
+//     }
+// }
 
 void Map::movePlayer(int id, int x, int y, Orientation orientation)
 {
@@ -237,21 +197,21 @@ void Map::delPlayer(int id)
     }
 }
 
-void Map::addEgg(int id, int playerId, int x, int y, std::string team)
-{
-    for (Egg e : _tiles[x][y].eggs) {
-        if (e.getId() == id)
-            return;
-    }
-    for (size_t i = 0; i < _teams.size(); i++) {
-        if (_teams[i].getTeamName() == team) {
-            Egg egg(_modelEgg, id, playerId, x, y, _teams[i]);
-            _tiles[x][y].eggs.push_back(egg);
-            _nbEggs += 1;
-            _teams[i].setNumberEggs(_teams[i].getNumberEggs() + 1);
-        }
-    }
-}
+// void Map::addEgg(int id, int playerId, int x, int y, std::string team)
+// {
+//     for (Egg e : _tiles[x][y].eggs) {
+//         if (e.getId() == id)
+//             return;
+//     }
+//     for (size_t i = 0; i < _teams.size(); i++) {
+//         if (_teams[i].getTeamName() == team) {
+//             Egg egg(_modelEgg, id, playerId, x, y, _teams[i]);
+//             _tiles[x][y].eggs.push_back(egg);
+//             _nbEggs += 1;
+//             _teams[i].setNumberEggs(_teams[i].getNumberEggs() + 1);
+//         }
+//     }
+// }
 
 void Map::moveEgg(int id, int x, int y)
 {
