@@ -52,6 +52,7 @@ typedef struct Tile_s {
 
 class Map {
 public:
+    Map() = default;
     Map(int width, int height);
     ~Map() = default;
 
@@ -67,6 +68,8 @@ public:
     void setPhiras(int x, int y, bool value);
     void setThystame(int x, int y, bool value);
     void setIsland(int x, int y, bool value);
+    void setWidth(int width);
+    void setHeight(int height);
 
     void draw();
     void drawTransparent();

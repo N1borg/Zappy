@@ -61,10 +61,10 @@ class Window {
         void drawGrid(int slices, float spacing);
         void drawText(const char *text, int posX, int posY, int fontSize, Color color);
         void drawFPS(int posX, int posY);
- 
+
         std::string animateTextDots(const std::string &string, float elapsedTime);
-        int drawWaitingScreen(Socket &socket, ParseArguments &argsParser, bool isReconnecting);
-        void drawConnection(bool isConnected, std::string ip, bool isReconnecting, int elapsedTime);
+        int drawWaitingScreen(Socket &socket, std::string ip, bool isReconnecting);
+        void drawConnectionText(bool isConnected, std::string ip, bool isReconnecting, int elapsedTime);
         void log(int level, const std::string &msg, ...);
 
     private:

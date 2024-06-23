@@ -6,23 +6,42 @@
 */
 
 #include "Commands/Commands.hpp"
+#include "Game.hpp"
 
-void Commands::getMapSize(const std::string &params)
+void Commands::validateWelcome(const std::string &params, Game &game)
+{
+    std::cout << "Welcome to Zappy!" << params << std::endl;
+    game.getSocket()->sendMessage("GRAPHIC\n");
+    game.getSocket()->sendMessage("msz\n");
+    game.setWelcomeReceived(true);
+}
+
+void Commands::getMapSize(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
     int width, height;
     iss >> width >> height;
-    std::cout << "Map size: Width = " << width << ", Height = " << height << std::endl;
+
+    // try {
+    //     // msg >> mapSz >> mapWidthStr >> mapHeightStr;
+    //     // mapWidth = std::stoi(mapWidthStr);
+    //     // mapHeight = std::stoi(mapHeightStr);
+    // } catch (const std::exception &e) {
+    //     window.log(LOG_ERROR, "INIT: Invalid map size");
+    //     window.close();
+    //     return 84;
+    // }
+    std::cout << "Map size: " << width << "x" << height << std::endl;
 }
 
-void Commands::getPlayerPosition(const std::string& params)
+void Commands::getPlayerPosition(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
     int playerNumber, x, y, orientation;
     iss >> playerNumber >> x >> y >> orientation;
     std::cout << "Player #" << playerNumber << " is at (" << x << ", " << y << ") facing orientation " << orientation << std::endl;}
 
-void Commands::getTileContent(const std::string& params)
+void Commands::getTileContent(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
     int x, y, q0, q1, q2, q3, q4, q5, q6;
@@ -30,7 +49,7 @@ void Commands::getTileContent(const std::string& params)
     std::cout << "Tile at (" << x << ", " << y << ") has resources: Food=" << q0 << ", Linemate=" << q1 << ", Deraumere=" << q2 << ", Sibur=" << q3 << ", Mendiane=" << q4 << ", Phiras=" << q5 << ", Thystame=" << q6 << std::endl;
 }
 
-void Commands::getTeamsName(const std::string& params)
+void Commands::getTeamsName(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
     std::string teamName;
@@ -39,7 +58,7 @@ void Commands::getTeamsName(const std::string& params)
     }
 }
 
-void Commands::getConnectionNewPlayer(const std::string& params)
+void Commands::getConnectionNewPlayer(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
     int playerNumber, x, y, orientation, level;
@@ -48,7 +67,7 @@ void Commands::getConnectionNewPlayer(const std::string& params)
     std::cout << "New player #" << playerNumber << " from team " << teamName << " at (" << x << ", " << y << ") facing " << orientation << " at level " << level << std::endl;
 }
 
-void Commands::getPlayerLevel(const std::string& params)
+void Commands::getPlayerLevel(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
     int playerNumber, level;
@@ -56,7 +75,7 @@ void Commands::getPlayerLevel(const std::string& params)
     std::cout << "Player #" << playerNumber << " is at level " << level << std::endl;
 }
 
-void Commands::getPlayerInventory(const std::string& params)
+void Commands::getPlayerInventory(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
     std::string teamName;
@@ -64,7 +83,7 @@ void Commands::getPlayerInventory(const std::string& params)
         std::cout << "Team name: " << teamName << std::endl;
     }}
 
-void Commands::getExpulsion(const std::string& params)
+void Commands::getExpulsion(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
     int playerNumber;
@@ -72,7 +91,7 @@ void Commands::getExpulsion(const std::string& params)
     std::cout << "Player #" << playerNumber << " has been expelled." << std::endl;
 }
 
-void Commands::getBroadcast(const std::string& params)
+void Commands::getBroadcast(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
     int playerNumber;
@@ -82,12 +101,12 @@ void Commands::getBroadcast(const std::string& params)
     std::cout << "Player #" << playerNumber << " broadcasts: " << message << std::endl;
 }
 
-void Commands::getStartOfIncantation(const std::string& params)
+void Commands::getStartOfIncantation(const std::string &params, Game &game)
 {
     std::cout  << "Start of Incantation: " << params << std::endl;
 }
 
-void Commands::getEndOfIncantation(const std::string& params)
+void Commands::getEndOfIncantation(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
     int x, y, result;
@@ -95,7 +114,7 @@ void Commands::getEndOfIncantation(const std::string& params)
     std::cout << "Incantation at (" << x << ", " << y << ") ended with result: " << (result ? "Success" : "Failure") << std::endl;
 }
 
-void Commands::getLayingEggByPlayer(const std::string& params)
+void Commands::getLayingEggByPlayer(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
     int playerNumber;
@@ -103,7 +122,7 @@ void Commands::getLayingEggByPlayer(const std::string& params)
     std::cout << "Player #" << playerNumber << " has laid an egg." << std::endl;
 }
 
-void Commands::getResourceDropping(const std::string& params)
+void Commands::getResourceDropping(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
     int playerNumber, resourceIndex;
@@ -111,7 +130,7 @@ void Commands::getResourceDropping(const std::string& params)
     std::cout << "Player #" << playerNumber << " dropped resource " << resourceIndex << std::endl;
 }
 
-void Commands::getResourceCollecting(const std::string& params)
+void Commands::getResourceCollecting(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
     int playerNumber, resourceIndex;
@@ -119,7 +138,7 @@ void Commands::getResourceCollecting(const std::string& params)
     std::cout << "Player #" << playerNumber << " collected resource " << resourceIndex << std::endl;
 }
 
-void Commands::getPlayerDeath(const std::string& params)
+void Commands::getPlayerDeath(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
     int playerNumber;
@@ -127,7 +146,7 @@ void Commands::getPlayerDeath(const std::string& params)
     std::cout << "Player #" << playerNumber << " has died." << std::endl;
 }
 
-void Commands::getEggLaidByPlayer(const std::string& params)
+void Commands::getEggLaidByPlayer(const std::string &params, Game &game)
 {
      std::istringstream iss(params);
     int eggNumber, playerNumber, x, y;
@@ -135,7 +154,7 @@ void Commands::getEggLaidByPlayer(const std::string& params)
     std::cout << "Egg #" << eggNumber << " laid by Player #" << playerNumber << " at (" << x << ", " << y << ")." << std::endl;
 }
 
-void Commands::getPlayerConnectionInEgg(const std::string& params)
+void Commands::getPlayerConnectionInEgg(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
     int eggNumber;
@@ -143,7 +162,7 @@ void Commands::getPlayerConnectionInEgg(const std::string& params)
     std::cout << "Player connected from Egg #" << eggNumber << "." << std::endl;
 }
 
-void Commands::getEggDeath(const std::string& params)
+void Commands::getEggDeath(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
     int eggNumber;
@@ -151,7 +170,7 @@ void Commands::getEggDeath(const std::string& params)
     std::cout << "Egg #" << eggNumber << " has died." << std::endl;
 }
 
-void Commands::getTimeUnitRequest(const std::string& params)
+void Commands::getTimeUnitRequest(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
     int timeUnit;
@@ -159,7 +178,7 @@ void Commands::getTimeUnitRequest(const std::string& params)
     std::cout << "Current time unit: " << timeUnit << std::endl;
 }
 
-void Commands::getTimeUnitModification(const std::string& params)
+void Commands::getTimeUnitModification(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
     int newTimeUnit;
@@ -167,7 +186,7 @@ void Commands::getTimeUnitModification(const std::string& params)
     std::cout << "Time unit modified to: " << newTimeUnit << std::endl;
 }
 
-void Commands::getEndOfGame(const std::string& params)
+void Commands::getEndOfGame(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
     std::string teamName;
@@ -175,17 +194,17 @@ void Commands::getEndOfGame(const std::string& params)
     std::cout << "Game over! Winning team: " << teamName << std::endl;
 }
 
-void Commands::getServerMessage(const std::string& params)
+void Commands::getServerMessage(const std::string &params, Game &game)
 {
     std::cout  << "Server Message: " << params << std::endl;
 }
 
-void Commands::getUnknownCommand(const std::string& params)
+void Commands::getUnknownCommand(const std::string &params, Game &game)
 {
     std::cout  << "Unknown Command: " << params << std::endl;
 }
 
-void Commands::getCommandParameter(const std::string& params)
+void Commands::getCommandParameter(const std::string &params, Game &game)
 {
     std::cout  << "Command Parameter: " << params << std::endl;
 }

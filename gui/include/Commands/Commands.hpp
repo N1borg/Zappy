@@ -11,33 +11,36 @@
 #include <sstream>
 #include <string>
 
+class Game;
+
 class Commands {
     public:
         Commands() = default;
         ~Commands() = default;
 
-        void getMapSize(const std::string& params);
-        void getPlayerPosition(const std::string& params);
-        void getTileContent(const std::string& params);
-        void getTeamsName(const std::string& params);
-        void getConnectionNewPlayer(const std::string& params);
-        void getPlayerLevel(const std::string& params);
-        void getPlayerInventory(const std::string& params);
-        void getExpulsion(const std::string& params);
-        void getStartOfIncantation(const std::string& params);
-        void getEndOfIncantation(const std::string& params);
-        void getLayingEggByPlayer(const std::string& params);
-        void getResourceDropping(const std::string& params);
-        void getResourceCollecting(const std::string& params);
-        void getPlayerDeath(const std::string& params);
-        void getEggLaidByPlayer(const std::string& params);
-        void getPlayerConnectionInEgg(const std::string& params);
-        void getEggDeath(const std::string& params);
-        void getTimeUnitRequest(const std::string& params);
-        void getTimeUnitModification(const std::string& params);
-        void getEndOfGame(const std::string& params);
-        void getServerMessage(const std::string& params);
-        void getUnknownCommand(const std::string& params);
-        void getCommandParameter(const std::string& params);
-        void getBroadcast(const std::string& params);
+        void validateWelcome(const std::string& params, Game &game);
+        void getMapSize(const std::string& params, Game &game);
+        void getPlayerPosition(const std::string& para, Game &game);
+        void getTileContent(const std::string& params, Game &game);
+        void getTeamsName(const std::string& param, Game &game);
+        void getConnectionNewPlayer(const std::string& params, Game &game);
+        void getPlayerLevel(const std::string& params, Game &game);
+        void getPlayerInventory(const std::string& params, Game &game);
+        void getExpulsion(const std::string& param, Game &game);
+        void getStartOfIncantation(const std::string& para, Game &game);
+        void getEndOfIncantation(const std::string& params, Game &game);
+        void getLayingEggByPlayer(const std::string& param, Game &game);
+        void getResourceDropping(const std::string& params, Game &game);
+        void getResourceCollecting(const std::string& para, Game &game);
+        void getPlayerDeath(const std::string& params, Game &game);
+        void getEggLaidByPlayer(const std::string& params, Game &game);
+        void getPlayerConnectionInEgg(const std::string& param, Game &game);
+        void getEggDeath(const std::string& params, Game &game);
+        void getTimeUnitRequest(const std::string& params, Game &game);
+        void getTimeUnitModification(const std::string& params, Game &game);
+        void getEndOfGame(const std::string& param, Game &game);
+        void getServerMessage(const std::string& param, Game &game);
+        void getUnknownCommand(const std::string& para, Game &game);
+        void getCommandParameter(const std::string& params, Game &game);
+        void getBroadcast(const std::string& param, Game &game);
 };

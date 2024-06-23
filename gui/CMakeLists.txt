@@ -69,6 +69,7 @@ set(SHARED_SRC
     src/Collectables/Thystame.cpp
     src/Island.cpp
     src/Commands/Commands.cpp
+    src/Game.cpp
 )
 
 add_executable(zappy_gui ${SHARED_SRC})

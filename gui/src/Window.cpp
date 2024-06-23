@@ -250,7 +250,7 @@ std::string Window::animateTextDots(const std::string &string, float elapsedTime
     return string + dots;
 }
 
-void Window::drawConnection(bool isConnected, std::string ip, bool isReconnecting, int elapsedTime)
+void Window::drawConnectionText(bool isConnected, std::string ip, bool isReconnecting, int elapsedTime)
 {
     Color color = isConnected ? GREEN : DARKGRAY;
     std::string connectStatus = isConnected ? "Connected to " : "Connecting to ";
@@ -270,10 +270,9 @@ void Window::drawConnection(bool isConnected, std::string ip, bool isReconnectin
     endDrawing();
 }
 
-int Window::drawWaitingScreen(Socket &socket, ParseArguments &argsParser, bool isReconnecting = false)
+int Window::drawWaitingScreen(Socket &socket, std::string ip, bool isReconnecting = false)
 {
     std::thread connectionThread(&Socket::attemptConnection, &socket);
-    std::string ip = argsParser.getMachine();
     float elapsedTime = 0.0f;
 
     while (!socket.isConnected()) {
@@ -282,20 +281,10 @@ int Window::drawWaitingScreen(Socket &socket, ParseArguments &argsParser, bool i
             return 0;
         }
         elapsedTime += GetFrameTime();
-        drawConnection(false, ip, isReconnecting, elapsedTime);
+        drawConnectionText(false, ip, isReconnecting, elapsedTime);
     }
     connectionThread.join();
-    drawConnection(true, ip, isReconnecting, elapsedTime);
-
-    // Validate connection
-    if (argsParser.validateConnection(socket.receiveMessage())) {
-        std::cout << "Connection established" << std::endl;
-        socket.sendMessage("GRAPHIC\n");
-    } else {
-        std::cerr << "Error: Connection failed" << std::endl;
-        close();
-        return 0;
-    }
+    drawConnectionText(true, ip, isReconnecting, elapsedTime);
 
     if (socket.isConnected())
         return 1;

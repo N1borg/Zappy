@@ -20,7 +20,7 @@ Map::Map(int width, int height) : _width(width), _height(height)
     _modelThystame = LoadModel("gui/ressources/thystame.glb");
     _modelIsland = LoadModel("gui/ressources/island.glb");
 
-    srand(time(NULL));
+    srand(time(0));
 
     for (int i = 0; i < width; i++) {
         std::vector<Tile_t> row;
@@ -102,6 +102,16 @@ void Map::setThystame(int x, int y, bool value)
 void Map::setIsland(int x, int y, bool value)
 {
     _tiles[x][y].island.second = value;
+}
+
+void Map::setWidth(int width)
+{
+    _width = width;
+}
+
+void Map::setHeight(int height)
+{
+    _height = height;
 }
 
 void Map::draw()

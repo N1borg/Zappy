@@ -113,8 +113,9 @@ void Socket::attemptConnection()
     }
 }
 
-void Socket::startThread()
+void Socket::startThread(Game *game)
 {
+    _game = game;
     _threadRunning = true;
     _thread = std::thread(&Socket::readThread, this);
 }
@@ -149,7 +150,7 @@ void Socket::readThread()
             if (message.empty())
                 _connected = false;
             else
-                cmdParser.parse(message);
+                cmdParser.parse(message, *_game);
         }
     }
 }
