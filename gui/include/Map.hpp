@@ -57,7 +57,6 @@ typedef struct Tile_s {
 class Map {
 public:
     Map(int width, int height, int frequency, std::vector<Team> teams);
-    Map() = default;
     ~Map() = default;
 
     int getWidth() const;
@@ -65,7 +64,6 @@ public:
     void setFrequency(int frequency);
     int getFrequency() const;
     bool isGameRunning() const;
-    bool isTileSelected() const;
     void setGameRunning(bool isGameRunning);
     int getNbPlayers() const;
     int getNbTeams() const;
@@ -108,16 +106,12 @@ public:
     bool selectTile(Ray ray);
     Tile_t getSelectedTile() const;
 
-    void setWidth(int width);
-    void setHeight(int height);
-
     void unload();
 private:
     int _width;
     int _height;
     int _frequency;
     bool _isGameRunning;
-    bool _isTileSelected;
 
     int _nbPlayers;
     int _nbTeams;

@@ -14,15 +14,13 @@
 #include <unordered_map>
 #include <string>
 
-class Game;
-
 class ParseCommands : public IParser {
     public:
         ParseCommands();
         ~ParseCommands() = default;
 
-        void parse(const std::string &msg, Game &game);
+        void parse(std::string msg);
     private:
-        typedef void (Commands::*CommandFunc)(const std::string&, Game&);
+        typedef void (Commands::*CommandFunc)(const std::string&);
         std::unordered_map<std::string, CommandFunc> _commandMap;
 };

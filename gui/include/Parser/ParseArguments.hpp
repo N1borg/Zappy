@@ -10,21 +10,20 @@
 #include "IParser.hpp"
 
 class ParseArguments : public IParser {
-    public:
-        ParseArguments(int argc, char *argv[]);
-        ~ParseArguments() = default;
+public:
+    ParseArguments(int argc, char *argv[]);
+    ~ParseArguments() = default;
 
-        void parse();
-        bool validateConnection(std::string msg);
+    void parse();
+    bool validateConnection(std::string msg);
 
-        int getPort() const;
-        std::string getMachine() const;
-
-        void setPort(int port);
-        void setMachine(std::string machine);
-    private:
-        int _argc;
-        char **_argv;
-        int _port;
-        std::string _machine;
+    int getPort() const;
+    void setPort(int port);
+    std::string getMachine() const;
+    void setMachine(std::string machine);
+private:
+    int _argc;
+    char **_argv;
+    int _port;
+    std::string _machine;
 };

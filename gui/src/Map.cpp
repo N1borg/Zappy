@@ -33,7 +33,7 @@ Map::Map(int width, int height, int frequency, std::vector<Team> teams) : _width
     _modelIsland = LoadModel("gui/resources/island.glb");
     _modelGrass = LoadModel("gui/resources/grass.glb");
 
-    srand(time(0));
+    srand(time(NULL));
 
     for (int i = 0; i < width; i++) {
         std::vector<Tile_t> row;
@@ -100,11 +100,6 @@ int Map::getFrequency() const
 bool Map::isGameRunning() const
 {
     return _isGameRunning;
-}
-
-bool Map::isTileSelected() const
-{
-    return _isTileSelected;
 }
 
 void Map::setGameRunning(bool isGameRunning)
@@ -366,16 +361,6 @@ void Map::delThystame(int x, int y)
     _nbThystame -= 1;
 }
 
-void Map::setWidth(int width)
-{
-    _width = width;
-}
-
-void Map::setHeight(int height)
-{
-    _height = height;
-}
-
 void Map::draw()
 {
     double time = GetTime();
@@ -487,6 +472,7 @@ bool Map::selectTile(Ray ray)
     RayCollision closestCollision;
     closestCollision.distance = FLT_MAX;
     bool hasHit = false;
+    bool isSelected = false;
     double time = GetTime();
 
     for (int x = 0; x < _width; x++) {
@@ -521,14 +507,14 @@ bool Map::selectTile(Ray ray)
                 RayCollision collision = GetRayCollisionBox(ray, box);
                 if (collision.hit && collision.distance == closestCollision.distance && tile.island.first.isSelected() == false) {
                     tile.island.first.setSelected(true);
-                    _isTileSelected = true;
+                    isSelected = true;
                 } else
                     tile.island.first.setSelected(false);
             } else
                 _tiles[x][z].island.first.setSelected(false);
         }
     }
-    return _isTileSelected;
+    return isSelected;
 }
 
 Tile_t Map::getSelectedTile() const
