@@ -24,7 +24,8 @@ class Window {
 
         // Raylib window functions
         void init();
-        void playMusic(const std::string &path);
+        void close();
+        void playMusic(const char *path);
 
         // Raylib Camera functions
         CameraObject *getCamera();
@@ -46,4 +47,5 @@ class Window {
         std::string _title;
         CameraObject *_camera;
         CameraObject *_minimap;
+        Music _music;
 };

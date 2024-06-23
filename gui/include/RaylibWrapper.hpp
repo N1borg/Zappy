@@ -49,6 +49,17 @@ class RaylibWrapper {
         // Camera functions
         static void updateCamera(Camera3D *camera, int mode) { UpdateCamera(camera, mode); }
 
+        // Audio functions
+        static void initAudioDevice() { InitAudioDevice(); }
+        static void closeAudioDevice() { CloseAudioDevice(); }
+        static Music loadMusicStream(const char *fileName) { return LoadMusicStream(fileName); }
+        static void unloadMusicStream(Music music) { UnloadMusicStream(music); }
+        static void playMusicStream(Music music) { PlayMusicStream(music); }
+        static void stopMusicStream(Music music) { StopMusicStream(music); }
+        static void pauseMusicStream(Music music) { PauseMusicStream(music); }
+        static void resumeMusicStream(Music music) { ResumeMusicStream(music); }
+        static void setMusicVolume(Music music, float volume) { SetMusicVolume(music, volume); }
+
         // Other
         static float getFrameTime() { return GetFrameTime(); }
         static int measureText(const char *text, int fontSize) { return MeasureText(text, fontSize); }
