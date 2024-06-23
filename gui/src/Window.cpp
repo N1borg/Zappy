@@ -33,10 +33,13 @@ void Window::init()
     SetTargetFPS(144);
     SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_MSAA_4X_HINT | FLAG_VSYNC_HINT);
     InitWindow(_width, _height, _title.c_str());
+    InitAudioDevice();
 }
 
 void Window::close()
 {
+    UnloadMusicStream(_music);
+    CloseAudioDevice();
     CloseWindow();
 }
 
@@ -113,6 +116,13 @@ bool Window::isMouseButtonDown(int button)
 bool Window::isMouseButtonUp(int button)
 {
     return IsMouseButtonUp(button);
+}
+
+void Window::playMusic(const std::string &path)
+{
+    _music = LoadMusicStream(path.c_str());
+    _music.looping = true;
+    PlayMusicStream(_music);
 }
 
 Camera3D Window::getCamera() const
@@ -245,33 +255,45 @@ void Window::drawFPS(int posX, int posY)
 
 void Window::drawGeneralInfo(Map map)
 {
-    DrawText(TextFormat("X:%f Y:%f Z:%f", _camera.position.x, _camera.position.y, _camera.position.z), 10, 20, 20, GRAY);
-    DrawText(TextFormat("Map size: (%d, %d)", map.getWidth(), map.getHeight()), 10, 40, 20, GRAY);
-    DrawText(TextFormat("Frequency: %d", map.getFrequency()), 10, 60, 20, GRAY);
-    DrawText(TextFormat("Camera mode: %d", getCameraMode()), 10, 80, 20, GRAY);
-    DrawText(TextFormat("Teams: N/A", map.getNbTeams()), 10, 120, 20, GRAY);
-    DrawText(TextFormat("Players: %d", map.getNbPlayers()), 10, 100, 20, GRAY);
-    DrawText(TextFormat("Eggs: %d", map.getNbEggs()), 10, 140, 20, GRAY);
-    DrawText(TextFormat("Food: %d", map.getNbFood()), 10, 160, 20, GRAY);
-    DrawText(TextFormat("Linemate: %d", map.getNbLinemate()), 10, 180, 20, GRAY);
-    DrawText(TextFormat("Deraumere: %d", map.getNbDeraumere()), 10, 200, 20, GRAY);
-    DrawText(TextFormat("Sibur: %d", map.getNbSibur()), 10, 220, 20, GRAY);
-    DrawText(TextFormat("Mendiane: %d", map.getNbMendiane()), 10, 240, 20, GRAY);
-    DrawText(TextFormat("Phiras: %d", map.getNbPhiras()), 10, 260, 20, GRAY);
-    DrawText(TextFormat("Thystame: %d", map.getNbThystame()), 10, 280, 20, GRAY);
+    DrawText(TextFormat("X:%f Y:%f Z:%f", _camera.position.x, _camera.position.y, _camera.position.z), 10, 20, 20, BLACK);
+    DrawText(TextFormat("Map size: (%d, %d)", map.getWidth(), map.getHeight()), 10, 40, 20, BLACK);
+    DrawText(TextFormat("Frequency: %d", map.getFrequency()), 10, 60, 20, BLACK);
+    DrawText(TextFormat("Camera mode: %d", getCameraMode()), 10, 80, 20, BLACK);
+    DrawText(TextFormat("Is Game running: %d", map.isGameRunning()), 10, 100, 20, BLACK);
+    DrawText(TextFormat("Teams (%d):", map.getNbTeams()), 10, 120, 20, BLACK);
+    int i = drawTeamNames(map);
+    DrawText(TextFormat("Players: %d", map.getNbPlayers()), 10, 140 + i * 20, 20, BLACK);
+    DrawText(TextFormat("Eggs: %d", map.getNbEggs()), 10, 160 + i * 20, 20, BLACK);
+    DrawText(TextFormat("Food: %d", map.getNbFood()), 10, 180 + i * 20, 20, BLACK);
+    DrawText(TextFormat("Linemate: %d", map.getNbLinemate()), 10, 200 + i * 20, 20, BLACK);
+    DrawText(TextFormat("Deraumere: %d", map.getNbDeraumere()), 10, 220 + i * 20, 20, BLACK);
+    DrawText(TextFormat("Sibur: %d", map.getNbSibur()), 10, 240 + i * 20, 20, BLACK);
+    DrawText(TextFormat("Mendiane: %d", map.getNbMendiane()), 10, 260 + i * 20, 20, BLACK);
+    DrawText(TextFormat("Phiras: %d", map.getNbPhiras()), 10, 280 + i * 20, 20, BLACK);
+    DrawText(TextFormat("Thystame: %d", map.getNbThystame()), 10, 300 + i * 20, 20, BLACK);
+}
+
+int Window::drawTeamNames(Map map)
+{
+    int i = 0;
+    for (auto &team : map.getTeams()) {
+        DrawText(TextFormat("  %s: p(%d) e(%d)", team.getTeamName().c_str(), team.getNumberPlayers(), team.getNumberEggs()), 10, 140 + i * 20, 20, team.getTeamColor());
+        i++;
+    }
+    return i;
 }
 
 void Window::drawTileInfo(Tile_t tile)
 {
-    DrawText(TextFormat("Players: %d", tile.players.size()), _width - MeasureText(TextFormat("Players: %d", tile.players.size()), 20) - 10, 20, 20, GRAY);
-    DrawText(TextFormat("Eggs: %d", tile.eggs.size()), _width - MeasureText(TextFormat("Eggs: %d", tile.eggs.size()), 20) - 10, 40, 20, GRAY);
-    DrawText(TextFormat("Food: %d", tile.food.second), _width - MeasureText(TextFormat("Food: %d", tile.food.second), 20) - 10, 60, 20, GRAY);
-    DrawText(TextFormat("Linemate: %d", tile.linemate.second), _width - MeasureText(TextFormat("Linemate: %d", tile.linemate.second), 20) - 10, 80, 20, GRAY);
-    DrawText(TextFormat("Deraumere: %d", tile.deraumere.second), _width - MeasureText(TextFormat("Deraumere: %d", tile.deraumere.second), 20) - 10, 100, 20, GRAY);
-    DrawText(TextFormat("Sibur: %d", tile.sibur.second), _width - MeasureText(TextFormat("Sibur: %d", tile.sibur.second), 20) - 10, 120, 20, GRAY);
-    DrawText(TextFormat("Mendiane: %d", tile.mendiane.second), _width - MeasureText(TextFormat("Mendiane: %d", tile.mendiane.second), 20) - 10, 140, 20, GRAY);
-    DrawText(TextFormat("Phiras: %d", tile.phiras.second), _width - MeasureText(TextFormat("Phiras: %d", tile.phiras.second), 20) - 10, 160, 20, GRAY);
-    DrawText(TextFormat("Thystame: %d", tile.thystame.second), _width - MeasureText(TextFormat("Thystame: %d", tile.thystame.second), 20) - 10, 180, 20, GRAY);
+    DrawText(TextFormat("Players: %d", tile.players.size()), getScreenWidth() - MeasureText(TextFormat("Players: %d", tile.players.size()), 20) - 10, 20, 20, BLACK);
+    DrawText(TextFormat("Eggs: %d", tile.eggs.size()), getScreenWidth() - MeasureText(TextFormat("Eggs: %d", tile.eggs.size()), 20) - 10, 40, 20, BLACK);
+    DrawText(TextFormat("Food: %d", tile.food.second), getScreenWidth() - MeasureText(TextFormat("Food: %d", tile.food.second), 20) - 10, 60, 20, BLACK);
+    DrawText(TextFormat("Linemate: %d", tile.linemate.second), getScreenWidth() - MeasureText(TextFormat("Linemate: %d", tile.linemate.second), 20) - 10, 80, 20, BLACK);
+    DrawText(TextFormat("Deraumere: %d", tile.deraumere.second), getScreenWidth() - MeasureText(TextFormat("Deraumere: %d", tile.deraumere.second), 20) - 10, 100, 20, BLACK);
+    DrawText(TextFormat("Sibur: %d", tile.sibur.second), getScreenWidth() - MeasureText(TextFormat("Sibur: %d", tile.sibur.second), 20) - 10, 120, 20, BLACK);
+    DrawText(TextFormat("Mendiane: %d", tile.mendiane.second), getScreenWidth() - MeasureText(TextFormat("Mendiane: %d", tile.mendiane.second), 20) - 10, 140, 20, BLACK);
+    DrawText(TextFormat("Phiras: %d", tile.phiras.second), getScreenWidth() - MeasureText(TextFormat("Phiras: %d", tile.phiras.second), 20) - 10, 160, 20, BLACK);
+    DrawText(TextFormat("Thystame: %d", tile.thystame.second), getScreenWidth() - MeasureText(TextFormat("Thystame: %d", tile.thystame.second), 20) - 10, 180, 20, BLACK);
 }
 
 std::string Window::animateTextDots(const std::string &string, float elapsedTime)

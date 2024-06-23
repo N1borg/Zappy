@@ -68,33 +68,33 @@ int main(int argc, char *argv[])
     }
 
     // Create map
+    std::vector<Team> teams;
     Team team1("team1");
     team1.setTeamColor(RED);
+    teams.push_back(team1);
     Team team2("team2");
     team2.setTeamColor(YELLOW);
+    teams.push_back(team2);
     Team team3("team3");
     team3.setTeamColor(BLUE);
+    teams.push_back(team3);
 
-    Map map(mapWidth, mapHeight, timeUnit);
+    Map map(mapWidth, mapHeight, timeUnit, teams);
     std::vector<std::vector<Tile_t>> tiles = map.getTiles();
 
     window.setCameraPosition({0.0f, 20.0f, 0.0f});
     window.setCameraTarget({(mapWidth / 2.0f) * 10.0f, 0.0f, (mapHeight / 2.0f) * 10.0f});
 
-    Model playerModel = LoadModel("gui/resources/player.glb");
-    Model eggModel = LoadModel("gui/resources/egg.glb");
-
-    Player player1(playerModel, 0, 1, 3, (Orientation) 0, team1);
-    Player player2(playerModel, 1, 0, 0, (Orientation) 1, team2);
-    Egg egg1(eggModel, 0, 0, 0, 0, team1);
-    Egg egg2(eggModel, 1, 2, 4, 5, team3);
-    map.addPlayer(1, 3, player1);
+    map.addPlayer(0, 0, 0, Orientation::North, 1, "team1");
+    map.addPlayer(1, 1, 1, Orientation::East, 1, "team2");
+    map.addPlayer(2, 2, 2, Orientation::South, 1, "team3");
+    map.addEgg(0, 0, 0, 0, "team1");
+    map.addEgg(1, 0, 1, 1, "team2");
+    map.addEgg(2, 0, 2, 2, "team3");
     map.addFood(2, 3);
     map.addFood(1, 5);
     map.addFood(4, 2);
     map.addFood(5, 1);
-    map.addEgg(4, 3, egg1);
-    map.addEgg(3, 5, egg2);
     map.addLinemate(1, 1);
     map.addDeraumere(2, 2);
     map.addSibur(3, 3);
@@ -102,8 +102,6 @@ int main(int argc, char *argv[])
     map.addPhiras(5, 5);
     map.addThystame(6, 6);
 
-    map.addPlayer(0, 0, player2);
-    map.addEgg(0, 0, egg1);
     map.addFood(0, 0);
     map.addLinemate(0, 0);
     map.addDeraumere(0, 0);
@@ -113,10 +111,12 @@ int main(int argc, char *argv[])
     map.addThystame(0, 0);
 
     bool isTileSelected = false;
+    bool isFrequencySelected = false;
 
     // Starts thread for reading messages
     socket.startThread();
 
+    window.playMusic("gui/resources/game_music.mp3");
     window.disableCursor();
     while (!window.shouldClose()) {
         // Check socket disconnection
@@ -126,8 +126,10 @@ int main(int argc, char *argv[])
                 break;
         }
 
-        if (window.isMouseButtonPressed(MOUSE_LEFT_BUTTON) || window.isKeyPressed(KEY_ENTER))
+        if (window.isMouseButtonPressed(MOUSE_LEFT_BUTTON))
             isTileSelected = map.selectTile(GetMouseRay({window.getScreenWidth() / 2.0f, window.getScreenHeight() / 2.0f}, window.getCamera()));
+        if (window.isKeyPressed(KEY_ENTER))
+            !isFrequencySelected;
 
         window.parseCameraInputs();
         window.updateCamera();

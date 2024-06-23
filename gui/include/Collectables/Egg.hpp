@@ -16,13 +16,13 @@ public:
     ~Egg() = default;
 
     int getId() const;
-    int setId(int id);
+    void setId(int id);
     int getPlayerId() const;
-    int setPlayerId() const;
+    void setPlayerId(int playerId);
     int getX() const;
-    int setX(int x);
+    void setX(int x);
     int getY() const;
-    int setY(int y);
+    void setY(int y);
     Team getTeam() const;
 private:
     int _id;

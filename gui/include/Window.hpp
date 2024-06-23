@@ -38,6 +38,7 @@ class Window {
         bool isMouseButtonReleased(int button);
         bool isMouseButtonDown(int button);
         bool isMouseButtonUp(int button);
+        void playMusic(const std::string &path);
 
         // Raylib Camera functions
         Camera3D getCamera() const;
@@ -63,8 +64,9 @@ class Window {
         void drawText(const char *text, int posX, int posY, int fontSize, Color color);
         void drawFPS(int posX, int posY);
         void drawGeneralInfo(Map map);
+        int drawTeamNames(Map map);
         void drawTileInfo(Tile_t tile);
- 
+
         std::string animateTextDots(const std::string &string, float elapsedTime);
         int drawWaitingScreen(Socket &socket, ParseArguments &argsParser, bool isReconnecting);
         void drawConnection(bool isConnected, std::string ip, bool isReconnecting, int elapsedTime);
@@ -77,4 +79,5 @@ class Window {
         std::string _title;
         Camera _camera;
         int _cameraMode;
+        Music _music;
 };

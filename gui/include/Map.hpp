@@ -54,13 +54,15 @@ typedef struct Tile_s {
 
 class Map {
 public:
-    Map(int width, int height, int frequency);
+    Map(int width, int height, int frequency, std::vector<Team> teams);
     ~Map() = default;
 
     int getWidth() const;
     int getHeight() const;
     void setFrequency(int frequency);
     int getFrequency() const;
+    bool isGameRunning() const;
+    void setGameRunning(bool isGameRunning);
     int getNbPlayers() const;
     int getNbTeams() const;
     int getNbEggs() const;
@@ -74,10 +76,14 @@ public:
 
     std::vector<std::vector<Tile_t>> getTiles() const;
     Tile_t getTile(int x, int y) const;
-    void addPlayer(int x, int y, Player player);
-    void delPlayer(int x, int y, Player player);
-    void addEgg(int x, int y, Egg egg);
-    void delEgg(int x, int y, Egg egg);
+    std::vector<Team> getTeams() const;
+    Color getTeamColor(std::string team) const;
+    void addPlayer(int id, int x, int y, Orientation orientation, int level, std::string team);
+    void movePlayer(int id, int x, int y, Orientation orientation);
+    void delPlayer(int id);
+    void addEgg(int id, int playerId, int x, int y, std::string team);
+    void moveEgg(int id, int x, int y);
+    void delEgg(int id);
     void addFood(int x, int y);
     void delFood(int x, int y);
     void addLinemate(int x, int y);
@@ -103,17 +109,21 @@ private:
     int _width;
     int _height;
     int _frequency;
+    bool _isGameRunning;
 
-    int _nbPlayers = 0;
-    int _nbTeams = 0;
-    int _nbEggs = 0;
-    int _nbFood = 0;
-    int _nbLinemate = 0;
-    int _nbDeraumere = 0;
-    int _nbSibur = 0;
-    int _nbMendiane = 0;
-    int _nbPhiras = 0;
-    int _nbThystame = 0;
+    int _nbPlayers;
+    int _nbTeams;
+    int _nbEggs;
+    int _nbFood;
+    int _nbLinemate;
+    int _nbDeraumere;
+    int _nbSibur;
+    int _nbMendiane;
+    int _nbPhiras;
+    int _nbThystame;
+
+    std::vector<Team> _teams;
+    std::vector<Player> _players;
 
     Model _modelPlayer;
     Model _modelEgg;
