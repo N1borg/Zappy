@@ -31,7 +31,7 @@ void Game::stop()
 
 void Game::render(float elapsedTime)
 {
-    if (!_welcomeReceived || !_mapSizeReceived) {
+    if (!_welcomeReceived || !_mapSizeReceived || !_tilesReceived || !_playersReceived || !_timeUnitReceived) {
         _window->waitingScreen(elapsedTime);
     } else {
         RaylibWrapper::beginDrawing();
@@ -109,6 +109,21 @@ void Game::setWelcomeReceived(bool welcomeReceived)
 void Game::setMapSizeReceived(bool mapSizeReceived)
 {
     _mapSizeReceived = mapSizeReceived;
+}
+
+void Game::setTilesReceived(bool tilesReceived)
+{
+    _tilesReceived = tilesReceived;
+}
+
+void Game::setPlayersReceived(bool playersReceived)
+{
+    _playersReceived = playersReceived;
+}
+
+void Game::setTimeUnitReceived(bool timeUnitReceived)
+{
+    _timeUnitReceived = timeUnitReceived;
 }
 
 void Game::setTimeUnit(int timeUnit)

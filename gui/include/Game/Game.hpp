@@ -35,6 +35,9 @@ class Game {
         // Setters
         void setWelcomeReceived(bool welcomeReceived);
         void setMapSizeReceived(bool mapSizeReceived);
+        void setTilesReceived(bool tilesReceived);
+        void setPlayersReceived(bool playersReceived);
+        void setTimeUnitReceived(bool timeUnitReceived);
         void setTimeUnit(int timeUnit);
 
     protected:
@@ -44,6 +47,9 @@ class Game {
         bool _isError = false;
         bool _welcomeReceived = false;
         bool _mapSizeReceived = false;
+        bool _tilesReceived = false;
+        bool _playersReceived = false;
+        bool _timeUnitReceived = false;
         bool _isConnected = false;
         int _timeUnit = 0;
 };

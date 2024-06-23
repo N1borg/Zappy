@@ -12,8 +12,10 @@ void Commands::validateWelcome(const std::string &params, Game &game)
 {
     std::cout << "Welcome to Zappy!" << params << std::endl;
     game.getSocket()->sendMessage("GRAPHIC\n");
-    game.getSocket()->sendMessage("sgt\n");
     game.getSocket()->sendMessage("msz\n");
+    // game.getSocket()->sendMessage("bct\n");
+    game.getSocket()->sendMessage("tna\n");
+    game.getSocket()->sendMessage("sgt\n");
     game.setWelcomeReceived(true);
 }
 
@@ -63,6 +65,7 @@ void Commands::getTileContent(const std::string &params, Game &game)
     int x, y, q0, q1, q2, q3, q4, q5, q6;
     iss >> x >> y >> q0 >> q1 >> q2 >> q3 >> q4 >> q5 >> q6;
     std::cout << "Tile at (" << x << ", " << y << ") has resources: Food=" << q0 << ", Linemate=" << q1 << ", Deraumere=" << q2 << ", Sibur=" << q3 << ", Mendiane=" << q4 << ", Phiras=" << q5 << ", Thystame=" << q6 << std::endl;
+    game.setTilesReceived(true);
 }
 
 void Commands::getTeamsName(const std::string &params, Game &game)
@@ -72,6 +75,7 @@ void Commands::getTeamsName(const std::string &params, Game &game)
     while (iss >> teamName) {
         std::cout << "Team name: " << teamName << std::endl;
     }
+    game.setPlayersReceived(true);
 }
 
 void Commands::getConnectionNewPlayer(const std::string &params, Game &game)
@@ -208,6 +212,7 @@ void Commands::getTimeUnitModification(const std::string &params, Game &game)
     int newTimeUnit;
     iss >> newTimeUnit;
     std::cout << "Time unit modified to: " << newTimeUnit << std::endl;
+    game.setTimeUnitReceived(true);
 }
 
 void Commands::getEndOfGame(const std::string &params, Game &game)
