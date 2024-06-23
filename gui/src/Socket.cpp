@@ -94,7 +94,7 @@ std::string Socket::receiveMessage()
             if (bytesReceived == -1) {
                 if (errno == EAGAIN || errno == EWOULDBLOCK)
                     return "";
-                throw std::runtime_error("Failed to receive message: " + std::string(strerror(errno)));
+                RaylibWrapper::log(LOG_ERROR, "Failed to receive message");
             }
         }
         return std::string(buffer);
@@ -109,7 +109,7 @@ void Socket::attemptConnection()
     while (!_connected) {
         _connected = connectSocket();
         if (!_connected)
-            std::this_thread::sleep_for(std::chrono::seconds(2));
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 }
 
@@ -123,14 +123,15 @@ void Socket::startThread(Game *game)
 void Socket::stopThread()
 {
     _threadRunning = false;
-    _thread.detach();
+    if (_thread.joinable())
+        _thread.join();
 }
 
 void Socket::readThread()
 {
     ParseCommands cmdParser;
     fd_set readfds;
-    // struct timeval tv;
+    struct timeval tv;
     int retval;
 
     while (_threadRunning) {
@@ -140,10 +141,10 @@ void Socket::readThread()
         FD_ZERO(&readfds);
         FD_SET(_clientSocket, &readfds);
 
-        // tv.tv_sec = 0;
-        // tv.tv_usec = 0;
+        tv.tv_sec = 5;
+        tv.tv_usec = 0;
 
-        retval = select(_clientSocket + 1, &readfds, 0, 0, 0);
+        retval = select(_clientSocket + 1, &readfds, 0, 0, &tv);
         if (retval != -1 && FD_ISSET(_clientSocket, &readfds)) {
             std::string message = receiveMessage();
             if (message.empty())

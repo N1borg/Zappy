@@ -8,6 +8,7 @@
 #pragma once
 
 #include "Parser/ParseCommands.hpp"
+#include "RaylibWrapper.hpp"
 
 #include <cstring>
 #include <sys/socket.h>
