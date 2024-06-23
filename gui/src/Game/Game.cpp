@@ -31,16 +31,27 @@ void Game::stop()
 
 void Game::render(float elapsedTime)
 {
-    RaylibWrapper::beginDrawing();
-    RaylibWrapper::clearBackground(RAYWHITE);
-
     if (!_welcomeReceived || !_mapSizeReceived) {
         _window->waitingScreen(elapsedTime);
     } else {
-        _map->draw();
-    }
+        RaylibWrapper::beginDrawing();
+        RaylibWrapper::clearBackground(SKYBLUE);
+        //     // if (window.isMouseButtonPressed(MOUSE_LEFT_BUTTON) || window.isKeyPressed(KEY_ENTER))
+        //     //     map.selectTile(GetMouseRay({window.getScreenWidth() / 2.0f, window.getScreenHeight() / 2.0f}, window.getCamera()));
 
-    RaylibWrapper::endDrawing();
+        RaylibWrapper::updateCamera(getWindow()->getCamera()->getCameraObj(), (getWindow()->getCamera()->getCameraMode()));
+        RaylibWrapper::beginMode3D(*getWindow()->getCamera()->getCameraObj());
+        RaylibWrapper::drawGrid(20, 10.0f);
+        getMap()->draw();
+        getMap()->drawTransparent();
+        RaylibWrapper::endMode3D();
+
+        //     // window.drawText(TextFormat("X:%f Y:%f Z:%f", window.getCamera().position.x, window.getCamera().position.y, window.getCamera().position.z), 10, 40, 20, GRAY);
+
+        getWindow()->drawCrosshair();
+        RaylibWrapper::drawFPS(10, 10);
+        RaylibWrapper::endDrawing();
+    }
 }
 
 void Game::parseInputs()

@@ -12,14 +12,13 @@
 
 class CameraObject {
     public:
-        CameraObject() = default;
+        CameraObject();
         ~CameraObject() = default;
 
-        Camera3D getCameraObj() const;
+        Camera3D *getCameraObj() const;
         int getCameraMode() const;
 
         void setCameraMode(int cameraMode);
-        void setCameraObj(Camera3D cameraObj);
         void setCameraPosition(Vector3 position);
         void setCameraTarget(Vector3 target);
         void setCameraUp(Vector3 up);
@@ -28,7 +27,7 @@ class CameraObject {
 
     private:
         int _cameraMode;
-        Camera3D _cameraObj;
+        Camera3D *_cameraObj;
 };
 
 #endif /* !CAMERA_HPP_ */

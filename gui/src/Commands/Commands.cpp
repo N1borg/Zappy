@@ -22,8 +22,29 @@ void Commands::getMapSize(const std::string &params, Game &game)
     int width, height;
     iss >> width >> height;
 
-    game.getMap()->setWidth(width);
-    game.getMap()->setHeight(height);
+    // // Create map
+    // Map map(mapWidth, mapHeight);
+    // std::vector<std::vector<Tile_t>> tiles = map.getTiles();
+
+    // window.setCameraPosition({(mapWidth / 2.0f) * 10.0f, 20, (mapHeight / 2.0f) * 10.0f});
+
+    // map.setPlayer(1, 3, true);
+    // map.setPlayer(1, 8, true);
+    // map.setPlayer(4, 8, true);
+    // map.setPlayer(5, 1, true);
+    // map.setFood(2, 3, true);
+    // map.setFood(1, 5, true);
+    // map.setFood(4, 2, true);
+    // map.setFood(5, 1, true);
+    // map.setEgg(4, 3, true);
+    // map.setEgg(3, 5, true);
+    // map.setLinemate(1, 1, true);
+    // map.setDeraumere(2, 2, true);
+    // map.setSibur(3, 3, true);
+    // map.setMendiane(4, 4, true);
+    // map.setPhiras(5, 5, true);
+    // map.setThystame(6, 6, true);
+
     game.setMapSizeReceived(true);
     std::cout << "Map size: " << width << "x" << height << std::endl;
 }
