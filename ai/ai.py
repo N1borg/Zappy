@@ -30,16 +30,6 @@ reverse_abbreviations = {
 
 resources = ["linemate", "deraumere", "sibur", "mendiane", "phiras", "thystame"]
 
-# vision_levels = {
-#     1: [[0], [1, 2, 3]],
-#     2: [[0], [1, 2, 3], [4, 5, 6, 7, 8]],
-#     3: [[0], [1, 2, 3], [4, 5, 6, 7, 8], [9, 10, 11, 12, 13, 14, 15]]
-#     4: [[0], [1, 2, 3], [4, 5, 6, 7, 8], [9, 10, 11, 12, 13, 14, 15]]
-#     5: [[0], [1, 2, 3], [4, 5, 6, 7, 8], [9, 10, 11, 12, 13, 14, 15]]
-#     6: [[0], [1, 2, 3], [4, 5, 6, 7, 8], [9, 10, 11, 12, 13, 14, 15]]
-#     7: [[0], [1, 2, 3], [4, 5, 6, 7, 8], [9, 10, 11, 12, 13, 14, 15]]
-#     8: [[0], [1, 2, 3], [4, 5, 6, 7, 8], [9, 10, 11, 12, 13, 14, 15]]
-#     }
 
 medianes = [0, 2, 6, 12, 20, 30, 42, 56, 72]
 
@@ -121,6 +111,7 @@ class AI:
                 result[key] = dict2[key]
         return result
 
+    # A broadcast parsing method
     def broadcast_receive(self, response):
         inc_list = ["inc2", "inc3", "inc4", "inc5", "inc6", "inc7"]
         response = response[8:] if response[:8] == "message " else response
@@ -160,10 +151,12 @@ class AI:
             inv = self.inventory_from_string(cmd[1:])
             self.shared_inventory = self.sum_dictionaries(self.shared_inventory, inv)
 
+    # A methods which adds commands to the queue
     def command(self, cmd, arg):
         command = cmd if arg == "" else cmd + " " + arg
         self.queue.insert(0, command)
 
+    # A method which receives a command and parses them
     def command_response(self):
         cmd = "-1"
         cmd_okko = ["Incantation", "Fork", "Eject", "Take", "Set"]
@@ -235,6 +228,7 @@ class AI:
         if tile_nb <= 80:
             return 8
 
+    # A method which queues walk actions
     def walk(self, tile_nb):
         with self.lock:
             self.queue = []
@@ -256,12 +250,14 @@ class AI:
         for i in range(abs(left_or_right)):
             self.command("Forward", "")
 
+    # A method which searches for an object in the field of view (look)
     def search_object(self, obj_string):
         for i in range(0, len(self.look)):
             if obj_string in self.look[i].keys():
                 return i, self.look[i][obj_string]
         return False, False
 
+    # A method which makes the AI go and get the object
     def get_object(self, obj_name, amount):
         curr_fwd = 0
         with self.lock:
@@ -319,6 +315,7 @@ class AI:
         with self.lock:
             self.queue = []
 
+    # A method which launches incantation
     def incantate(self):
         old_lvl = 1
         while not self.incantation_done:
@@ -331,12 +328,14 @@ class AI:
                     self.command("Incantation", "")
                     self.proposed_incantation = True
 
+    # A thread management branch to consistently receive commands
     def receive_management(self):
         while not self.grace.is_set():
             self.command_response()
             if self.grace.is_set():
                 break
 
+    # A thread management branch to consistently have at least 3 commands sent to server
     def send_management(self):
         while not self.grace.is_set() and not self.dead:
             with self.lock:
@@ -375,30 +374,6 @@ class AI:
             time.sleep(5)
             if self.grace.is_set():
                 break
-
-    def launch_loop(self):
-        self.naming()
-        t_send = threading.Thread(target=self.send_management, args=())
-        t_receive = threading.Thread(target=self.receive_management, args=())
-        t_look = threading.Thread(target=self.look_management, args=())
-
-        t_receive.start()
-        t_send.start()
-        t_look.start()
-
-        try:
-            self.lvl2()
-            # self.lvl3()
-
-        except KeyboardInterrupt:
-            print("Interrupted by user. Stopping threads...")
-
-        print(self.name)
-        self.stop()
-        t_look.join()
-        t_send.join()
-        t_receive.join()
-
     def naming(self):
         self.command("Connect_nbr", "")
         self.name = self.names[self.connect_nbr_tmp]
@@ -437,4 +412,28 @@ class AI:
                     self.command("Broadcast", f"{self.team}/!/{self.name}/!/?{key}")
                     self.grace.wait(0.5)
                     self.get_object(key, value)
-            self.command("Broadcast", f"{self.team}/!/{self.name}/!/I{inventory_to_string()}")
+            self.command("Broadcast", f"{self.team}/!/{self.name}/!/I{self.inventory_to_string()}")
+
+    # Main loop which launches threads and other methods
+    def launch_loop(self):
+        self.naming()
+        t_send = threading.Thread(target=self.send_management, args=())
+        t_receive = threading.Thread(target=self.receive_management, args=())
+        t_look = threading.Thread(target=self.look_management, args=())
+
+        t_receive.start()
+        t_send.start()
+        t_look.start()
+
+        try:
+            self.lvl2()
+            # self.lvl3()
+
+        except KeyboardInterrupt:
+            print("Interrupted by user. Stopping threads...")
+
+        print(self.name)
+        self.stop()
+        t_look.join()
+        t_send.join()
+        t_receive.join()

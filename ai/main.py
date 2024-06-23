@@ -65,7 +65,7 @@ def main():
             already_parced = False
             slots = -1
             x, y = -1, -1
-            # Receive the number of available slots
+            # Receive the number of available slots and map coordinates
             try:
                 response = receive_response(s)
                 if response == "ko":
@@ -82,7 +82,6 @@ def main():
                     x, y = parced[1], parced[2]
                     already_parced = True
 
-            # Receive the position (X, Y)
             if not already_parced:
                 response = receive_response(s)
                 parts = response.split()
