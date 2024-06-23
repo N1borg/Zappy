@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
     Window window(1280, 720, "Zappy GUI");
     window.init();
 
-    if (!window.drawWaitingScreen(socket, argsParser))
+    if (!window.drawWaitingScreen(socket, argsParser, false))
         return 84;
 
     socket.sendMessage("msz\n");
@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
         mapWidth = std::stoi(mapWidthStr);
         mapHeight = std::stoi(mapHeightStr);
     } catch (const std::exception &e) {
-        std::cerr << "Error: Invalid map size" << std::endl;
+        window.log(LOG_ERROR, "INIT: Invalid map size");
         window.close();
         return 84;
     }
@@ -79,6 +79,13 @@ int main(int argc, char *argv[])
     socket.startThread();
 
     while (!window.shouldClose()) {
+        // Check socket disconnection
+        if (!socket.isConnected()) {
+            window.log(LOG_ERROR, "Connection lost");
+            if (!window.drawWaitingScreen(socket, argsParser, true))
+                break;
+        }
+
         window.parseCameraInputs();
         window.updateCamera();
         window.beginDrawing();
