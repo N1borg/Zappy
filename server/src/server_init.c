@@ -91,7 +91,7 @@ void init_server(server_t *serv)
             x = rand() % serv->width;
             y = rand() % serv->height;
             add_new_egg(serv, serv->clients[i],
-                serv->teams[i], &serv->map[x][y]);
+                serv->teams[i], &serv->map[y][x]);
         }
     }
 }
