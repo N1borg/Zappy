@@ -21,6 +21,7 @@ Window::Window(int width, int height, std::string title)
     _camera->setCameraFovy(60.0f);
     _camera->setCameraProjection(CAMERA_PERSPECTIVE);
     _camera->setCameraMode(CAMERA_FREE);
+    playMusic("gui/resources/game_music.mp3");
 }
 
 void Window::init()

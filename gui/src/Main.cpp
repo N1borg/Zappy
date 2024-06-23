@@ -41,45 +41,6 @@ int main(int argc, char *argv[])
     game.stop();
     return 0;
 
-    // /*
-    // ** Init socker and window, draw waiting screen while connecting
-    // */
-    // Socket socket(argsParser.getPort(), argsParser.getMachine());
-    // Window window(1280, 720, "Zappy GUI");
-    // window.init();
-
-    // if (!window.drawWaitingScreen(socket, argsParser, false))
-    //     return 84;
-
-    // socket.sendMessage("msz\n");
-    // std::istringstream msg = std::istringstream(socket.receiveMessage());
-    // std::string mapSz, mapWidthStr, mapHeightStr;
-    // int mapWidth, mapHeight;
-
-    // try {
-    //     msg >> mapSz >> mapWidthStr >> mapHeightStr;
-    //     mapWidth = std::stoi(mapWidthStr);
-    //     mapHeight = std::stoi(mapHeightStr);
-    // } catch (const std::exception &e) {
-    //     window.log(LOG_ERROR, "INIT: Invalid map size");
-    //     window.close();
-    //     return 84;
-    // }
-
-    // socket.sendMessage("sgt\n");
-    // msg = std::istringstream(socket.receiveMessage());
-    // std::string timeUnitReq, timeUnitStr;
-    // int timeUnit;
-
-    // try {
-    //     msg >> timeUnitReq >> timeUnitStr;
-    //     timeUnit = std::stoi(timeUnitStr);
-    // } catch (const std::exception &e) {
-    //     window.log(LOG_ERROR, "INIT: Invalid frequence");
-    //     window.close();
-    //     return 84;
-    // }
-
     // // Create map
     // std::vector<Team> teams;
     // Team team1("team1");
@@ -132,12 +93,6 @@ int main(int argc, char *argv[])
     // window.playMusic("gui/resources/game_music.mp3");
     // window.disableCursor();
     // while (!window.shouldClose()) {
-    //     // Check socket disconnection
-    //     if (!socket.isConnected()) {
-    //         window.log(LOG_ERROR, "Connection lost");
-    //         if (!window.drawWaitingScreen(socket, argsParser, true))
-    //             break;
-    //     }
 
     //     if (window.isMouseButtonPressed(MOUSE_LEFT_BUTTON))
     //         isTileSelected = map.selectTile(GetMouseRay({window.getScreenWidth() / 2.0f, window.getScreenHeight() / 2.0f}, window.getCamera()));
@@ -162,8 +117,4 @@ int main(int argc, char *argv[])
     //             window.drawTileInfo(map.getSelectedTile());
     //     window.endDrawing();
     // }
-    // map.unload();
-    // window.close();
-    // socket.stopThread();
-    // return 0;
 }

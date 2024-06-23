@@ -20,29 +20,6 @@ void Game::init()
 
     if (!_window->waitingConnection(*_socket, _socket->getMachine(), false))
         _isError = true;
-
-    // // Create map
-    // Map map(10, 10);
-    // std::vector<std::vector<Tile_t>> tiles = map.getTiles();
-
-    // getWindow()->getCamera()->setCameraPosition({(10 / 2.0f) * 10.0f, 20, (10 / 2.0f) * 10.0f});
-
-    // map.setPlayer(1, 3, true);
-    // map.setPlayer(1, 8, true);
-    // map.setPlayer(4, 8, true);
-    // map.setPlayer(5, 1, true);
-    // map.setFood(2, 3, true);
-    // map.setFood(1, 5, true);
-    // map.setFood(4, 2, true);
-    // map.setFood(5, 1, true);
-    // map.setEgg(4, 3, true);
-    // map.setEgg(3, 5, true);
-    // map.setLinemate(1, 1, true);
-    // map.setDeraumere(2, 2, true);
-    // map.setSibur(3, 3, true);
-    // map.setMendiane(4, 4, true);
-    // map.setPhiras(5, 5, true);
-    // map.setThystame(6, 6, true);
 }
 
 void Game::stop()
@@ -129,4 +106,9 @@ void Game::setWelcomeReceived(bool welcomeReceived)
 void Game::setMapSizeReceived(bool mapSizeReceived)
 {
     _mapSizeReceived = mapSizeReceived;
+}
+
+void Game::setTimeUnit(int timeUnit)
+{
+    _timeUnit = timeUnit;
 }

@@ -31,10 +31,12 @@ class Game {
         Socket *getSocket();
         Map *getMap();
         bool hasError() const;
+        int getTimeUnit() const;
 
         // Setters
         void setWelcomeReceived(bool welcomeReceived);
         void setMapSizeReceived(bool mapSizeReceived);
+        void setTimeUnit(int timeUnit);
 
     protected:
         Window *_window;
@@ -44,6 +46,7 @@ class Game {
         bool _welcomeReceived = false;
         bool _mapSizeReceived = false;
         bool _isConnected = false;
+        int _timeUnit = 0;
 };
 
 #endif /* !GAME_HPP_ */

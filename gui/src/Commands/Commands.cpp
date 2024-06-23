@@ -12,6 +12,7 @@ void Commands::validateWelcome(const std::string &params, Game &game)
 {
     std::cout << "Welcome to Zappy!" << params << std::endl;
     game.getSocket()->sendMessage("GRAPHIC\n");
+    game.getSocket()->sendMessage("sgt\n");
     game.getSocket()->sendMessage("msz\n");
     game.setWelcomeReceived(true);
 }
@@ -190,9 +191,16 @@ void Commands::getEggDeath(const std::string &params, Game &game)
 void Commands::getTimeUnitRequest(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
+    std::string timeUnitReq, timeUnitStr;
     int timeUnit;
-    iss >> timeUnit;
-    std::cout << "Current time unit: " << timeUnit << std::endl;
+
+    try {
+        iss >> timeUnitReq >> timeUnitStr;
+        timeUnit = std::stoi(timeUnitStr);
+        game.setTimeUnit(timeUnit);
+    } catch (const std::exception &e) {
+        RaylibWrapper::log(LOG_ERROR, "INIT: Invalid frequence");
+    }
 }
 
 void Commands::getTimeUnitModification(const std::string &params, Game &game)
