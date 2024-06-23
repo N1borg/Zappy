@@ -92,6 +92,11 @@ bool Map::isGameRunning() const
     return _isGameRunning;
 }
 
+bool Map::isTileSelected() const
+{
+    return _isTileSelected;
+}
+
 void Map::setGameRunning(bool isGameRunning)
 {
     _isGameRunning = isGameRunning;
@@ -468,7 +473,6 @@ bool Map::selectTile(Ray ray)
     RayCollision closestCollision;
     closestCollision.distance = FLT_MAX;
     bool hasHit = false;
-    bool isSelected = false;
     double time = GetTime();
 
     for (int x = 0; x < _width; x++) {
@@ -503,14 +507,14 @@ bool Map::selectTile(Ray ray)
                 RayCollision collision = GetRayCollisionBox(ray, box);
                 if (collision.hit && collision.distance == closestCollision.distance && tile.island.first.isSelected() == false) {
                     tile.island.first.setSelected(true);
-                    isSelected = true;
+                    _isTileSelected = true;
                 } else
                     tile.island.first.setSelected(false);
             } else
                 _tiles[x][z].island.first.setSelected(false);
         }
     }
-    return isSelected;
+    return _isTileSelected;
 }
 
 Tile_t Map::getSelectedTile() const

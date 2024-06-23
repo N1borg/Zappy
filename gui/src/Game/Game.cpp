@@ -36,9 +36,6 @@ void Game::render(float elapsedTime)
     } else {
         RaylibWrapper::beginDrawing();
         RaylibWrapper::clearBackground(SKYBLUE);
-        //     // if (window.isMouseButtonPressed(MOUSE_LEFT_BUTTON) || window.isKeyPressed(KEY_ENTER))
-        //     //     map.selectTile(GetMouseRay({window.getScreenWidth() / 2.0f, window.getScreenHeight() / 2.0f}, window.getCamera()));
-
         RaylibWrapper::updateCamera(getWindow()->getCamera()->getCameraObj(), (getWindow()->getCamera()->getCameraMode()));
         RaylibWrapper::beginMode3D(*getWindow()->getCamera()->getCameraObj());
         RaylibWrapper::drawGrid(20, 10.0f);
@@ -46,8 +43,11 @@ void Game::render(float elapsedTime)
         getMap()->drawTransparent();
         RaylibWrapper::endMode3D();
 
-        //     // window.drawText(TextFormat("X:%f Y:%f Z:%f", window.getCamera().position.x, window.getCamera().position.y, window.getCamera().position.z), 10, 40, 20, GRAY);
+            // window.drawText(TextFormat("X:%f Y:%f Z:%f", window.getCamera().position.x, window.getCamera().position.y, window.getCamera().position.z), 10, 40, 20, GRAY);
 
+        getWindow()->drawGeneralInfo(*getMap());
+        if (getMap()->isTileSelected())
+            getWindow()->drawTileInfo(getMap()->getSelectedTile());
         getWindow()->drawCrosshair();
         RaylibWrapper::drawFPS(10, 10);
         RaylibWrapper::endDrawing();
@@ -57,6 +57,9 @@ void Game::render(float elapsedTime)
 void Game::parseInputs()
 {
     switch (RaylibWrapper::getKeyPressed()) {
+        case MOUSE_LEFT_BUTTON:
+            _map->selectTile(RaylibWrapper::getMouseRay({RaylibWrapper::getScreenWidth() / 2.0f, RaylibWrapper::getScreenHeight() / 2.0f}, *getWindow()->getCamera()->getCameraObj()));
+            break;
         case KEY_ONE:
             _window->getCamera()->setCameraMode(CAMERA_FIRST_PERSON);
             _window->getCamera()->setCameraUp({0.0f, 1.0f, 0.0f});

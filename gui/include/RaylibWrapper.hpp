@@ -41,7 +41,6 @@ class RaylibWrapper {
         static void endMode3D() { EndMode3D(); }
         static void clearBackground(Color color) { ClearBackground(color); }
         static void drawFPS(int posX, int posY) { DrawFPS(posX, posY); }
-        static void drawText(const char *text, int posX, int posY, int fontSize, Color color) { DrawText(text, posX, posY, fontSize, color); }
         static void drawRectangle(int posX, int posY, int width, int height, Color color) { DrawRectangle(posX, posY, width, height, color); }
         static void drawPlane(Vector3 position, Vector2 size, Color color) { DrawPlane(position, size, color); }
         static void drawGrid(int slices, float spacing) { DrawGrid(slices, spacing); }
@@ -60,9 +59,14 @@ class RaylibWrapper {
         static void resumeMusicStream(Music music) { ResumeMusicStream(music); }
         static void setMusicVolume(Music music, float volume) { SetMusicVolume(music, volume); }
 
+        // Text functions
+        static int measureText(const char *text, int fontSize) { return MeasureText(text, fontSize); }
+        static void drawText(const char *text, int posX, int posY, int fontSize, Color color) { DrawText(text, posX, posY, fontSize, color); }
+        static const char *textFormat(const char *text, ...) { va_list args; va_start(args, text); return TextFormat(text, args); va_end(args); }
+
         // Other
         static float getFrameTime() { return GetFrameTime(); }
-        static int measureText(const char *text, int fontSize) { return MeasureText(text, fontSize); }
+        static Ray getMouseRay(Vector2 mousePosition, Camera3D camera) { return GetMouseRay(mousePosition, camera); }
         static void log(int level, const char *msg, ...) { va_list args; va_start(args, msg); TraceLog(level, msg, args); va_end(args); }
         static void setConfigFlags(unsigned int flags) { SetConfigFlags(flags); }
 };

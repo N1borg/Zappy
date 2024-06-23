@@ -63,6 +63,7 @@ public:
     void setFrequency(int frequency);
     int getFrequency() const;
     bool isGameRunning() const;
+    bool isTileSelected() const;
     void setGameRunning(bool isGameRunning);
     int getNbPlayers() const;
     int getNbTeams() const;
@@ -114,6 +115,7 @@ private:
     int _height;
     int _frequency;
     bool _isGameRunning;
+    bool _isTileSelected;
 
     int _nbPlayers;
     int _nbTeams;

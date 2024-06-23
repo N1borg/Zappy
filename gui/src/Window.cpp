@@ -56,48 +56,53 @@ void Window::drawCrosshair()
     RaylibWrapper::drawRectangle(centerX - crosshairThickness / 2, centerY - crosshairSize, crosshairThickness, 2 * crosshairSize, {0, 0, 0, 127});
 }
 
-// void Window::drawGeneralInfo(Map map)
-// {
-//     DrawText(TextFormat("X:%f Y:%f Z:%f", _camera.position.x, _camera.position.y, _camera.position.z), 10, 20, 20, BLACK);
-//     DrawText(TextFormat("Map size: (%d, %d)", map.getWidth(), map.getHeight()), 10, 40, 20, BLACK);
-//     DrawText(TextFormat("Frequency: %d", map.getFrequency()), 10, 60, 20, BLACK);
-//     DrawText(TextFormat("Camera mode: %d", getCameraMode()), 10, 80, 20, BLACK);
-//     DrawText(TextFormat("Is Game running: %d", map.isGameRunning()), 10, 100, 20, BLACK);
-//     DrawText(TextFormat("Teams (%d):", map.getNbTeams()), 10, 120, 20, BLACK);
-//     int i = drawTeamNames(map);
-//     DrawText(TextFormat("Players: %d", map.getNbPlayers()), 10, 140 + i * 20, 20, BLACK);
-//     DrawText(TextFormat("Eggs: %d", map.getNbEggs()), 10, 160 + i * 20, 20, BLACK);
-//     DrawText(TextFormat("Food: %d", map.getNbFood()), 10, 180 + i * 20, 20, BLACK);
-//     DrawText(TextFormat("Linemate: %d", map.getNbLinemate()), 10, 200 + i * 20, 20, BLACK);
-//     DrawText(TextFormat("Deraumere: %d", map.getNbDeraumere()), 10, 220 + i * 20, 20, BLACK);
-//     DrawText(TextFormat("Sibur: %d", map.getNbSibur()), 10, 240 + i * 20, 20, BLACK);
-//     DrawText(TextFormat("Mendiane: %d", map.getNbMendiane()), 10, 260 + i * 20, 20, BLACK);
-//     DrawText(TextFormat("Phiras: %d", map.getNbPhiras()), 10, 280 + i * 20, 20, BLACK);
-//     DrawText(TextFormat("Thystame: %d", map.getNbThystame()), 10, 300 + i * 20, 20, BLACK);
-// }
+void Window::drawGeneralInfo(Map map)
+{
+    Camera camera = *_camera->getCameraObj();
+    int cameraMode = _camera->getCameraMode();
 
-// int Window::drawTeamNames(Map map)
-// {
-//     int i = 0;
-//     for (auto &team : map.getTeams()) {
-//         DrawText(TextFormat("  %s: p(%d) e(%d)", team.getTeamName().c_str(), team.getNumberPlayers(), team.getNumberEggs()), 10, 140 + i * 20, 20, team.getTeamColor());
-//         i++;
-//     }
-//     return i;
-// }
+    RaylibWrapper::drawText(RaylibWrapper::textFormat("X:%f Y:%f Z:%f", camera.position.x, camera.position.y, camera.position.z), 10, 20, 20, BLACK);
+    RaylibWrapper::drawText(RaylibWrapper::textFormat("Map size: (%d, %d)", map.getWidth(), map.getHeight()), 10, 40, 20, BLACK);
+    RaylibWrapper::drawText(RaylibWrapper::textFormat("Frequency: %d", map.getFrequency()), 10, 60, 20, BLACK);
+    RaylibWrapper::drawText(RaylibWrapper::textFormat("Camera mode: %d", cameraMode), 10, 80, 20, BLACK);
+    RaylibWrapper::drawText(RaylibWrapper::textFormat("Is Game running: %d", map.isGameRunning()), 10, 100, 20, BLACK);
+    RaylibWrapper::drawText(RaylibWrapper::textFormat("Teams (%d):", map.getNbTeams()), 10, 120, 20, BLACK);
+    int i = drawTeamNames(map);
+    RaylibWrapper::drawText(RaylibWrapper::textFormat("Players: %d", map.getNbPlayers()), 10, 140 + i * 20, 20, BLACK);
+    RaylibWrapper::drawText(RaylibWrapper::textFormat("Eggs: %d", map.getNbEggs()), 10, 160 + i * 20, 20, BLACK);
+    RaylibWrapper::drawText(RaylibWrapper::textFormat("Food: %d", map.getNbFood()), 10, 180 + i * 20, 20, BLACK);
+    RaylibWrapper::drawText(RaylibWrapper::textFormat("Linemate: %d", map.getNbLinemate()), 10, 200 + i * 20, 20, BLACK);
+    RaylibWrapper::drawText(RaylibWrapper::textFormat("Deraumere: %d", map.getNbDeraumere()), 10, 220 + i * 20, 20, BLACK);
+    RaylibWrapper::drawText(RaylibWrapper::textFormat("Sibur: %d", map.getNbSibur()), 10, 240 + i * 20, 20, BLACK);
+    RaylibWrapper::drawText(RaylibWrapper::textFormat("Mendiane: %d", map.getNbMendiane()), 10, 260 + i * 20, 20, BLACK);
+    RaylibWrapper::drawText(RaylibWrapper::textFormat("Phiras: %d", map.getNbPhiras()), 10, 280 + i * 20, 20, BLACK);
+    RaylibWrapper::drawText(RaylibWrapper::textFormat("Thystame: %d", map.getNbThystame()), 10, 300 + i * 20, 20, BLACK);
+}
 
-// void Window::drawTileInfo(Tile_t tile)
-// {
-//     DrawText(TextFormat("Players: %d", tile.players.size()), getScreenWidth() - MeasureText(TextFormat("Players: %d", tile.players.size()), 20) - 10, 20, 20, BLACK);
-//     DrawText(TextFormat("Eggs: %d", tile.eggs.size()), getScreenWidth() - MeasureText(TextFormat("Eggs: %d", tile.eggs.size()), 20) - 10, 40, 20, BLACK);
-//     DrawText(TextFormat("Food: %d", tile.food.second), getScreenWidth() - MeasureText(TextFormat("Food: %d", tile.food.second), 20) - 10, 60, 20, BLACK);
-//     DrawText(TextFormat("Linemate: %d", tile.linemate.second), getScreenWidth() - MeasureText(TextFormat("Linemate: %d", tile.linemate.second), 20) - 10, 80, 20, BLACK);
-//     DrawText(TextFormat("Deraumere: %d", tile.deraumere.second), getScreenWidth() - MeasureText(TextFormat("Deraumere: %d", tile.deraumere.second), 20) - 10, 100, 20, BLACK);
-//     DrawText(TextFormat("Sibur: %d", tile.sibur.second), getScreenWidth() - MeasureText(TextFormat("Sibur: %d", tile.sibur.second), 20) - 10, 120, 20, BLACK);
-//     DrawText(TextFormat("Mendiane: %d", tile.mendiane.second), getScreenWidth() - MeasureText(TextFormat("Mendiane: %d", tile.mendiane.second), 20) - 10, 140, 20, BLACK);
-//     DrawText(TextFormat("Phiras: %d", tile.phiras.second), getScreenWidth() - MeasureText(TextFormat("Phiras: %d", tile.phiras.second), 20) - 10, 160, 20, BLACK);
-//     DrawText(TextFormat("Thystame: %d", tile.thystame.second), getScreenWidth() - MeasureText(TextFormat("Thystame: %d", tile.thystame.second), 20) - 10, 180, 20, BLACK);
-// }
+int Window::drawTeamNames(Map map)
+{
+    int i = 0;
+    for (auto &team : map.getTeams()) {
+        RaylibWrapper::drawText(RaylibWrapper::textFormat("  %s: p(%d) e(%d)", team.getTeamName().c_str(), team.getNumberPlayers(), team.getNumberEggs()), 10, 140 + i * 20, 20, team.getTeamColor());
+        i++;
+    }
+    return i;
+}
+
+void Window::drawTileInfo(Tile_t tile)
+{
+    int screenWidth = RaylibWrapper::getScreenWidth();
+
+    RaylibWrapper::drawText(RaylibWrapper::textFormat("Players: %d", tile.players.size()), screenWidth - RaylibWrapper::measureText(RaylibWrapper::textFormat("Players: %d", tile.players.size()), 20) - 10, 20, 20, BLACK);
+    RaylibWrapper::drawText(RaylibWrapper::textFormat("Eggs: %d", tile.eggs.size()), screenWidth - RaylibWrapper::measureText(RaylibWrapper::textFormat("Eggs: %d", tile.eggs.size()), 20) - 10, 40, 20, BLACK);
+    RaylibWrapper::drawText(RaylibWrapper::textFormat("Food: %d", tile.food.second), screenWidth - RaylibWrapper::measureText(RaylibWrapper::textFormat("Food: %d", tile.food.second), 20) - 10, 60, 20, BLACK);
+    RaylibWrapper::drawText(RaylibWrapper::textFormat("Linemate: %d", tile.linemate.second), screenWidth - RaylibWrapper::measureText(RaylibWrapper::textFormat("Linemate: %d", tile.linemate.second), 20) - 10, 80, 20, BLACK);
+    RaylibWrapper::drawText(RaylibWrapper::textFormat("Deraumere: %d", tile.deraumere.second), screenWidth - RaylibWrapper::measureText(RaylibWrapper::textFormat("Deraumere: %d", tile.deraumere.second), 20) - 10, 100, 20, BLACK);
+    RaylibWrapper::drawText(RaylibWrapper::textFormat("Sibur: %d", tile.sibur.second), screenWidth - RaylibWrapper::measureText(RaylibWrapper::textFormat("Sibur: %d", tile.sibur.second), 20) - 10, 120, 20, BLACK);
+    RaylibWrapper::drawText(RaylibWrapper::textFormat("Mendiane: %d", tile.mendiane.second), screenWidth - RaylibWrapper::measureText(RaylibWrapper::textFormat("Mendiane: %d", tile.mendiane.second), 20) - 10, 140, 20, BLACK);
+    RaylibWrapper::drawText(RaylibWrapper::textFormat("Phiras: %d", tile.phiras.second), screenWidth - RaylibWrapper::measureText(RaylibWrapper::textFormat("Phiras: %d", tile.phiras.second), 20) - 10, 160, 20, BLACK);
+    RaylibWrapper::drawText(RaylibWrapper::textFormat("Thystame: %d", tile.thystame.second), screenWidth - RaylibWrapper::measureText(RaylibWrapper::textFormat("Thystame: %d", tile.thystame.second), 20) - 10, 180, 20, BLACK);
+}
 
 std::string Window::animateTextDots(const std::string &string, float elapsedTime)
 {
