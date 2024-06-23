@@ -85,7 +85,7 @@ std::string Socket::receiveMessage()
         FD_ZERO(&readfds);
         FD_SET(_clientSocket, &readfds);
 
-        tv.tv_sec = 0;
+        tv.tv_sec = 5;
         tv.tv_usec = 0;
 
         retval = select(_clientSocket + 1, &readfds, 0, 0, &tv);
