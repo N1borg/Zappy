@@ -32,6 +32,7 @@ def parse_slots_and_map(str):
         numbers.extend(part.split())
 
     integers = [int(num) for num in numbers]
+    # print(str, integers)
     return integers
 
 def main():
@@ -62,6 +63,8 @@ def main():
             send_message(s, name)
 
             already_parced = False
+            slots = -1
+            x, y = -1, -1
             # Receive the number of available slots
             try:
                 response = receive_response(s)
@@ -71,10 +74,11 @@ def main():
                 print(f'Received slots: {slots}')
             except ValueError:
                 print(f'Unexpected response for slots from server: {response}')
-                parced = parse_slots_and_map(response)
-                slots = parced[0]
-                x, y = parced[1], parced[2]
-                already_parced = True
+                if response:
+                    parced = parse_slots_and_map(response)
+                    slots = parced[0]
+                    x, y = parced[1], parced[2]
+                    already_parced = True
 
             # Receive the position (X, Y)
             if not already_parced:
