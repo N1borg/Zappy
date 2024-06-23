@@ -6,7 +6,7 @@
 */
 
 #include "Commands/Commands.hpp"
-#include "Game.hpp"
+#include "Game/Game.hpp"
 
 void Commands::validateWelcome(const std::string &params, Game &game)
 {

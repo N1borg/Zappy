@@ -12,12 +12,15 @@ Window::Window(int width, int height, std::string title)
     _width = width;
     _height = height;
     _title = title;
-    setCameraPosition({0.0f, 10.0f, 10.0f});
-    setCameraTarget({0.0f, 10.0f, 0.0f});
-    setCameraUp({0.0f, 1.0f, 0.0f});
-    setCameraFovy(60.0f);
-    setCameraProjection(CAMERA_PERSPECTIVE);
-    setCameraMode(CAMERA_FREE);
+    _camera = new CameraObject();
+    _minimap = new CameraObject();
+
+    _camera->setCameraPosition({0.0f, 10.0f, 10.0f});
+    _camera->setCameraTarget({0.0f, 10.0f, 0.0f});
+    _camera->setCameraUp({0.0f, 1.0f, 0.0f});
+    _camera->setCameraFovy(60.0f);
+    _camera->setCameraProjection(CAMERA_PERSPECTIVE);
+    _camera->setCameraMode(CAMERA_FREE);
 }
 
 void Window::init()
@@ -28,68 +31,9 @@ void Window::init()
 }
 
 
-Camera3D Window::getCamera() const
+CameraObject *Window::getCamera()
 {
     return _camera;
-}
-
-int Window::getCameraMode() const
-{
-    return _cameraMode;
-}
-
-void Window::setCameraMode(int mode)
-{
-    _cameraMode = mode;
-}
-
-void Window::setCameraPosition(Vector3 position)
-{
-    _camera.position = position;
-}
-
-void Window::setCameraTarget(Vector3 target)
-{
-    _camera.target = target;
-}
-
-void Window::setCameraUp(Vector3 up)
-{
-    _camera.up = up;
-}
-
-void Window::setCameraFovy(float fovy)
-{
-    _camera.fovy = fovy;
-}
-
-void Window::setCameraProjection(int projection)
-{
-    _camera.projection = projection;
-}
-
-void Window::parseCameraInputs()
-{
-    switch (RaylibWrapper::getKeyPressed()) {
-        case KEY_ONE:
-            setCameraMode(CAMERA_FIRST_PERSON);
-            setCameraUp({ 0.0f, 1.0f, 0.0f });
-            break;
-        case KEY_TWO:
-            setCameraMode(CAMERA_THIRD_PERSON);
-            setCameraUp({ 0.0f, 1.0f, 0.0f });
-            break;
-        case KEY_THREE:
-            setCameraMode(CAMERA_FREE);
-            setCameraUp({ 0.0f, 1.0f, 0.0f });
-            break;
-        case KEY_FOUR:
-            setCameraMode(CAMERA_ORBITAL);
-            setCameraUp({ 0.0f, 1.0f, 0.0f });
-            break;
-        default:
-            break;
-    }
 }
 
 void Window::drawCrosshair()
@@ -128,20 +72,19 @@ void Window::drawConnectionText(std::string ip, bool isReconnecting, int elapsed
 
 int Window::waitingConnection(Socket &socket, std::string ip, bool isReconnecting = false)
 {
-    std::thread connectionThread;
-    if (!connectionThread.joinable())
-        connectionThread = std::thread(&Socket::attemptConnection, &socket);
+    std::thread connectionThread(&Socket::attemptConnection, &socket);
 
     float elapsedTime = 0.0f;
-    while (!socket.isConnected() && !RaylibWrapper::shouldClose()) {
+    while (!socket.isConnected()) {
+        if (RaylibWrapper::shouldClose()){
+            connectionThread.detach();
+            return 0;
+        }
         elapsedTime += RaylibWrapper::getFrameTime();
         drawConnectionText(ip, isReconnecting, elapsedTime);
     }
-
     connectionThread.join();
-    if (socket.isConnected())
-        return 1;
-    return 0;
+    return 1;
 }
 
 void Window::waitingScreen(float elapsedTime)

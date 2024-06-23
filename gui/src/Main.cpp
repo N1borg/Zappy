@@ -5,7 +5,7 @@
 ** main
 */
 
-#include "Game.hpp"
+#include "Game/Game.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -56,8 +56,9 @@ int main(int argc, char *argv[])
                 break;
         }
 
-        game.render(elapsedTime);
         elapsedTime += RaylibWrapper::getFrameTime();
+        game.render(elapsedTime);
+        game.parseInputs();
 
     //     // if (window.isMouseButtonPressed(MOUSE_LEFT_BUTTON) || window.isKeyPressed(KEY_ENTER))
     //     //     map.selectTile(GetMouseRay({window.getScreenWidth() / 2.0f, window.getScreenHeight() / 2.0f}, window.getCamera()));

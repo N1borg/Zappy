@@ -123,8 +123,7 @@ void Socket::startThread(Game *game)
 void Socket::stopThread()
 {
     _threadRunning = false;
-    if (_thread.joinable())
-        _thread.join();
+    _thread.detach();
 }
 
 void Socket::readThread()

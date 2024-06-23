@@ -24,11 +24,13 @@ class Game {
         void init();
         void stop();
         void render(float elapsedTime);
+        void parseInputs();
 
         // Getters
         Window *getWindow();
         Socket *getSocket();
         Map *getMap();
+        bool hasError() const;
 
         // Setters
         void setWelcomeReceived(bool welcomeReceived);

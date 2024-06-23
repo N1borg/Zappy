@@ -9,11 +9,8 @@
 
 #include "Parser/ParseArguments.hpp"
 #include "RaylibWrapper.hpp"
+#include "Camera/Camera.hpp"
 #include "Socket.hpp"
-
-#include <raylib.h>
-#include <math.h>
-#include <string>
 
 class Window {
     public:
@@ -24,15 +21,7 @@ class Window {
         void init();
 
         // Raylib Camera functions
-        Camera3D getCamera() const;
-        int getCameraMode() const;
-        void setCameraPosition(Vector3 position);
-        void setCameraTarget(Vector3 target);
-        void setCameraUp(Vector3 up);
-        void setCameraFovy(float fovy);
-        void setCameraProjection(int projection);
-        void setCameraMode(int mode);
-        void parseCameraInputs();
+        CameraObject *getCamera();
 
         // Raylib drawing functions
         void drawCrosshair();
@@ -46,6 +35,6 @@ class Window {
         int _width;
         int _height;
         std::string _title;
-        Camera _camera;
-        int _cameraMode;
+        CameraObject *_camera;
+        CameraObject *_minimap;
 };

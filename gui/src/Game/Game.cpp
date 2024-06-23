@@ -5,7 +5,7 @@
 ** Game
 */
 
-#include "Game.hpp"
+#include "Game/Game.hpp"
 
 Game::Game(Socket *socket) : _socket(socket)
 {
@@ -43,6 +43,30 @@ void Game::render(float elapsedTime)
     RaylibWrapper::endDrawing();
 }
 
+void Game::parseInputs()
+{
+    switch (RaylibWrapper::getKeyPressed()) {
+        case KEY_ONE:
+            _window->getCamera()->setCameraMode(CAMERA_FIRST_PERSON);
+            _window->getCamera()->setCameraUp({0.0f, 1.0f, 0.0f});
+            break;
+        case KEY_TWO:
+            _window->getCamera()->setCameraMode(CAMERA_THIRD_PERSON);
+            _window->getCamera()->setCameraUp({0.0f, 1.0f, 0.0f});
+            break;
+        case KEY_THREE:
+            _window->getCamera()->setCameraMode(CAMERA_FREE);
+            _window->getCamera()->setCameraUp({0.0f, 1.0f, 0.0f});
+            break;
+        case KEY_FOUR:
+            _window->getCamera()->setCameraMode(CAMERA_ORBITAL);
+            _window->getCamera()->setCameraUp({0.0f, 1.0f, 0.0f});
+            break;
+        default:
+            break;
+    }
+}
+
 Window *Game::getWindow()
 {
     return _window;
@@ -56,6 +80,11 @@ Socket *Game::getSocket()
 Map *Game::getMap()
 {
     return _map;
+}
+
+bool Game::hasError() const
+{
+    return _isError;
 }
 
 void Game::setWelcomeReceived(bool welcomeReceived)
