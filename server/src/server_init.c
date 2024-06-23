@@ -39,28 +39,28 @@ tile_t **init_map(int width, int height)
 }
 
 // Initialize given client structure
-void set_client(client_t *clients)
+void set_client(client_t *client)
 {
-    clients->fd = 0;
-    clients->id = 0;
-    clients->x = 0;
-    clients->y = 0;
-    clients->level = 0;
-    clients->life = 0;
-    clients->tick = 0;
-    clients->current_command = NULL;
-    clients->is_incanting = false;
-    clients->is_forking = false;
-    clients->orientation = 0;
-    clients->inv.food = 10;
-    clients->inv.linemate = 0;
-    clients->inv.deraumere = 0;
-    clients->inv.sibur = 0;
-    clients->inv.mendiane = 0;
-    clients->inv.phiras = 0;
-    clients->inv.thystame = 0;
-    clients->team = NULL;
-    clients->command_queue = NULL;
+    client->fd = 0;
+    client->id = 0;
+    client->x = 0;
+    client->y = 0;
+    client->level = 0;
+    client->life = 0;
+    client->tick = 0;
+    client->current_command = NULL;
+    client->is_incanting = false;
+    client->is_forking = false;
+    client->orientation = 0;
+    client->inv.food = 10;
+    client->inv.linemate = 0;
+    client->inv.deraumere = 0;
+    client->inv.sibur = 0;
+    client->inv.mendiane = 0;
+    client->inv.phiras = 0;
+    client->inv.thystame = 0;
+    client->team = NULL;
+    client->command_queue = NULL;
 }
 
 void add_new_egg(server_t *serv, client_t *client, team_t *team, tile_t *tile)

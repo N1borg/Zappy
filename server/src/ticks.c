@@ -43,9 +43,15 @@ int check_player_death(server_t *serv, client_t *player)
 }
 
 // Elapse the time and check for player death
-void elapse_time(server_t *serv, int *sd)
+void elapse_time(server_t *serv, int *sd, struct timespec *start)
 {
-    if (serv->elapsed_time < serv->interval)
+    struct timespec current;
+    int elapsed_time;
+
+    clock_gettime(CLOCK_REALTIME, &current);
+    elapsed_time = (current.tv_sec - start->tv_sec) *
+        1000000000 + (current.tv_nsec - start->tv_nsec);
+    if (elapsed_time < 1000000000 / serv->freq)
         return;
     for (int i = 0; i < MAX_CLIENTS; i++) {
         if (serv->clients[i]->fd <= 0)
@@ -56,6 +62,6 @@ void elapse_time(server_t *serv, int *sd)
         client_handler(serv, serv->clients[i]);
         check_player_queue(serv->clients[i], serv);
     }
-    serv->start.tv_sec = serv->current.tv_sec;
-    serv->start.tv_nsec = serv->current.tv_nsec;
+    start->tv_sec = current.tv_sec;
+    start->tv_nsec = current.tv_nsec;
 }
