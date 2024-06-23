@@ -34,6 +34,7 @@ void Game::render(float elapsedTime)
     if (!_welcomeReceived || !_mapSizeReceived || !_tilesReceived || !_playersReceived || !_timeUnitReceived) {
         _window->waitingScreen(elapsedTime);
     } else {
+        RaylibWrapper::disableCursor();
         RaylibWrapper::beginDrawing();
         RaylibWrapper::clearBackground(SKYBLUE);
         RaylibWrapper::updateCamera(getWindow()->getCamera()->getCameraObj(), (getWindow()->getCamera()->getCameraMode()));
