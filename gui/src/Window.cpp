@@ -20,14 +20,6 @@ Window::Window(int width, int height, std::string title)
     setCameraMode(CAMERA_FREE);
 }
 
-void Window::log(int level, const std::string &msg, ...)
-{
-    va_list args;
-    va_start(args, msg);
-    TraceLog(level, msg.c_str(), args);
-    va_end(args);
-}
-
 void Window::init()
 {
     SetTargetFPS(144);
@@ -255,29 +247,31 @@ void Window::drawFPS(int posX, int posY)
 
 void Window::drawGeneralInfo(Map map)
 {
-    DrawText(TextFormat("X:%f Y:%f Z:%f", _camera.position.x, _camera.position.y, _camera.position.z), 10, 20, 20, BLACK);
-    DrawText(TextFormat("Map size: (%d, %d)", map.getWidth(), map.getHeight()), 10, 40, 20, BLACK);
-    DrawText(TextFormat("Frequency: %d", map.getFrequency()), 10, 60, 20, BLACK);
-    DrawText(TextFormat("Camera mode: %d", getCameraMode()), 10, 80, 20, BLACK);
-    DrawText(TextFormat("Is Game running: %d", map.isGameRunning()), 10, 100, 20, BLACK);
-    DrawText(TextFormat("Teams (%d):", map.getNbTeams()), 10, 120, 20, BLACK);
+    DrawRectangleRounded({2.0f, 2.0f, 250, 312.0f + map.getNbTeams() * 20.0f}, 0.1, 10, {255, 255, 255, 150});
+    DrawRectangleRoundedLines({2.0f, 2.0f, 250, 312.0f + map.getNbTeams() * 20.0f}, 0.1, 10, BLACK);
+    DrawText(TextFormat("X:%.2f Y:%.2f Z:%.2f", _camera.position.x, _camera.position.y, _camera.position.z), 10, 10, 20, GRAY);
+    DrawText(TextFormat("Map size: (%d, %d)", map.getWidth(), map.getHeight()), 10, 30, 20, GRAY);
+    DrawText(TextFormat("Frequency: %d", map.getFrequency()), 10, 50, 20, GRAY);
+    DrawText(TextFormat("Camera mode: %d", getCameraMode()), 10, 70, 20, GRAY);
+    DrawText(TextFormat("Is Game running: %d", map.isGameRunning()), 10, 90, 20, GRAY);
+    DrawText(TextFormat("Teams (%d):", map.getNbTeams()), 10, 110, 20, GRAY);
     int i = drawTeamNames(map);
-    DrawText(TextFormat("Players: %d", map.getNbPlayers()), 10, 140 + i * 20, 20, BLACK);
-    DrawText(TextFormat("Eggs: %d", map.getNbEggs()), 10, 160 + i * 20, 20, BLACK);
-    DrawText(TextFormat("Food: %d", map.getNbFood()), 10, 180 + i * 20, 20, BLACK);
-    DrawText(TextFormat("Linemate: %d", map.getNbLinemate()), 10, 200 + i * 20, 20, BLACK);
-    DrawText(TextFormat("Deraumere: %d", map.getNbDeraumere()), 10, 220 + i * 20, 20, BLACK);
-    DrawText(TextFormat("Sibur: %d", map.getNbSibur()), 10, 240 + i * 20, 20, BLACK);
-    DrawText(TextFormat("Mendiane: %d", map.getNbMendiane()), 10, 260 + i * 20, 20, BLACK);
-    DrawText(TextFormat("Phiras: %d", map.getNbPhiras()), 10, 280 + i * 20, 20, BLACK);
-    DrawText(TextFormat("Thystame: %d", map.getNbThystame()), 10, 300 + i * 20, 20, BLACK);
+    DrawText(TextFormat("Players: %d", map.getNbPlayers()), 10, 130 + i * 20, 20, GRAY);
+    DrawText(TextFormat("Eggs: %d", map.getNbEggs()), 10, 150 + i * 20, 20, GRAY);
+    DrawText(TextFormat("Food: %d", map.getNbFood()), 10, 170 + i * 20, 20, GRAY);
+    DrawText(TextFormat("Linemate: %d", map.getNbLinemate()), 10, 190 + i * 20, 20, GRAY);
+    DrawText(TextFormat("Deraumere: %d", map.getNbDeraumere()), 10, 210 + i * 20, 20, GRAY);
+    DrawText(TextFormat("Sibur: %d", map.getNbSibur()), 10, 230 + i * 20, 20, GRAY);
+    DrawText(TextFormat("Mendiane: %d", map.getNbMendiane()), 10, 250 + i * 20, 20, GRAY);
+    DrawText(TextFormat("Phiras: %d", map.getNbPhiras()), 10, 270 + i * 20, 20, GRAY);
+    DrawText(TextFormat("Thystame: %d", map.getNbThystame()), 10, 290 + i * 20, 20, GRAY);
 }
 
 int Window::drawTeamNames(Map map)
 {
     int i = 0;
     for (auto &team : map.getTeams()) {
-        DrawText(TextFormat("  %s: p(%d) e(%d)", team.getTeamName().c_str(), team.getNumberPlayers(), team.getNumberEggs()), 10, 140 + i * 20, 20, team.getTeamColor());
+        DrawText(TextFormat("  %s: p(%d) e(%d)", team.getTeamName().c_str(), team.getNumberPlayers(), team.getNumberEggs()), 10, 130 + i * 20, 20, team.getTeamColor());
         i++;
     }
     return i;
@@ -285,15 +279,18 @@ int Window::drawTeamNames(Map map)
 
 void Window::drawTileInfo(Tile_t tile)
 {
-    DrawText(TextFormat("Players: %d", tile.players.size()), getScreenWidth() - MeasureText(TextFormat("Players: %d", tile.players.size()), 20) - 10, 20, 20, BLACK);
-    DrawText(TextFormat("Eggs: %d", tile.eggs.size()), getScreenWidth() - MeasureText(TextFormat("Eggs: %d", tile.eggs.size()), 20) - 10, 40, 20, BLACK);
-    DrawText(TextFormat("Food: %d", tile.food.second), getScreenWidth() - MeasureText(TextFormat("Food: %d", tile.food.second), 20) - 10, 60, 20, BLACK);
-    DrawText(TextFormat("Linemate: %d", tile.linemate.second), getScreenWidth() - MeasureText(TextFormat("Linemate: %d", tile.linemate.second), 20) - 10, 80, 20, BLACK);
-    DrawText(TextFormat("Deraumere: %d", tile.deraumere.second), getScreenWidth() - MeasureText(TextFormat("Deraumere: %d", tile.deraumere.second), 20) - 10, 100, 20, BLACK);
-    DrawText(TextFormat("Sibur: %d", tile.sibur.second), getScreenWidth() - MeasureText(TextFormat("Sibur: %d", tile.sibur.second), 20) - 10, 120, 20, BLACK);
-    DrawText(TextFormat("Mendiane: %d", tile.mendiane.second), getScreenWidth() - MeasureText(TextFormat("Mendiane: %d", tile.mendiane.second), 20) - 10, 140, 20, BLACK);
-    DrawText(TextFormat("Phiras: %d", tile.phiras.second), getScreenWidth() - MeasureText(TextFormat("Phiras: %d", tile.phiras.second), 20) - 10, 160, 20, BLACK);
-    DrawText(TextFormat("Thystame: %d", tile.thystame.second), getScreenWidth() - MeasureText(TextFormat("Thystame: %d", tile.thystame.second), 20) - 10, 180, 20, BLACK);
+    DrawRectangleRounded({getScreenWidth() - 152.0f, 2.0f, 150.0f, 212.0f}, 0.1, 10, {255, 255, 255, 150});
+    DrawRectangleRoundedLines({getScreenWidth() - 152.0f, 2.0f, 150.0f, 212.0f}, 0.1, 10, BLACK);
+    DrawText(TextFormat("Tile (%d, %d)", tile.xPos, tile.yPos), getScreenWidth() - MeasureText(TextFormat("Tile (%d, %d)", tile.xPos, tile.yPos), 20) - 10, 10, 20, GRAY);
+    DrawText(TextFormat("Players: %d", tile.players.size()), getScreenWidth() - MeasureText(TextFormat("Players: %d", tile.players.size()), 20) - 10, 30, 20, GRAY);
+    DrawText(TextFormat("Eggs: %d", tile.eggs.size()), getScreenWidth() - MeasureText(TextFormat("Eggs: %d", tile.eggs.size()), 20) - 10, 50, 20, GRAY);
+    DrawText(TextFormat("Food: %d", tile.food.second), getScreenWidth() - MeasureText(TextFormat("Food: %d", tile.food.second), 20) - 10, 70, 20, GRAY);
+    DrawText(TextFormat("Linemate: %d", tile.linemate.second), getScreenWidth() - MeasureText(TextFormat("Linemate: %d", tile.linemate.second), 20) - 10, 90, 20, GRAY);
+    DrawText(TextFormat("Deraumere: %d", tile.deraumere.second), getScreenWidth() - MeasureText(TextFormat("Deraumere: %d", tile.deraumere.second), 20) - 10, 110, 20, GRAY);
+    DrawText(TextFormat("Sibur: %d", tile.sibur.second), getScreenWidth() - MeasureText(TextFormat("Sibur: %d", tile.sibur.second), 20) - 10, 130, 20, GRAY);
+    DrawText(TextFormat("Mendiane: %d", tile.mendiane.second), getScreenWidth() - MeasureText(TextFormat("Mendiane: %d", tile.mendiane.second), 20) - 10, 150, 20, GRAY);
+    DrawText(TextFormat("Phiras: %d", tile.phiras.second), getScreenWidth() - MeasureText(TextFormat("Phiras: %d", tile.phiras.second), 20) - 10, 170, 20, GRAY);
+    DrawText(TextFormat("Thystame: %d", tile.thystame.second), getScreenWidth() - MeasureText(TextFormat("Thystame: %d", tile.thystame.second), 20) - 10, 190, 20, GRAY);
 }
 
 std::string Window::animateTextDots(const std::string &string, float elapsedTime)
@@ -354,4 +351,12 @@ int Window::drawWaitingScreen(Socket &socket, ParseArguments &argsParser, bool i
     if (socket.isConnected())
         return 1;
     return 0;
+}
+
+void Window::log(int level, const std::string &msg, ...)
+{
+    va_list args;
+    va_start(args, msg);
+    TraceLog(level, msg.c_str(), args);
+    va_end(args);
 }

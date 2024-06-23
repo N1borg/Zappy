@@ -26,6 +26,8 @@
 #include <cfloat>
 
 typedef struct Tile_s {
+    int xPos;
+    int yPos;
     std::deque<Player> players;
     std::deque<Egg> eggs;
     std::pair<Food, int> food;
@@ -38,10 +40,10 @@ typedef struct Tile_s {
     std::pair<Island, int> island;
     std::pair<Grass, int> grass;
 
-    Tile_s(Model _modelFood, Model _modelLinemate, Model _modelDeraumere,
+    Tile_s(int x, int y, Model _modelFood, Model _modelLinemate, Model _modelDeraumere,
         Model _modelSibur, Model _modelMendiane, Model _modelPhiras,
         Model _modelThystame, Model _modelIsland, Model _modelGrass)
-            : food(std::make_pair(Food(_modelFood), 0)),
+            : xPos(x), yPos(y), food(std::make_pair(Food(_modelFood), 0)),
             linemate(std::make_pair(Linemate(_modelLinemate), 0)),
             deraumere(std::make_pair(Deraumere(_modelDeraumere), 0)),
             sibur(std::make_pair(Sibur(_modelSibur), 0)),

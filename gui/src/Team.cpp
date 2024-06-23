@@ -7,7 +7,7 @@
 
 #include "Team.hpp"
 
-Team::Team(std::string name) : _name{name}, _teamColor(WHITE), _numberPlayers(0), _numberEggs(0) {}
+Team::Team(std::string name) : _name(name), _teamColor(WHITE), _numberPlayers(0), _numberEggs(0) {}
 
 std::string Team::getTeamName() const
 {

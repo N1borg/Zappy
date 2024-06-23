@@ -9,7 +9,6 @@
 
 Player::Player(Model model, int id, int x, int y, Orientation orientation, Team team) : AModel(model), _id(id), _x(x), _y(y), _orientation(orientation), _team(team)
 {
-    team.setNumberPlayers(team.getNumberPlayers() + 1);
     _yRotation = static_cast<int>(orientation) * 90.0f;
     _level = 1;
     _islandPositionX = 0.0f;

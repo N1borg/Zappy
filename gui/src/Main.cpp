@@ -70,14 +70,21 @@ int main(int argc, char *argv[])
     // Create map
     std::vector<Team> teams;
     Team team1("team1");
-    team1.setTeamColor(RED);
     teams.push_back(team1);
     Team team2("team2");
-    team2.setTeamColor(YELLOW);
     teams.push_back(team2);
     Team team3("team3");
-    team3.setTeamColor(BLUE);
     teams.push_back(team3);
+    Team team4("team4");
+    teams.push_back(team4);
+    Team team5("team5");
+    teams.push_back(team5);
+    Team team6("team6");
+    teams.push_back(team6);
+    Team team7("team7");
+    teams.push_back(team7);
+    Team team8("team8");
+    teams.push_back(team8);
 
     Map map(mapWidth, mapHeight, timeUnit, teams);
     std::vector<std::vector<Tile_t>> tiles = map.getTiles();
@@ -88,9 +95,19 @@ int main(int argc, char *argv[])
     map.addPlayer(0, 0, 0, Orientation::North, 1, "team1");
     map.addPlayer(1, 1, 1, Orientation::East, 1, "team2");
     map.addPlayer(2, 2, 2, Orientation::South, 1, "team3");
+    map.addPlayer(3, 5, 3, Orientation::West, 1, "team4");
+    map.addPlayer(4, 4, 4, Orientation::North, 1, "team5");
+    map.addPlayer(5, 6, 5, Orientation::East, 1, "team6");
+    map.addPlayer(6, 2, 6, Orientation::South, 1, "team7");
+    map.addPlayer(7, 4, 7, Orientation::West, 1, "team8");
     map.addEgg(0, 0, 0, 0, "team1");
     map.addEgg(1, 0, 1, 1, "team2");
     map.addEgg(2, 0, 2, 2, "team3");
+    map.addEgg(3, 0, 3, 3, "team4");
+    map.addEgg(4, 0, 4, 4, "team5");
+    map.addEgg(5, 0, 5, 5, "team6");
+    map.addEgg(6, 0, 6, 6, "team7");
+    map.addEgg(7, 0, 7, 7, "team8");
     map.addFood(2, 3);
     map.addFood(1, 5);
     map.addFood(4, 2);
@@ -137,14 +154,13 @@ int main(int argc, char *argv[])
             window.clearBackground(SKYBLUE);
 
             window.beginMode3D();
-                window.drawGrid(20, 10.0f);
                 map.draw();
                 map.drawTransparent();
             window.endMode3D();
 
             window.drawCrosshair();
-            window.drawFPS(10, 2);
             window.drawGeneralInfo(map);
+            window.drawFPS(10, window.getScreenHeight() - 30);
             if (isTileSelected)
                 window.drawTileInfo(map.getSelectedTile());
         window.endDrawing();

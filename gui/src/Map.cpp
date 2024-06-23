@@ -38,7 +38,7 @@ Map::Map(int width, int height, int frequency, std::vector<Team> teams) : _width
     for (int i = 0; i < width; i++) {
         std::vector<Tile_t> row;
         for (int j = 0; j < height; j++) {
-            Tile_t tile(_modelFood, _modelLinemate, _modelDeraumere,
+            Tile_t tile(j, i, _modelFood, _modelLinemate, _modelDeraumere,
                         _modelSibur, _modelMendiane, _modelPhiras,
                         _modelThystame, _modelIsland, _modelGrass);
             int shift = GetRandomValue(1, 6);
@@ -64,6 +64,16 @@ Map::Map(int width, int height, int frequency, std::vector<Team> teams) : _width
             row.push_back(tile);
         }
         _tiles.push_back(row);
+    }
+
+    Color colors[] = {RED, GREEN, BLUE, YELLOW, PURPLE, LIGHTGRAY, ORANGE, BEIGE, MAROON, LIME, DARKBLUE, GOLD, PINK, VIOLET, BROWN, DARKGRAY, DARKPURPLE};
+ 
+    // Assign colors to each team
+    int numColors = sizeof(colors) / sizeof(colors[0]);
+    int shift = GetRandomValue(0, _teams.size() - 1);
+    for (size_t i = 0; i < _teams.size(); i++) {
+        _teams[i].setTeamColor(colors[(shift + i) % numColors]);
+        shift++;
     }
 }
 
@@ -177,13 +187,14 @@ void Map::addPlayer(int id, int x, int y, Orientation orientation, int level, st
         if (p.getId() == id)
             return;
     }
-    for (Team t : _teams) {
-        if (t.getTeamName() == team) {
-            Player player(_modelPlayer, id, x, y, orientation, t);
+    for (size_t i = 0; i < _teams.size(); i++) {
+        if (_teams[i].getTeamName() == team) {
+            Player player(_modelPlayer, id, x, y, orientation, _teams[i]);
             player.setLevel(level);
             _tiles[x][y].players.push_back(player);
             _nbPlayers += 1;
             _players.push_back(player);
+            _teams[i].setNumberPlayers(_teams[i].getNumberPlayers() + 1);
         }
     }
 }
@@ -213,6 +224,7 @@ void Map::delPlayer(int id)
                 if (_tiles[_players[i].getX()][_players[i].getY()].players[j].getId() == id) {
                     _tiles[_players[i].getX()][_players[i].getY()].players.erase(_tiles[_players[i].getX()][_players[i].getY()].players.begin() + j);
                     _nbPlayers -= 1;
+                    _players[i].getTeam().setNumberPlayers(_players[i].getTeam().getNumberPlayers() - 1);
                 }
             }
             _players.erase(_players.begin() + i);
@@ -226,11 +238,12 @@ void Map::addEgg(int id, int playerId, int x, int y, std::string team)
         if (e.getId() == id)
             return;
     }
-    for (Team t : _teams) {
-        if (t.getTeamName() == team) {
-            Egg egg(_modelEgg, id, playerId, x, y, t);
+    for (size_t i = 0; i < _teams.size(); i++) {
+        if (_teams[i].getTeamName() == team) {
+            Egg egg(_modelEgg, id, playerId, x, y, _teams[i]);
             _tiles[x][y].eggs.push_back(egg);
             _nbEggs += 1;
+            _teams[i].setNumberEggs(_teams[i].getNumberEggs() + 1);
         }
     }
 }
@@ -257,6 +270,7 @@ void Map::delEgg(int id)
                 if (_tiles[i][j].eggs[k].getId() == id) {
                     _tiles[i][j].eggs.erase(_tiles[i][j].eggs.begin() + k);
                     _nbEggs -= 1;
+                    _tiles[i][j].eggs[k].getTeam().setNumberEggs(_tiles[i][j].eggs[k].getTeam().getNumberEggs() - 1);
                 }
             }
         }
