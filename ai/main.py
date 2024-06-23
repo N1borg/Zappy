@@ -70,6 +70,8 @@ def main():
                 response = receive_response(s)
                 if response == "ko":
                     exit(84)
+                if response == "dead":
+                    exit()
                 slots = int(response)
                 print(f'Received slots: {slots}')
             except ValueError:
@@ -92,8 +94,6 @@ def main():
 
             ai = AI(name, s, slots, int(x), int(y))
             ai.launch_loop()
-            
-
 
     except Exception as e:
         print(f'{host}:{port} - {e}')
