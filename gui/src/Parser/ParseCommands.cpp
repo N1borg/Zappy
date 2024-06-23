@@ -9,6 +9,7 @@
 
 ParseCommands::ParseCommands()
 {
+    _commandMap["WELCOME\n"] = &Commands::validateWelcome;
     _commandMap["msz"] = &Commands::getMapSize;
     _commandMap["bct"] = &Commands::getTileContent;
     _commandMap["tna"] = &Commands::getTeamsName;
@@ -35,7 +36,7 @@ ParseCommands::ParseCommands()
     _commandMap["sbp"] = &Commands::getCommandParameter;
 }
 
-void ParseCommands::parse(std::string msg)
+void ParseCommands::parse(const std::string &msg, Game &game)
 {
     std::string command, params;
     size_t pos = msg.find(' ');
@@ -47,7 +48,7 @@ void ParseCommands::parse(std::string msg)
 
     auto it = _commandMap.find(command);
     if (it != _commandMap.end())
-        std::invoke(it->second, Commands(), params);
+        std::invoke(it->second, Commands(), params, game);
     else
         std::cerr << "Commande inconnue: " << command << std::endl;
 }

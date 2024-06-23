@@ -7,10 +7,7 @@
 
 #include "Team.hpp"
 
-Team::Team(std::string name)
-{
-    _name = name;
-}
+Team::Team(std::string name) : _name(name), _teamColor(WHITE), _numberPlayers(0), _numberEggs(0) {}
 
 std::string Team::getTeamName() const
 {
@@ -45,14 +42,4 @@ void Team::setNumberEggs(int numberEggs)
 int Team::getNumberEggs() const
 {
     return _numberEggs;
-}
-
-void Team::setNumberFreeSlots(int numberFreeSlots)
-{
-    _numberFreeSlots = numberFreeSlots;
-}
-
-int Team::getNumberFreeSlots() const
-{
-    return _numberFreeSlots;
 }

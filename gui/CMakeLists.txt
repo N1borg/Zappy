@@ -52,9 +52,11 @@ include_directories(include)
 
 set(SHARED_SRC
     src/Main.cpp
+    src/Game/Game.cpp
     src/Help.cpp
     src/Socket.cpp
     src/Window.cpp
+    src/Camera/Camera.cpp
     src/Map.cpp
     src/AModel.cpp
     src/Player.cpp

@@ -2,7 +2,7 @@ Apple by jeremy [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly 
 Island by J-Toastie [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza (https://poly.pizza/m/C03O8OQq6O)
 Chicken Egg by sirkitree [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza (https://poly.pizza/m/0ylMw3Mzedx)
 BlockMan by Robert Mark [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza (https://poly.pizza/m/bHcxXYw8lnl)
-Crystal by iPoly3D (https://poly.pizza/m/WzWPKHFMkL)
+Crystals by Ashley Alicea [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza (https://poly.pizza/m/5wGpIRD2AKD)
 Mineral by Quaternius (https://poly.pizza/m/STixpWYaTd)
 Gold ore by Quaternius (https://poly.pizza/m/i1ic0r7FUI)
 Big Crystal by Quaternius (https://poly.pizza/m/pf5lzmgr2J)

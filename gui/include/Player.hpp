@@ -13,12 +13,25 @@
 
 class Player : public AModel {
 public:
-    Player(Model model, Team team);
+    Player(Model model, int id, int x, int y, Orientation orientation, Team team);
     ~Player() = default;
 
-    Team getTeam() const;
+    int getId() const;
+    void setId(int id);
+    int getX() const;
+    void setX(int x);
+    int getY() const;
+    void setY(int y);
+    Orientation getOrientation() const;
     void setOrientation(Orientation orientation);
+    int getLevel() const;
+    void setLevel(int level);
+    Team getTeam() const;
 private:
-    Team _team;
+    int _id;
+    int _x;
+    int _y;
     Orientation _orientation;
+    int _level;
+    Team _team;
 };
