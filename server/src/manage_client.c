@@ -101,7 +101,7 @@ int init_client(server_t *s, client_t *client, char *team_name)
     if (strcmp(team_name, "GRAPHIC") == 0 && add_graphic_to_team(s, client))
             return 1;
     if (strcmp(team_name, "GRAPHIC") != 0) {
-        if (add_player_to_team(s, client, team_name) == 0)
+        if (add_player_to_team(s, client, team_name))
             return 1;
         for (; i < MAX_CLIENTS &&
             s->map[client->y][client->x].players[i]; i++);
