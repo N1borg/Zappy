@@ -5,8 +5,11 @@ import sys
 import argparse
 import re
 import time
+import traceback
 
 from ai import AI
+from outils import receive_response
+from outils import send_message
 
 def parse_arguments():
     """
@@ -21,21 +24,6 @@ def parse_arguments():
     parser.add_argument('-h', '--host', type=str, default='localhost')
     return parser.parse_args()
 
-
-# Send a given string followed by a newline to the server.
-def send_message(sock, message):
-    message_with_newline = message + '\n'
-    sock.sendall(message_with_newline.encode())
-    print(f'[->]    Sent message: {message}')
-
-
-# Receive a response from the server and throw an error if the response is 'ko\n'.
-def receive_response(sock):
-    response = sock.recv(1024).decode().strip()
-    if response == "ko":
-        raise ValueError("Received 'ko' from server")
-    return response
-
 def parse_slots_and_map(str):
     parts = str.split('\n')
 
@@ -44,6 +32,7 @@ def parse_slots_and_map(str):
         numbers.extend(part.split())
 
     integers = [int(num) for num in numbers]
+    # print(str, integers)
     return integers
 
 def main():
@@ -74,17 +63,24 @@ def main():
             send_message(s, name)
 
             already_parced = False
+            slots = -1
+            x, y = -1, -1
             # Receive the number of available slots
             try:
                 response = receive_response(s)
+                if response == "ko":
+                    exit(84)
+                if response == "dead":
+                    exit()
                 slots = int(response)
                 print(f'Received slots: {slots}')
             except ValueError:
                 print(f'Unexpected response for slots from server: {response}')
-                parced = parse_slots_and_map(response)
-                slots = parced[0]
-                x, y = parced[1], parced[2]
-                already_parced = True
+                if response:
+                    parced = parse_slots_and_map(response)
+                    slots = parced[0]
+                    x, y = parced[1], parced[2]
+                    already_parced = True
 
             # Receive the position (X, Y)
             if not already_parced:
@@ -96,11 +92,12 @@ def main():
                 else:
                     print(f'Unexpected response for map size from server: {response}')
 
-            ai = AI(name, s, slots, x, y)
+            ai = AI(name, s, slots, int(x), int(y))
             ai.launch_loop()
 
     except Exception as e:
         print(f'{host}:{port} - {e}')
+        print(traceback.format_exc())
 
 
 

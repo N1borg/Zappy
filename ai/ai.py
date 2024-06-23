@@ -5,6 +5,11 @@ import sys
 import argparse
 import re
 import time
+import outils
+import threading
+
+from outils import receive_response
+from outils import send_message
 
 """
 ## AI
@@ -15,28 +20,71 @@ import time
 
 """
 
-# inventaire partage
-# team name
+reverse_abbreviations = {
+    "l": "linemate",
+    "s": "sibur",
+    "m": "mendiane",
+    "p": "phiras",
+    "t": "thystame"
+}
 
 resources = ["linemate", "deraumere", "sibur", "mendiane", "phiras", "thystame"]
 
-cmd_noarg = ["Forward", "Right", "Left", "Look"]
+# vision_levels = {
+#     1: [[0], [1, 2, 3]],
+#     2: [[0], [1, 2, 3], [4, 5, 6, 7, 8]],
+#     3: [[0], [1, 2, 3], [4, 5, 6, 7, 8], [9, 10, 11, 12, 13, 14, 15]]
+#     4: [[0], [1, 2, 3], [4, 5, 6, 7, 8], [9, 10, 11, 12, 13, 14, 15]]
+#     5: [[0], [1, 2, 3], [4, 5, 6, 7, 8], [9, 10, 11, 12, 13, 14, 15]]
+#     6: [[0], [1, 2, 3], [4, 5, 6, 7, 8], [9, 10, 11, 12, 13, 14, 15]]
+#     7: [[0], [1, 2, 3], [4, 5, 6, 7, 8], [9, 10, 11, 12, 13, 14, 15]]
+#     8: [[0], [1, 2, 3], [4, 5, 6, 7, 8], [9, 10, 11, 12, 13, 14, 15]]
+#     }
+
+medianes = [0, 2, 6, 12, 20, 30, 42, 56, 72]
+
+incantation_levels = {
+    2: {"player": 1, "linemate": 1, "sibur": 0, "mendiane": 0, "phiras": 0, "thystame": 0},
+    3: {"player": 2, "linemate": 1, "sibur": 1, "mendiane": 0, "phiras": 0, "thystame": 0},
+    4: {"player": 2, "linemate": 2, "sibur": 0, "mendiane": 0, "phiras": 2, "thystame": 0},
+    5: {"player": 4, "linemate": 1, "sibur": 1, "mendiane": 0, "phiras": 1, "thystame": 0},
+    6: {"player": 4, "linemate": 1, "sibur": 2, "mendiane": 3, "phiras": 0, "thystame": 0},
+    7: {"player": 6, "linemate": 1, "sibur": 2, "mendiane": 0, "phiras": 1, "thystame": 0},
+    8: {"player": 6, "linemate": 2, "sibur": 2, "mendiane": 2, "phiras": 2, "thystame": 1}
+}
 
 class AI:
     def __init__(self, teamname, socket, c_nbr, map_x, map_y):
-        # Initial arguments
         self.socket = socket
         self.team = teamname
         self.connect_nbr = c_nbr
+        self.connect_nbr_tmp = c_nbr
         self.map_x = map_x
         self.map_y = map_y
 
         self.level = 1
-        self.inventory = {"food": 0,"linemate": 0, "deraumere": 0, "sibur": 0, "mendiane": 0, "phiras": 0, "thystame": 0}
+        self.inventory = {"food": 10, "linemate": 0, "deraumere": 0, "sibur": 0, "mendiane": 0, "phiras": 0, "thystame": 0}
+        self.shared_inventory = self.inventory
         self.look = []
+        self.prev_look = self.look
 
-        self.command_queue = []
+        self.queue = []
         self.sent_queue = []
+
+        self.incantation_done = False
+
+        self.names = ["Rom", "Rob", "Ana", "Val", "Vic", "Jul", "Idk", "Lol", "Kek", "Uwu"]
+        self.name = self.names[0]
+        self.dead = False
+
+        self.broadcast_dir = 0
+        self.proposed_incantation = False
+        self.success_incantation = False
+        self.responses_count = 0
+
+        self.lock = threading.Lock()
+        self.grace = threading.Event()
+        self.cancel_get = False
 
     def parse_look(self, look_str):
         look_str = look_str.strip('[]')
@@ -52,6 +100,7 @@ class AI:
                 else:
                     tile_dict[element] = 1
             result.append(tile_dict)
+
         return result
 
     def parse_inventory(self, inv_str):
@@ -60,217 +109,332 @@ class AI:
         result_dict = {key: int(value) for key, value in pairs}
         return result_dict
 
-    def append_command(self, cmd, arg):
-        if cmd == "Broadcast" or cmd == "Take" or cmd == "Set":
-            self.command_queue.insert(0, cmd + " " + arg)
+    def sum_dictionaries(self, dict1, dict2):
+        result = {}
+        for key in dict1:
+            if key in dict2:
+                result[key] = dict1[key] + dict2[key]
+            else:
+                result[key] = dict1[key]
+        for key in dict2:
+            if key not in result:
+                result[key] = dict2[key]
+        return result
+
+    def broadcast_receive(self, response):
+        inc_list = ["inc2", "inc3", "inc4", "inc5", "inc6", "inc7"]
+        response = response[8:] if response[:8] == "message " else response
+        print(f"____RESP {response}")
+        try:
+            parts = response.split(", ")
+            if len(parts) == 2:
+                self.direction, message = parts
+            else:
+                message = parts
+        except ValueError as e:
+            self.direction = 0
+            message = ""
+            print(f"Error: {e}")
+
+        int(self.direction)
+        message = message.split("/!/")
+        if isinstance(message, list) and len(message) == 3:
+            team, name, cmd = message[0], message[1], message[2]
         else:
-            self.command_queue.insert(0, cmd)
+            print("Other team broadcast, ignoring")
+            return 1
+        if self.team != team:
+            print("Other team broadcast, ignoring")
+            return 1
 
-    def append_sent(self, cmd):
-        self.sent_queue.insert(0, cmd)
 
-    def send_command(self):
-        # take a command from the command queue
-        if len(self.command_queue) != 0:
-            cmd = self.command_queue.pop()
+        if cmd[0] == '?':
+            self.command("Broadcast", f"{self.team}/!/{self.name}/!/^{self.inventory.get(cmd[1:], 0)}.{cmd[1:]}")
+        elif cmd[0] == '^':
+            cmd = cmd[1:]
+            parts = cmd.split(".")
+            if parts[1] in incantation_levels[self.level + 1] and int(parts[0]) >= incantation_levels[self.level + 1].get(parts[1], 0):
+                self.cancel_get = True
+        elif cmd[0] == 'I':
+            self.shared_inventory = self.sum_dictionaries(self.shared_inventory, self.inventory)
+            inv = self.inventory_from_string(cmd[1:])
+            self.shared_inventory = self.sum_dictionaries(self.shared_inventory, inv)
 
-            # send this command to server
-            send_message(self.socket, cmd)
+    def command(self, cmd, arg):
+        command = cmd if arg == "" else cmd + " " + arg
+        self.queue.insert(0, command)
 
-            # add sent action to the sent queue
-            self.append_sent(cmd)
-        else:
-            print("Command queue: no more commands left")
-            time.sleep(5)
-
-    def receive_command(self):
+    def command_response(self):
+        cmd = "-1"
+        cmd_okko = ["Incantation", "Fork", "Eject", "Take", "Set"]
         response = receive_response(self.socket)
-        if response == "dead":
-            # TODO: implement death mechanism
+
+        if self.grace.is_set():
             return
+
+        if self.sent_queue:
+            cmd = self.sent_queue.pop().split(" ")[0]
+
         print(f"        Received response   [<-]: {response}")
-        cmd = self.sent_queue.pop()
-        cmd_name, cmd_arg = "", ""
-        if len(cmd.split(" ")) == 2:
-            cmd_name, cmd_arg = cmd.split(" ")
-            # print(f"Received a: {cmd_name} {cmd_arg}")
-        else:
-            cmd_name = cmd
-            # print(f"Received a: {cmd_name}")
 
-        if cmd_name == "Forward" or cmd_name == "Right" or cmd_name == "Left" or cmd_name == "Fork" or cmd_name == "Broadcast":
-            if response == "ok":
-                print(cmd_name + ": OK")
+        if response == "dead" or not response:
+            print("We are dead")
+            self.stop()
+            self.dead = True
+            exit()
+
+        if response[:8] == "message " and cmd != "Broadcast":
+            self.broadcast_receive(response)
+            response = receive_response(self.socket)
+            print(f"        Received response   [<-]: {response}")
+
+        if response[0] == "[":
+            if cmd == "Inventory":
+                self.inventory = self.parse_inventory(response)
+            elif cmd == "Look":
+                self.look = self.parse_look(response)
+                if self.look:
+                    self.prev_look = self.look
+                elif not self.look:
+                    self.look = self.prev_look
+
+        elif response == "ko":
+            if cmd in cmd_okko:
+                print(f"{cmd} failed.")
             else:
-                print(f"Received an unexpected response from {cmd_name} command: ", response)
+                print(f"Unexpected response from {cmd} command: {response}")
 
-        elif cmd_name == "Look":
-            if response[0] != '[':
-                print(f"Received an unexpected response from {cmd_name} command: ", response)
-            self.look = self.parse_look(response)
-            # print(self.look)
+        elif cmd == "Incantation":
+            self.level += 1
+            self.incantation_done = True
+            response = receive_response(self.socket)
+            print(response)
+            response = receive_response(self.socket)
+            print(response)
+        elif cmd == "Connect_nbr":
+            self.connect_nbr_tmp = int(response)
 
-        elif cmd_name == "Inventory":
-            if response[0] != '[':
-                print(f"Received an unexpected response from {cmd_name} command: ", response)
-            self.inventory = self.parse_inventory(response)
-            # print(self.inventory)
+    @staticmethod
+    def get_tile_lvl(tile_nb):
+        if tile_nb == 0:
+            return 0
+        if tile_nb <= 3:
+            return 1
+        if tile_nb <= 8:
+            return 2
+        if tile_nb <= 15:
+            return 3
+        if tile_nb <= 24:
+            return 4
+        if tile_nb <= 35:
+            return 5
+        if tile_nb <= 48:
+            return 6
+        if tile_nb <= 63:
+            return 7
+        if tile_nb <= 80:
+            return 8
 
-        elif cmd_name == "Connect_nbr":
-            try:
-                self.connect_nbr = int(response)
-            except ValueError:
-                print(f"Received an unexpected response from {cmd_name} command: ", response)
-                self.connect_nbr = 0
+    def walk(self, tile_nb):
+        with self.lock:
+            self.queue = []
+        fwd_lvl = self.get_tile_lvl(tile_nb)
 
-        elif cmd_name == "Eject":
-            if response == "ko":
-                print("Failed to eject")
-            elif response == "ok":
-                print("Eject successful")
+        for i in range(fwd_lvl):
+            self.command("Forward", "")
 
-        elif cmd_name == "Incantation":
-            if response == "ko":
-                print("Incantation failed")
-            else:
-                print(response)
+        if tile_nb in medianes:
+            return
 
-        elif cmd_name == "Take":
-            if response == "ok":
-                self.inventory[cmd_arg] += 1
-            elif response == "ko":
-                print(f"Couldn't take {cmd_arg}")
+        left_or_right = tile_nb - medianes[fwd_lvl]
 
-        elif cmd_name == "Set":
-            if response == "ok":
-                self.inventory[cmd_arg] -= 1
-            elif response == "ko":
-                print(f"Couldn't set {cmd_arg}")
+        if left_or_right > 0:
+            self.command("Right", "")
+        elif left_or_right < 0:
+            self.command("Left", "")
 
-    def manage_queue(self):
-        while len(self.sent_queue) < 2:
-            self.send_command()
+        for i in range(abs(left_or_right)):
+            self.command("Forward", "")
+
+    def search_object(self, obj_string):
+        for i in range(0, len(self.look)):
+            if obj_string in self.look[i].keys():
+                return i, self.look[i][obj_string]
+        return False, False
+
+    def get_object(self, obj_name, amount):
+        curr_fwd = 0
+        with self.lock:
+            self.queue = []
+
+        while self.inventory.get(obj_name, 0) < amount and not self.cancel_get:
+            if self.grace.is_set():
+                with self.lock:
+                    self.queue = []
+                break
+            if obj_name in self.look[0]:
+                with self.lock:
+                    self.queue = []
+                if obj_name in self.look[0]:
+                    for i in range(self.look[0][obj_name]):
+                        self.command("Take", obj_name)
+                else:
+                    self.command("Take", obj_name)
+
+            if obj_name in self.inventory and self.inventory.get(obj_name, 0) >= amount or self.cancel_get:
+                with self.lock:
+                    self.queue = []
+                break
+            if self.inventory.get('food', 0) < 4 and obj_name != 'food':
+                with self.lock:
+                    self.queue = []
+                self.get_object('food', 7)
+
+            tile_nb, obj_nb = self.search_object(obj_name)
+            if tile_nb and obj_nb:
+                with self.lock:
+                    self.queue = []
+                self.walk(tile_nb)
+                for i in range(obj_nb):
+                    self.command("Take", obj_name)
+                self.grace.wait(0.5)
+            elif not tile_nb and not obj_nb:
+                if curr_fwd >= self.map_x or curr_fwd >= self.map_y:
+                    with self.lock:
+                        self.queue = []
+                    self.command("Right", "")
+                    for i in range(3):
+                        self.command("Forward", "")
+                    self.command("Left", "")
+                    curr_fwd = 0
+                else:
+                    with self.lock:
+                        self.queue = []
+                    self.command("Forward", "")
+                    curr_fwd += 1
+            if self.inventory.get(obj_name, 0)  >= amount or self.cancel_get:
+                with self.lock:
+                    self.queue = []
+                break
+        with self.lock:
+            self.queue = []
+
+    def incantate(self):
+        old_lvl = 1
+        while not self.incantation_done:
+            if self.level != old_lvl or self.incantation_done:
+                break
+            if self.level + 1 == 2 and self.proposed_incantation == False:
+                conditions_dict = incantation_levels[self.level + 1]
+                if self.inventory.get('linemate', 0) >= 1:
+                    self.command("Set", "linemate")
+                    self.command("Incantation", "")
+                    self.proposed_incantation = True
+
+    def receive_management(self):
+        while not self.grace.is_set():
+            self.command_response()
+            if self.grace.is_set():
+                break
+
+    def send_management(self):
+        while not self.grace.is_set() and not self.dead:
+            with self.lock:
+                if len(self.sent_queue) < 3:
+                    count = 2
+                    while self.queue and count > 0:
+                        action = self.queue.pop()
+                        self.sent_queue.insert(0, action)
+                        send_message(self.socket, action)
+                        count -= 1
+            if not self.queue:
+                self.grace.wait(0.02)
+            if self.grace.is_set():
+                break
+
+    def stop(self):
+        self.grace.set()
+
+    def look_management(self):
+        while not self.grace.is_set() and not self.dead:
+            if self.grace.is_set():
+                break
+            if "Look" not in self.sent_queue and not self.grace.is_set():
+                self.sent_queue.insert(0, "Look")
+                send_message(self.socket, "Look")
+            if self.grace.is_set():
+                break
+            if "Inventory" not in self.sent_queue and not self.grace.is_set():
+                self.sent_queue.insert(0, "Inventory")
+                send_message(self.socket, "Inventory")
+            self.grace.wait(0.1)
+
+    def inv_management(self):
+        while not self.grace.is_set():
+            self.command("Inventory", "")
+            time.sleep(5)
+            if self.grace.is_set():
+                break
 
     def launch_loop(self):
-        i = 0
-        while True:
-            if i == 0:
-                self.append_command("Look", "")
-                self.append_command("Inventory", "")
-                self.append_command("Broadcast", "A1")
-                self.append_command("Look", "")
-                self.append_command("Inventory", "")
-                self.append_command("Broadcast", "AA2")
-                self.append_command("Look", "")
-                self.append_command("Inventory", "")
-                self.append_command("Broadcast", "AAA3")
-                i += 1
-            self.manage_queue()
-            self.receive_command()
-            self.manage_queue()
-            print(f"[SENT] Queue: {self.sent_queue}")
-            print(f"[CMD] Queue: {self.command_queue}")
+        self.naming()
+        t_send = threading.Thread(target=self.send_management, args=())
+        t_receive = threading.Thread(target=self.receive_management, args=())
+        t_look = threading.Thread(target=self.look_management, args=())
 
+        t_receive.start()
+        t_send.start()
+        t_look.start()
 
+        try:
+            self.lvl2()
+            # self.lvl3()
 
-def parse_arguments():
-    """
-    A function which takes the arguments from the command line.
+        except KeyboardInterrupt:
+            print("Interrupted by user. Stopping threads...")
 
-    Returns:
-        A namespace argparse from which information can be easily taken.
-    """
-    parser = argparse.ArgumentParser(add_help=False)
-    parser.add_argument('-p', '--port', type=int, required=True)
-    parser.add_argument('-n', '--name', type=str, required=True)
-    parser.add_argument('-h', '--host', type=str, default='localhost')
-    return parser.parse_args()
+        print(self.name)
+        self.stop()
+        t_look.join()
+        t_send.join()
+        t_receive.join()
 
+    def naming(self):
+        self.command("Connect_nbr", "")
+        self.name = self.names[self.connect_nbr_tmp]
 
-# Send a given string followed by a newline to the server.
-def send_message(sock, message):
-    message_with_newline = message + '\n'
-    sock.sendall(message_with_newline.encode())
-    print(f'[->]    Sent message: {message}')
+    def lvl2(self):
+        while not self.look:
+            self.command("Look", "")
+        self.get_object("linemate", 1)
+        with self.lock:
+            self.queue = []
 
+        self.incantate()
 
-# Receive a response from the server and throw an error if the response is 'ko\n'.
-def receive_response(sock):
-    response = sock.recv(1024).decode().strip()
-    if response == "ko":
-        raise ValueError("Received 'ko' from server")
-    return response
+    def inventory_to_string(self):
+        return "|".join(f"{key[0]} {value}" for key, value in self.inventory.items())
 
-def parse_slots_and_map(str):
-    parts = str.split('\n')
+    def inventory_from_string(self, string):
+        elements = string.split('|')
 
-    numbers = []
-    for part in parts:
-        numbers.extend(part.split())
+        parsed_dict = {}
 
-    integers = [int(num) for num in numbers]
-    return integers
+        for element in elements:
+            abbrev, value = element.split()
+            key = reverse_abbreviations[abbrev]
+            parsed_dict[key] = int(value)
 
-def main():
-    args = parse_arguments()
+        return parsed_dict
 
-    host = args.host
-    port = args.port
-    name = args.name
-
-    if name == "GRAPHIC":
-        print("Team name not available.")
-        exit(84)
-
-    try:
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.connect((host, port))
-            print(f'Connected to {host}:{port}')
-
-            # Wait for "WELCOME\n" from the server
-            welcome_message = receive_response(s)
-            if welcome_message != "WELCOME":
-                print(f'Unexpected message from server: {welcome_message}')
-                return
-
-            print(f'Received: {welcome_message}')
-
-            # Send the name to the server
-            send_message(s, name)
-
-            already_parced = False
-            # Receive the number of available slots
-            try:
-                response = receive_response(s)
-                slots = int(response)
-                print(f'Received slots: {slots}')
-            except ValueError:
-                print(f'Unexpected response for slots from server: {response}')
-                parced = parse_slots_and_map(response)
-                slots = parced[0]
-                x, y = parced[1], parced[2]
-                already_parced = True
-
-            # Receive the position (X, Y)
-            if not already_parced:
-                response = receive_response(s)
-                parts = response.split()
-                if len(parts) == 2:
-                    x, y = parts
-                    print(f'Received map size: ({x}, {y})')
-                else:
-                    print(f'Unexpected response for map size from server: {response}')
-
-            ai = AI(name, s, slots, x, y)
-            ai.launch_loop()
-
-    except Exception as e:
-        print(f'{host}:{port} - {e}')
-
-
-
-if __name__ == "__main__":
-    if len(sys.argv) == 1 or sys.argv[1] == '-help':
-        print(f"USAGE: {sys.argv[0]} -p port -n name -h machine")
-    else:
-        main()
+    def lvl3(self):
+        needed_stones = incantation_levels[self.level + 1]
+        while not self.dead:
+            for key, value in needed_stones.items():
+                if key == "player":
+                    continue
+                if needed_stones[key] > 0:
+                    self.command("Broadcast", f"{self.team}/!/{self.name}/!/?{key}")
+                    self.grace.wait(0.5)
+                    self.get_object(key, value)
+            self.command("Broadcast", f"{self.team}/!/{self.name}/!/I{inventory_to_string()}")
