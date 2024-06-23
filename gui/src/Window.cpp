@@ -57,12 +57,12 @@ void Window::drawCrosshair()
 
 void Window::drawGeneralInfo(Map map)
 {
-    Camera _camera = *getCamera()->getCameraObj();
+    Camera camera = *getCamera()->getCameraObj();
     int cameraMode = getCamera()->getCameraMode();
 
     RaylibWrapper::drawRectangleRounded({2.0f, 2.0f, 250, 312.0f + map.getNbTeams() * 20.0f}, 0.1, 10, {255, 255, 255, 150});
     RaylibWrapper::drawRectangleRoundedLines({2.0f, 2.0f, 250, 312.0f + map.getNbTeams() * 20.0f}, 0.1, 10, BLACK);
-    RaylibWrapper::drawText(RaylibWrapper::textFormat("X:%.2f Y:%.2f Z:%.2f", _camera.position.x, _camera.position.y, _camera.position.z), 10, 10, 20, GRAY);
+    RaylibWrapper::drawText(RaylibWrapper::textFormat("X:%.2f Y:%.2f Z:%.2f", camera.position.x, camera.position.y, camera.position.z), 10, 10, 20, GRAY);
     RaylibWrapper::drawText(RaylibWrapper::textFormat("Map size: (%d, %d)", map.getWidth(), map.getHeight()), 10, 30, 20, GRAY);
     RaylibWrapper::drawText(RaylibWrapper::textFormat("Frequency: %d", map.getFrequency()), 10, 50, 20, GRAY);
     RaylibWrapper::drawText(RaylibWrapper::textFormat("Camera mode: %d", cameraMode), 10, 70, 20, GRAY);
