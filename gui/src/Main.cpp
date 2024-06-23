@@ -131,7 +131,9 @@ int main(int argc, char *argv[])
     bool isFrequencySelected = false;
 
     // Starts thread for reading messages
-    socket.startThread();
+    // Creates pointer
+    std::shared_ptr<Map> mapPtr = std::make_shared<Map>(map);
+    socket.startThread(mapPtr);
 
     window.playMusic("gui/resources/game_music.mp3");
     window.disableCursor();
