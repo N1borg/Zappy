@@ -44,6 +44,8 @@ class RaylibWrapper {
         static void drawRectangle(int posX, int posY, int width, int height, Color color) { DrawRectangle(posX, posY, width, height, color); }
         static void drawPlane(Vector3 position, Vector2 size, Color color) { DrawPlane(position, size, color); }
         static void drawGrid(int slices, float spacing) { DrawGrid(slices, spacing); }
+        static void drawRectangleRounded(Rectangle rec, float roundness, int segments, Color color) { DrawRectangleRounded(rec, roundness, segments, color); }
+        static void drawRectangleRoundedLines(Rectangle rec, float roundness, int segments, Color color) { DrawRectangleRoundedLines(rec, roundness, segments, color); }
 
         // Camera functions
         static void updateCamera(Camera3D *camera, int mode) { UpdateCamera(camera, mode); }
