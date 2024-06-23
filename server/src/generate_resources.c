@@ -105,6 +105,7 @@ static int get_resource_from_tile(tile_t tile, int rsc_type)
         case THYSTAME:
             return tile.resources.thystame;
     }
+    return 0;
 }
 
 /**
