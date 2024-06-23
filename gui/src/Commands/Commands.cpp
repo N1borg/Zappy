@@ -161,7 +161,7 @@ void Commands::getTimeUnitRequest(const std::string &params, std::shared_ptr<Map
     std::istringstream iss(params);
     int timeUnit;
     iss >> timeUnit;
-    std::cout << "Current time unit: " << timeUnit << std::endl;
+    map->setFrequency(timeUnit);
 }
 
 void Commands::getTimeUnitModification(const std::string &params, std::shared_ptr<Map> &map)
@@ -169,7 +169,7 @@ void Commands::getTimeUnitModification(const std::string &params, std::shared_pt
     std::istringstream iss(params);
     int newTimeUnit;
     iss >> newTimeUnit;
-    std::cout << "Time unit modified to: " << newTimeUnit << std::endl;
+    map->setFrequency(newTimeUnit);
 }
 
 void Commands::getEndOfGame(const std::string &params, std::shared_ptr<Map> &map)

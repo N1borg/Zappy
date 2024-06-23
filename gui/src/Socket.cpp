@@ -78,17 +78,13 @@ std::string Socket::receiveMessage()
             throw std::runtime_error("Socket is not connected");
 
         fd_set readfds;
-        struct timeval tv;
         char buffer[1024] = {0};
         int retval;
 
         FD_ZERO(&readfds);
         FD_SET(_clientSocket, &readfds);
 
-        // tv.tv_sec = 0;
-        // tv.tv_usec = 0;
-
-        retval = select(_clientSocket + 1, &readfds, 0, 0, 0);// &tv);
+        retval = select(_clientSocket + 1, &readfds, 0, 0, 0);
         if (retval != -1 && FD_ISSET(_clientSocket, &readfds)) {
             ssize_t bytesReceived = recv(_clientSocket, buffer, 1024, 0);
             if (bytesReceived == -1) {
