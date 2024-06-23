@@ -80,6 +80,7 @@ void init_server(server_t *serv)
     int y = 0;
 
     serv->master_socket = 0;
+    serv->refill = 1;
     for (int i = 0; i < MAX_CLIENTS; i++) {
         serv->clients[i] = malloc(sizeof(client_t));
         set_client(serv->clients[i]);

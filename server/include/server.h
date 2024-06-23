@@ -28,6 +28,7 @@ typedef struct server_s {
     int width;
     int height;
     int freq;
+    int refill;
     struct timeval timeout;
     int max_client_team;
     int team_nb;

@@ -34,12 +34,22 @@ int check_player_death(server_t *serv, client_t *player)
         return 1;
     if (player->inv.food == 0) {
         event_pdi(serv, player);
-        close(player->fd);
+        dprintf(player->fd, "dead\n");
+        disconnect_client(serv, player);
         return 0;
     }
     player->inv.food--;
     player->life += 126;
     return 1;
+}
+
+void check_resource_event(server_t *serv)
+{
+    serv->refill -= 1;
+    if (serv->refill <= 0) {
+        generate_resources(serv);
+        serv->refill += 20;
+    }
 }
 
 // Elapse the time and check for player death
@@ -53,6 +63,7 @@ void elapse_time(server_t *serv, int *sd, struct timespec *start)
         1000000000 + (current.tv_nsec - start->tv_nsec);
     if (elapsed_time < 1000000000 / serv->freq)
         return;
+    check_resource_event(serv);
     for (int i = 0; i < MAX_CLIENTS; i++) {
         if (serv->clients[i]->fd <= 0)
             continue;
