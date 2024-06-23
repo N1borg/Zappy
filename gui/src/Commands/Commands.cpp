@@ -193,13 +193,10 @@ void Commands::getEggDeath(const std::string &params, Game &game)
 
 void Commands::getTimeUnitRequest(const std::string &params, Game &game)
 {
-    std::istringstream iss(params);
-    std::string timeUnitReq, timeUnitStr;
     int timeUnit;
 
     try {
-        iss >> timeUnitReq >> timeUnitStr;
-        timeUnit = std::stoi(timeUnitStr);
+        timeUnit = std::stoi(params);
         game.setTimeUnit(timeUnit);
     } catch (const std::exception &e) {
         RaylibWrapper::log(LOG_ERROR, "INIT: Invalid frequence");
