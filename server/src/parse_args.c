@@ -75,5 +75,6 @@ server_t parse_args(int argc, char *argv[])
         serv.teams[i]->free_slots = serv.max_client_team;
     serv.teams[get_team_id(&serv, "GRAPHIC")]->free_slots = MAX_CLIENTS;
     serv.team_nb = tablen(serv.teams);
+    printf("%i", serv.freq);
     return serv;
 }

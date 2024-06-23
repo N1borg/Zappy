@@ -8,6 +8,13 @@
 #include "server.h"
 
 // Print the help message, free the team names and return the given value
+
+
+/// @brief Print help message, free the team names and return the given value
+/// @param binary_name path used to start the server binary
+/// @param ret value to return
+/// @param serv 
+/// @return ret value given in argument
 int help(char *binary_name, int ret, server_t *serv)
 {
     printf("USAGE: %s -p port -x width -y height -n name1 name2", binary_name);
