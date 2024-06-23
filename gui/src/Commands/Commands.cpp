@@ -136,6 +136,7 @@ void Commands::getEggLaidByPlayer(const std::string &params, std::shared_ptr<Map
      std::istringstream iss(params);
     int eggNumber, playerNumber, x, y;
     iss >> eggNumber >> playerNumber >> x >> y;
+    map->addEgg(eggNumber, playerNumber, x, y, map->getTeamByPlayerId(playerNumber).getTeamName());
     std::cout << "Egg #" << eggNumber << " laid by Player #" << playerNumber << " at (" << x << ", " << y << ")." << std::endl;
 }
 
