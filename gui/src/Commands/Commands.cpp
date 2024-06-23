@@ -207,7 +207,7 @@ void Commands::getTimeUnitModification(const std::string &params, Game &game)
     std::istringstream iss(params);
     int newTimeUnit;
     iss >> newTimeUnit;
-    std::cout << "Time unit modified to: " << newTimeUnit << std::endl;
+    game.setTimeUnit(newTimeUnit);
     game.setTimeUnitReceived(true);
 }
 
@@ -226,10 +226,10 @@ void Commands::getServerMessage(const std::string &params, Game &game)
 
 void Commands::getUnknownCommand(const std::string &params, Game &game)
 {
-    std::cout  << "Unknown Command: " << params << std::endl;
+    RaylibWrapper::log(LOG_WARNING, "Unknown command");
 }
 
 void Commands::getCommandParameter(const std::string &params, Game &game)
 {
-    std::cout  << "Command Parameter: " << params << std::endl;
+    RaylibWrapper::log(LOG_WARNING, "Bad command parameters");
 }

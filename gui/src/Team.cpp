@@ -45,3 +45,8 @@ int Team::getNumberEggs() const
 {
     return _numberEggs;
 }
+
+// void Team::addPlayer(Player player)
+// {
+//     // _players.push_back(player);
+// }
