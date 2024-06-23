@@ -14,6 +14,4 @@ def send_message(sock, message):
 # Receive a response from the server and throw an error if the response is 'ko\n'.
 def receive_response(sock):
     response = sock.recv(1024).decode().strip()
-    # if response == "ko":
-    #     raise ValueError("Received 'ko' from server")
     return response
