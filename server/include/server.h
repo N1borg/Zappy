@@ -19,6 +19,7 @@
 #include <stdbool.h>
 #include <signal.h>
 #include <time.h>
+#include <math.h>
 
 #include "player.h"
 #include "tile.h"

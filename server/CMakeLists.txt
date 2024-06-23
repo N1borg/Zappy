@@ -66,3 +66,5 @@ set(SHARED_SRC
 )
 
 add_executable(zappy_server ${SHARED_SRC})
+
+target_link_libraries(zappy_server m)
