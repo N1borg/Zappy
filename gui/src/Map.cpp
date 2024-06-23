@@ -7,6 +7,7 @@
 
 #include "Map.hpp"
 
+// Initialise une nouvelle carte avec les dimensions spécifiées et les équipes.
 Map::Map(int width, int height, int frequency, std::vector<Team> teams) : _width(width), _height(height), _frequency(frequency), _teams(teams)
 {
     _isGameRunning = true;
@@ -177,6 +178,7 @@ std::vector<Team> Map::getTeams() const
     return _teams;
 }
 
+// Retourne la couleur d'une équipe spécifiée par son nom.
 Color Map::getTeamColor(std::string team) const
 {
     for (Team t : _teams) {
@@ -186,6 +188,7 @@ Color Map::getTeamColor(std::string team) const
     return WHITE;
 }
 
+// Ajoute un joueur à une position spécifiée sur la carte.
 void Map::addPlayer(int id, int x, int y, Orientation orientation, int level, std::string team)
 {
     for (Player p : _tiles[x][y].players) {
@@ -204,6 +207,7 @@ void Map::addPlayer(int id, int x, int y, Orientation orientation, int level, st
     }
 }
 
+// Déplace un joueur à une nouvelle position sur la carte.
 void Map::movePlayer(int id, int x, int y, Orientation orientation)
 {
     for (std::size_t i = 0; i < _players.size(); i++) {
@@ -221,6 +225,7 @@ void Map::movePlayer(int id, int x, int y, Orientation orientation)
     }
 }
 
+// Supprime un joueur de la carte.
 void Map::delPlayer(int id)
 {
     for (std::size_t i = 0; i < _players.size(); i++) {
@@ -237,6 +242,7 @@ void Map::delPlayer(int id)
     }
 }
 
+// Ajoute un œuf à une position spécifiée sur la carte.
 void Map::addEgg(int id, int playerId, int x, int y, std::string team)
 {
     for (Egg e : _tiles[x][y].eggs) {
@@ -253,6 +259,7 @@ void Map::addEgg(int id, int playerId, int x, int y, std::string team)
     }
 }
 
+// Déplace un œuf à une nouvelle position sur la carte.
 void Map::moveEgg(int id, int x, int y)
 {
     for (std::size_t i = 0; i < _tiles.size(); i++) {
@@ -267,6 +274,7 @@ void Map::moveEgg(int id, int x, int y)
     }
 }
 
+// Supprime un œuf de la carte.
 void Map::delEgg(int id)
 {
     for (std::size_t i = 0; i < _tiles.size(); i++) {
@@ -376,6 +384,7 @@ void Map::setHeight(int height)
     _height = height;
 }
 
+// Effectue le rendu des tuiles et des objets de la carte.
 void Map::draw()
 {
     double time = GetTime();
@@ -422,6 +431,7 @@ void Map::draw()
     }
 }
 
+// Effectue le rendu transparent des tuiles et des objets de la carte.
 void Map::drawTransparent()
 {
     double time = GetTime();
@@ -482,6 +492,7 @@ void Map::drawTransparent()
     }
 }
 
+// Sélectionne une tuile en fonction du rayon de la caméra.
 bool Map::selectTile(Ray ray)
 {
     RayCollision closestCollision;
@@ -531,6 +542,7 @@ bool Map::selectTile(Ray ray)
     return _isTileSelected;
 }
 
+// Retourne la tuile actuellement sélectionnée.
 Tile_t Map::getSelectedTile() const
 {
     for (int x = 0; x < _width; x++) {
@@ -542,6 +554,7 @@ Tile_t Map::getSelectedTile() const
     return _tiles[0][0];
 }
 
+// Libère les ressources de la carte.
 void Map::unload()
 {
     UnloadModel(_modelFood);

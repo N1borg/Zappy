@@ -9,6 +9,7 @@
 
 Socket::Socket(int port, std::string machine) : _port(port), _machine(machine), _clientSocket(-1), _connected(false), _threadRunning(false) {}
 
+// Destructeur qui ferme le socket s'il est ouvert.
 Socket::~Socket()
 {
     if (_clientSocket != -1)
@@ -40,6 +41,7 @@ bool Socket::isConnected() const
     return _connected.load();
 }
 
+// Tente de connecter le socket à l'adresse et au port configurés.
 bool Socket::connectSocket()
 {
     sockaddr_in serverAddress;
@@ -56,6 +58,7 @@ bool Socket::connectSocket()
     return true;
 }
 
+// Envoie un message à travers le socket.
 void Socket::sendMessage(const std::string &message)
 {
     try {
@@ -71,6 +74,7 @@ void Socket::sendMessage(const std::string &message)
     }
 }
 
+// Reçoit un message du socket.
 std::string Socket::receiveMessage()
 {
     try {
@@ -100,6 +104,7 @@ std::string Socket::receiveMessage()
     }
 }
 
+// Tente de se connecter jusqu'à ce que la connexion soit établie.
 void Socket::attemptConnection()
 {
     while (!_connected) {
@@ -109,6 +114,7 @@ void Socket::attemptConnection()
     }
 }
 
+// Démarre un thread pour lire les messages du socket.
 void Socket::startThread(Game *game)
 {
     _game = game;
@@ -122,6 +128,7 @@ void Socket::stopThread()
     _thread.detach();
 }
 
+// Lit et traite les messages reçus du socket.
 void Socket::readThread()
 {
     ParseCommands cmdParser;

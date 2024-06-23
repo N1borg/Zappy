@@ -7,6 +7,7 @@
 
 #include "Parser/ParseCommands.hpp"
 
+// Initialise la carte de correspondance des commandes aux fonctions.
 ParseCommands::ParseCommands()
 {
     _commandMap["WELCOME\n"] = &Commands::validateWelcome;
@@ -36,6 +37,7 @@ ParseCommands::ParseCommands()
     _commandMap["sbp"] = &Commands::getCommandParameter;
 }
 
+// Analyse le message reçu et exécute la commande correspondante.
 void ParseCommands::parse(const std::string &msg, Game &game)
 {
     std::string command, params;
@@ -43,8 +45,9 @@ void ParseCommands::parse(const std::string &msg, Game &game)
     if (pos != std::string::npos) {
         command = msg.substr(0, pos);
         params = msg.substr(pos + 1);
-    } else
+    } else {
         command = msg;
+    }
 
     auto it = _commandMap.find(command);
     if (it != _commandMap.end())

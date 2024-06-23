@@ -8,6 +8,7 @@
 #include "Commands/Commands.hpp"
 #include "Game/Game.hpp"
 
+// Accueille le client et initialise les messages de communication.
 void Commands::validateWelcome(const std::string &params, Game &game)
 {
     std::cout << "Welcome to Zappy!" << params << std::endl;
@@ -17,6 +18,7 @@ void Commands::validateWelcome(const std::string &params, Game &game)
     game.setWelcomeReceived(true);
 }
 
+// Définit la taille de la carte basée sur les paramètres reçus.
 void Commands::getMapSize(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
@@ -49,6 +51,7 @@ void Commands::getMapSize(const std::string &params, Game &game)
     game.setMapSizeReceived(true);
 }
 
+// Met à jour la position du joueur sur la carte.
 void Commands::getPlayerPosition(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
@@ -57,6 +60,7 @@ void Commands::getPlayerPosition(const std::string &params, Game &game)
     std::cout << "Player #" << playerNumber << " is at (" << x << ", " << y << ") facing orientation " << orientation << std::endl;
 }
 
+// Affiche le contenu de la tuile spécifiée.
 void Commands::getTileContent(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
@@ -65,6 +69,7 @@ void Commands::getTileContent(const std::string &params, Game &game)
     std::cout << "Tile at (" << x << ", " << y << ") has resources: Food=" << q0 << ", Linemate=" << q1 << ", Deraumere=" << q2 << ", Sibur=" << q3 << ", Mendiane=" << q4 << ", Phiras=" << q5 << ", Thystame=" << q6 << std::endl;
 }
 
+// Récupère et affiche les noms des équipes du jeu.
 void Commands::getTeamsName(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
@@ -74,6 +79,7 @@ void Commands::getTeamsName(const std::string &params, Game &game)
     }
 }
 
+// Gère la connexion d'un nouveau joueur au jeu.
 void Commands::getConnectionNewPlayer(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
@@ -83,6 +89,7 @@ void Commands::getConnectionNewPlayer(const std::string &params, Game &game)
     std::cout << "New player #" << playerNumber << " from team " << teamName << " at (" << x << ", " << y << ") facing " << orientation << " at level " << level << std::endl;
 }
 
+// Met à jour le niveau d'un joueur.
 void Commands::getPlayerLevel(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
@@ -91,6 +98,7 @@ void Commands::getPlayerLevel(const std::string &params, Game &game)
     std::cout << "Player #" << playerNumber << " is at level " << level << std::endl;
 }
 
+// Récupère et affiche l'inventaire d'un joueur.
 void Commands::getPlayerInventory(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
@@ -100,6 +108,7 @@ void Commands::getPlayerInventory(const std::string &params, Game &game)
     }
 }
 
+// Signale l'expulsion d'un joueur.
 void Commands::getExpulsion(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
@@ -108,6 +117,7 @@ void Commands::getExpulsion(const std::string &params, Game &game)
     std::cout << "Player #" << playerNumber << " has been expelled." << std::endl;
 }
 
+// Traite et diffuse un message d'un joueur.
 void Commands::getBroadcast(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
@@ -118,11 +128,13 @@ void Commands::getBroadcast(const std::string &params, Game &game)
     std::cout << "Player #" << playerNumber << " broadcasts: " << message << std::endl;
 }
 
+// Indique le début d'une incantation.
 void Commands::getStartOfIncantation(const std::string &params, Game &game)
 {
     std::cout  << "Start of Incantation: " << params << std::endl;
 }
 
+// Signale la fin d'une incantation et son résultat.
 void Commands::getEndOfIncantation(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
@@ -131,6 +143,7 @@ void Commands::getEndOfIncantation(const std::string &params, Game &game)
     std::cout << "Incantation at (" << x << ", " << y << ") ended with result: " << (result ? "Success" : "Failure") << std::endl;
 }
 
+// Gère la ponte d'un œuf par un joueur.
 void Commands::getLayingEggByPlayer(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
@@ -139,6 +152,7 @@ void Commands::getLayingEggByPlayer(const std::string &params, Game &game)
     std::cout << "Player #" << playerNumber << " has laid an egg." << std::endl;
 }
 
+// Gère la chute de ressources par un joueur.
 void Commands::getResourceDropping(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
@@ -147,6 +161,7 @@ void Commands::getResourceDropping(const std::string &params, Game &game)
     std::cout << "Player #" << playerNumber << " dropped resource " << resourceIndex << std::endl;
 }
 
+// Gère la collecte de ressources par un joueur.
 void Commands::getResourceCollecting(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
@@ -155,6 +170,7 @@ void Commands::getResourceCollecting(const std::string &params, Game &game)
     std::cout << "Player #" << playerNumber << " collected resource " << resourceIndex << std::endl;
 }
 
+// Signale la mort d'un joueur.
 void Commands::getPlayerDeath(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
@@ -163,6 +179,7 @@ void Commands::getPlayerDeath(const std::string &params, Game &game)
     std::cout << "Player #" << playerNumber << " has died." << std::endl;
 }
 
+// Gère la ponte d'un œuf par un joueur.
 void Commands::getEggLaidByPlayer(const std::string &params, Game &game)
 {
      std::istringstream iss(params);
@@ -171,6 +188,7 @@ void Commands::getEggLaidByPlayer(const std::string &params, Game &game)
     std::cout << "Egg #" << eggNumber << " laid by Player #" << playerNumber << " at (" << x << ", " << y << ")." << std::endl;
 }
 
+// Gère la connexion d'un joueur à partir d'un œuf.
 void Commands::getPlayerConnectionInEgg(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
@@ -179,6 +197,7 @@ void Commands::getPlayerConnectionInEgg(const std::string &params, Game &game)
     std::cout << "Player connected from Egg #" << eggNumber << "." << std::endl;
 }
 
+// Signale la mort d'un œuf.
 void Commands::getEggDeath(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
@@ -187,6 +206,7 @@ void Commands::getEggDeath(const std::string &params, Game &game)
     std::cout << "Egg #" << eggNumber << " has died." << std::endl;
 }
 
+// Demande de modification de l'unité de temps du jeu.
 void Commands::getTimeUnitRequest(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
@@ -202,6 +222,7 @@ void Commands::getTimeUnitRequest(const std::string &params, Game &game)
     }
 }
 
+// Demande de modification de l'unité de temps du jeu.
 void Commands::getTimeUnitModification(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
@@ -210,6 +231,7 @@ void Commands::getTimeUnitModification(const std::string &params, Game &game)
     std::cout << "Time unit modified to: " << newTimeUnit << std::endl;
 }
 
+// Annonce la fin du jeu et l'équipe gagnante.
 void Commands::getEndOfGame(const std::string &params, Game &game)
 {
     std::istringstream iss(params);
@@ -218,16 +240,19 @@ void Commands::getEndOfGame(const std::string &params, Game &game)
     std::cout << "Game over! Winning team: " << teamName << std::endl;
 }
 
+// Affiche un message du serveur.
 void Commands::getServerMessage(const std::string &params, Game &game)
 {
     std::cout  << "Server Message: " << params << std::endl;
 }
 
+// Signale la réception d'une commande inconnue.
 void Commands::getUnknownCommand(const std::string &params, Game &game)
 {
     std::cout  << "Unknown Command: " << params << std::endl;
 }
 
+// Affiche les paramètres d'une commande reçue.
 void Commands::getCommandParameter(const std::string &params, Game &game)
 {
     std::cout  << "Command Parameter: " << params << std::endl;
