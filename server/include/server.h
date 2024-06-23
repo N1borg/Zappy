@@ -74,6 +74,7 @@ void destroy_teams(team_t **teams);
 void destroy_map(tile_t **map);
 int destroy_server(server_t *serv, int ret);
 int add_player_to_team(server_t *serv, client_t *player, char *team_name);
+int add_graphic_to_team(server_t *serv, client_t *graphic);
 client_t *get_client_by_id(server_t *serv, int id);
 int get_nbr_eggs_on_tile(tile_t *tile);
 egg_t *add_egg(team_t *team, tile_t *tile);
@@ -85,6 +86,7 @@ int enqueue_command(client_t *client, char *command_str);
 command_t *dequeue_command(command_queue_t *queue);
 void free_command_queue(command_queue_t *queue);
 void manage_queue(client_t *client, char *buffer);
+int init_client(server_t *s, client_t *client, char *team_name);
 
 // player commands
 int success_response(client_t *client);

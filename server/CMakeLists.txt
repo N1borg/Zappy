@@ -3,7 +3,7 @@ project(zappy_server)
 
 set(CMAKE_C_STANDARD 17)
 
-set(CMAKE_C_FLAGS "-W -Wall -Wextra -Wpedantic -Wshadow -Wformat=2 -I ./include/")
+set(CMAKE_C_FLAGS "-W -Wall -Wextra -Wpedantic -Wshadow -Wformat=2 -I ./include/ -g")
 
 include_directories(include)
 

@@ -68,7 +68,7 @@ int handle_command_graphic(server_t *serv, client_t *client, char *buffer)
 void compute_response(server_t *serv, client_t *client, char *buffer, int time)
 {
     if (is_team(serv, buffer) == 1) {
-        if (create_player(serv, client, buffer) != 0
+        if (init_client(serv, client, buffer) != 0
             && dprintf(client->fd, "ko\n") < 0 && errno == EPIPE)
                 disconnect_client(serv, client);
         return;

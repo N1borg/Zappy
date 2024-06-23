@@ -90,21 +90,27 @@ static void set_client_pos(server_t *s, client_t *client)
     remove_egg(egg);
 }
 
-// create player if team_name exists else return 1
-int create_player(server_t *s, client_t *client, char *team_name)
+// Initialize a client
+int init_client(server_t *s, client_t *client, char *team_name)
 {
     int i = 0;
 
-    if (client->team != NULL || add_player_to_team(s, client, team_name))
+    if (client->team != NULL)
         return 1;
-    for (; i < MAX_CLIENTS && s->map[client->y][client->x].players[i]; i++);
-    if (i == MAX_CLIENTS)
+    if (strcmp(team_name, "GRAPHIC") == 0) {
+        if (add_graphic_to_team(s, client))
+            return 1;
+    } else if (add_player_to_team(s, client, team_name) == 0) {
+        for (; i < MAX_CLIENTS && s->map[client->y][client->x].players[i]; i++);
+        if (i == MAX_CLIENTS)
+            return 1;
+        set_client_pos(s, client);
+        s->map[client->y][client->x].players[i] = client;
+        client->orientation = (rand() % 4) + 1;
+        dprintf(client->fd, "%d\n",
+            s->teams[get_team_id(s, client->team)]->free_slots);
+        dprintf(client->fd, "%d %d\n", s->width, s->height);
+    } else
         return 1;
-    set_client_pos(s, client);
-    s->map[client->y][client->x].players[i] = client;
-    client->orientation = (rand() % 4) + 1;
-    dprintf(client->fd, "%d\n",
-        s->teams[get_team_id(s, client->team)]->free_slots);
-    dprintf(client->fd, "%d %d\n", s->width, s->height);
     return 0;
 }
