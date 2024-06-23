@@ -128,7 +128,6 @@ int main(int argc, char *argv[])
     map.addThystame(0, 0);
 
     bool isTileSelected = false;
-    bool isFrequencySelected = false;
 
     // Starts thread for reading messages
     // Creates pointer
@@ -145,10 +144,8 @@ int main(int argc, char *argv[])
                 break;
         }
 
-        if (window.isMouseButtonPressed(MOUSE_LEFT_BUTTON))
+        if (window.isMouseButtonPressed(MOUSE_LEFT_BUTTON) || window.isKeyPressed(KEY_ENTER))
             isTileSelected = map.selectTile(GetMouseRay({window.getScreenWidth() / 2.0f, window.getScreenHeight() / 2.0f}, window.getCamera()));
-        if (window.isKeyPressed(KEY_ENTER))
-            !isFrequencySelected;
 
         window.parseCameraInputs();
         window.updateCamera();

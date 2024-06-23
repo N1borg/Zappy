@@ -29,16 +29,17 @@ void check_player_queue(client_t *player, server_t *serv)
 // Check if the player is dead
 int check_player_death(server_t *serv, client_t *player)
 {
-    player->life -= 1;
-    if (player->life >= 0)
-        return 1;
-    if (player->inv.food == 0) {
-        event_pdi(serv, player);
-        close(player->fd);
-        return 0;
+    if (player->team && strcmp(player->team, "GRAPHIC") != 0) {
+        player->life -= 1;
+        if (player->life >= 0)
+            return 1;
+        if (player->inv.food == 0) {
+            disconnect_client(serv, player);
+            return 0;
+        }
+        player->inv.food--;
+        player->life += 126;
     }
-    player->inv.food--;
-    player->life += 126;
     return 1;
 }
 

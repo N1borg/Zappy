@@ -22,6 +22,8 @@ void Commands::getPlayerPosition(const std::string &params, std::shared_ptr<Map>
     std::istringstream iss(params);
     int playerNumber, x, y, orientation;
     iss >> playerNumber >> x >> y >> orientation;
+    map->delPlayer(playerNumber);
+    map->addPlayer(playerNumber, x, y, Orientation (orientation + 1), 1, map->getTeamByPlayerId(playerNumber).getTeamName());
     std::cout << "Player #" << playerNumber << " is at (" << x << ", " << y << ") facing orientation " << orientation << std::endl;
 }
 
@@ -48,6 +50,7 @@ void Commands::getConnectionNewPlayer(const std::string &params, std::shared_ptr
     int playerNumber, x, y, orientation, level;
     std::string teamName;
     iss >> playerNumber >> x >> y >> orientation >> level >> teamName;
+    map->addPlayer(playerNumber, x, y, Orientation (orientation + 1), level, teamName);
     std::cout << "New player #" << playerNumber << " from team " << teamName << " at (" << x << ", " << y << ") facing " << orientation << " at level " << level << std::endl;
 }
 
@@ -56,6 +59,7 @@ void Commands::getPlayerLevel(const std::string &params, std::shared_ptr<Map> &m
     std::istringstream iss(params);
     int playerNumber, level;
     iss >> playerNumber >> level;
+    map->getPlayerById(playerNumber).setLevel(level);
     std::cout << "Player #" << playerNumber << " is at level " << level << std::endl;
 }
 
@@ -112,6 +116,29 @@ void Commands::getResourceDropping(const std::string &params, std::shared_ptr<Ma
     std::istringstream iss(params);
     int playerNumber, resourceIndex;
     iss >> playerNumber >> resourceIndex;
+    switch (resourceIndex) {
+        case 0:
+            map->addFood(map->getPlayerById(playerNumber).getX(), map->getPlayerById(playerNumber).getY());
+            break;
+        case 1:
+            map->addLinemate(map->getPlayerById(playerNumber).getX(), map->getPlayerById(playerNumber).getY());
+            break;
+        case 2:
+            map->addDeraumere(map->getPlayerById(playerNumber).getX(), map->getPlayerById(playerNumber).getY());
+            break;
+        case 3:
+            map->addSibur(map->getPlayerById(playerNumber).getX(), map->getPlayerById(playerNumber).getY());
+            break;
+        case 4:
+            map->addMendiane(map->getPlayerById(playerNumber).getX(), map->getPlayerById(playerNumber).getY());
+            break;
+        case 5:
+            map->addPhiras(map->getPlayerById(playerNumber).getX(), map->getPlayerById(playerNumber).getY());
+            break;
+        case 6:
+            map->addThystame(map->getPlayerById(playerNumber).getX(), map->getPlayerById(playerNumber).getY());
+            break;
+    }
     std::cout << "Player #" << playerNumber << " dropped resource " << resourceIndex << std::endl;
 }
 
@@ -120,6 +147,29 @@ void Commands::getResourceCollecting(const std::string &params, std::shared_ptr<
     std::istringstream iss(params);
     int playerNumber, resourceIndex;
     iss >> playerNumber >> resourceIndex;
+    switch (resourceIndex) {
+        case 0:
+            map->delFood(map->getPlayerById(playerNumber).getX(), map->getPlayerById(playerNumber).getY());
+            break;
+        case 1:
+            map->delLinemate(map->getPlayerById(playerNumber).getX(), map->getPlayerById(playerNumber).getY());
+            break;
+        case 2:
+            map->delDeraumere(map->getPlayerById(playerNumber).getX(), map->getPlayerById(playerNumber).getY());
+            break;
+        case 3:
+            map->delSibur(map->getPlayerById(playerNumber).getX(), map->getPlayerById(playerNumber).getY());
+            break;
+        case 4:
+            map->delMendiane(map->getPlayerById(playerNumber).getX(), map->getPlayerById(playerNumber).getY());
+            break;
+        case 5:
+            map->delPhiras(map->getPlayerById(playerNumber).getX(), map->getPlayerById(playerNumber).getY());
+            break;
+        case 6:
+            map->delThystame(map->getPlayerById(playerNumber).getX(), map->getPlayerById(playerNumber).getY());
+            break;
+    }
     std::cout << "Player #" << playerNumber << " collected resource " << resourceIndex << std::endl;
 }
 
@@ -128,6 +178,7 @@ void Commands::getPlayerDeath(const std::string &params, std::shared_ptr<Map> &m
     std::istringstream iss(params);
     int playerNumber;
     iss >> playerNumber;
+    map->delPlayer(playerNumber);
     std::cout << "Player #" << playerNumber << " has died." << std::endl;
 }
 
@@ -145,6 +196,7 @@ void Commands::getPlayerConnectionInEgg(const std::string &params, std::shared_p
     std::istringstream iss(params);
     int eggNumber;
     iss >> eggNumber;
+    map->delEgg(eggNumber);
     std::cout << "Player connected from Egg #" << eggNumber << "." << std::endl;
 }
 
@@ -153,6 +205,7 @@ void Commands::getEggDeath(const std::string &params, std::shared_ptr<Map> &map)
     std::istringstream iss(params);
     int eggNumber;
     iss >> eggNumber;
+    map->delEgg(eggNumber);
     std::cout << "Egg #" << eggNumber << " has died." << std::endl;
 }
 
