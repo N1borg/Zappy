@@ -63,7 +63,6 @@ server_t parse_args(int argc, char *argv[])
     serv.width = 0;
     serv.height = 0;
     serv.freq = 100;
-    serv.elapsed_time = 0;
     serv.timeout.tv_sec = 0;
     serv.timeout.tv_usec = 0;
     serv.max_client_team = 0;

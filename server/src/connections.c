@@ -42,9 +42,10 @@ void start_listener(server_t *serv)
 {
     int sd = 0;
     int max_sd = 0;
+    struct timespec start;
 
     printf("Listening on port %d...\n", serv->port);
-    clock_gettime(CLOCK_REALTIME, &serv->start);
+    clock_gettime(CLOCK_REALTIME, &start);
     while (check_game_end(serv) == 0) {
         FD_ZERO(&serv->readfds);
         FD_SET(serv->master_socket, &serv->readfds);
@@ -55,9 +56,6 @@ void start_listener(server_t *serv)
             printf("Select error");
         if (FD_ISSET(serv->master_socket, &serv->readfds))
             accept_client(serv);
-        clock_gettime(CLOCK_REALTIME, &serv->current);
-        serv->elapsed_time = (serv->current.tv_sec - serv->start.tv_sec) *
-            1000000000 + (serv->current.tv_nsec - serv->start.tv_nsec);
-        elapse_time(serv, &sd);
+        elapse_time(serv, &sd, &start);
     }
 }
