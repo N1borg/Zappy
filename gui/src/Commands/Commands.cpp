@@ -27,7 +27,7 @@ void Commands::getPlayerPosition(const std::string &params, std::shared_ptr<Map>
     std::cout << "Player #" << playerNumber << " is at (" << x << ", " << y << ") facing orientation " << orientation << std::endl;
 }
 
-void Commands::getTileContent(const std::string &params, std::shared_ptr<Map> &map)
+void Commands::getTileContent(const std::string &params, std::shared_ptr<Map> &map __attribute__ ((unused)))
 {
     std::istringstream iss(params);
     int x, y, q0, q1, q2, q3, q4, q5, q6;
@@ -35,7 +35,7 @@ void Commands::getTileContent(const std::string &params, std::shared_ptr<Map> &m
     std::cout << "Tile at (" << x << ", " << y << ") has resources: Food=" << q0 << ", Linemate=" << q1 << ", Deraumere=" << q2 << ", Sibur=" << q3 << ", Mendiane=" << q4 << ", Phiras=" << q5 << ", Thystame=" << q6 << std::endl;
 }
 
-void Commands::getTeamsName(const std::string &params, std::shared_ptr<Map> &map)
+void Commands::getTeamsName(const std::string &params, std::shared_ptr<Map> &map __attribute__ ((unused)))
 {
     std::istringstream iss(params);
     std::string teamName;
@@ -63,7 +63,7 @@ void Commands::getPlayerLevel(const std::string &params, std::shared_ptr<Map> &m
     std::cout << "Player #" << playerNumber << " is at level " << level << std::endl;
 }
 
-void Commands::getPlayerInventory(const std::string &params, std::shared_ptr<Map> &map)
+void Commands::getPlayerInventory(const std::string &params, std::shared_ptr<Map> &map __attribute__ ((unused)))
 {
     std::istringstream iss(params);
     std::string teamName;
@@ -72,7 +72,7 @@ void Commands::getPlayerInventory(const std::string &params, std::shared_ptr<Map
     }
 }
 
-void Commands::getExpulsion(const std::string &params, std::shared_ptr<Map> &map)
+void Commands::getExpulsion(const std::string &params, std::shared_ptr<Map> &map __attribute__ ((unused)))
 {
     std::istringstream iss(params);
     int playerNumber;
@@ -80,7 +80,7 @@ void Commands::getExpulsion(const std::string &params, std::shared_ptr<Map> &map
     std::cout << "Player #" << playerNumber << " has been expelled." << std::endl;
 }
 
-void Commands::getBroadcast(const std::string &params, std::shared_ptr<Map> &map)
+void Commands::getBroadcast(const std::string &params, std::shared_ptr<Map> &map __attribute__ ((unused)))
 {
     std::istringstream iss(params);
     int playerNumber;
@@ -90,12 +90,12 @@ void Commands::getBroadcast(const std::string &params, std::shared_ptr<Map> &map
     std::cout << "Player #" << playerNumber << " broadcasts: " << message << std::endl;
 }
 
-void Commands::getStartOfIncantation(const std::string &params, std::shared_ptr<Map> &map)
+void Commands::getStartOfIncantation(const std::string &params, std::shared_ptr<Map> &map __attribute__ ((unused)))
 {
     std::cout  << "Start of Incantation: " << params << std::endl;
 }
 
-void Commands::getEndOfIncantation(const std::string &params, std::shared_ptr<Map> &map)
+void Commands::getEndOfIncantation(const std::string &params, std::shared_ptr<Map> &map __attribute__ ((unused)))
 {
     std::istringstream iss(params);
     int x, y, result;
@@ -103,7 +103,7 @@ void Commands::getEndOfIncantation(const std::string &params, std::shared_ptr<Ma
     std::cout << "Incantation at (" << x << ", " << y << ") ended with result: " << (result ? "Success" : "Failure") << std::endl;
 }
 
-void Commands::getLayingEggByPlayer(const std::string &params, std::shared_ptr<Map> &map)
+void Commands::getLayingEggByPlayer(const std::string &params, std::shared_ptr<Map> &map __attribute__ ((unused)))
 {
     std::istringstream iss(params);
     int playerNumber;
@@ -225,7 +225,7 @@ void Commands::getTimeUnitModification(const std::string &params, std::shared_pt
     map->setFrequency(newTimeUnit);
 }
 
-void Commands::getEndOfGame(const std::string &params, std::shared_ptr<Map> &map)
+void Commands::getEndOfGame(const std::string &params, std::shared_ptr<Map> &map __attribute__ ((unused)))
 {
     std::istringstream iss(params);
     std::string teamName;
@@ -233,17 +233,17 @@ void Commands::getEndOfGame(const std::string &params, std::shared_ptr<Map> &map
     std::cout << "Game over! Winning team: " << teamName << std::endl;
 }
 
-void Commands::getServerMessage(const std::string &params, std::shared_ptr<Map> &map)
+void Commands::getServerMessage(const std::string &params, std::shared_ptr<Map> &map __attribute__ ((unused)))
 {
     std::cout  << "Server Message: " << params << std::endl;
 }
 
-void Commands::getUnknownCommand(const std::string &params, std::shared_ptr<Map> &map)
+void Commands::getUnknownCommand(const std::string &params, std::shared_ptr<Map> &map __attribute__ ((unused)))
 {
     std::cout  << "Unknown Command: " << params << std::endl;
 }
 
-void Commands::getCommandParameter(const std::string &params, std::shared_ptr<Map> &map)
+void Commands::getCommandParameter(const std::string &params, std::shared_ptr<Map> &map __attribute__ ((unused)))
 {
     std::cout  << "Command Parameter: " << params << std::endl;
 }
