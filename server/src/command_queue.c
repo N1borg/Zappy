@@ -32,9 +32,8 @@ static int get_command_time(char *command_str, command_time_t *command_time)
 static int add_command(client_t *client, char *command_str,
     command_time_t *command_time)
 {
-    command_t *new_command = NULL;
+    command_t *new_command = malloc(sizeof(command_t));
 
-    new_command = malloc(sizeof(command_t));
     if (new_command == NULL)
         return 84;
     new_command->command = strdup(command_str);
