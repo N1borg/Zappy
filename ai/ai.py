@@ -51,6 +51,7 @@ class AI:
         self.socket = socket
         self.team = teamname
         self.connect_nbr = c_nbr
+        self.connect_nbr_tmp = c_nbr
         self.map_x = map_x
         self.map_y = map_y
 
@@ -102,9 +103,19 @@ class AI:
     def broadcast_receive(self, response):
         inc_list = ["inc2", "inc3", "inc4", "inc5", "inc6", "inc7"]
         response = response[8:] if response[:8] == "message " else response
-        print(response)
-        self.direction, message = response.split(", ")
+        print(f"____RESP {response}")
+        try:
+            parts = response.split(", ")
+            if len(parts) == 2:
+                self.direction, message = parts
+            else:
+                message = parts
+        except ValueError as e:
+            self.direction = 0
+            message = ""
+            print(f"Error: {e}")
 
+        print(f"________________DIR {self.direction}")
         int(self.direction)
         message = message.split("/!/")
         if isinstance(message, list) and len(message) == 3:
@@ -115,21 +126,11 @@ class AI:
         if self.team != team:
             print("Other team broadcast, ignoring")
             return 1
-
-        # if cmd == "qiela":
-        #     self.urgent_command("Broadcast", f"{self.team}/!/{self.name}/!/cmoi", 1)
-        #     self.command()
-        #     self.receive_command("")
-        # elif cmd == "cmoi":
-        #     self.name = self.names[self.responses_count + 1]
-        # elif cmd == "suila":
-        #     pass
-        # elif cmd in inc_list:
-        #     self.find_incantation()
-        # elif cmd == "oute" and self.proposed_incantation:
-        #     self.urgent_command("Broadcast", f"{self.team}/!/{self.name}/!/icila", 1)
-        #     self.command()
-        #     self.receive_command("")
+    
+        elif cmd in inc_list:
+            self.find_incantation()
+        elif cmd == "oute" and self.proposed_incantation:
+            self.command("Broadcast", f"{self.team}/!/{self.name}/!/icila")
             
 
  
@@ -157,7 +158,7 @@ class AI:
             exit()
             return
         
-        if response[:8] == "message ":
+        if response[:8] == "message " and cmd != "Broadcast":
             self.broadcast_receive(response)
             response = receive_response(self.socket)
             print(f"        Received response   [<-]: {response}")
@@ -166,7 +167,6 @@ class AI:
             if cmd == "Inventory":
                 
                 self.inventory = self.parse_inventory(response)
-                # print(f"_________INV {response} vs {self.inventory}")
             elif cmd == "Look":
                 self.look = self.parse_look(response)
                 if self.look:
@@ -187,8 +187,9 @@ class AI:
                 response = receive_response(self.socket)
                 print(response)
                 self.level = int(response.split("Current level: ")[1])
-                # print("____LVL ", self.level)
                 self.incantation_done = True
+        elif cmd == "Connect_nbr":
+            self.connect_nbr_tmp = int(response)
 
     @staticmethod
     def get_tile_lvl(tile_nb):
@@ -245,7 +246,7 @@ class AI:
         with self.lock:
             self.queue = []
         
-        while self.inventory[obj_name] < amount:
+        while self.inventory.get(obj_name, 0) < amount:
             if self.grace.is_set():
                 with self.lock:
                     self.queue = []
@@ -259,11 +260,11 @@ class AI:
                 else:
                     self.command("Take", obj_name)
     
-            if self.inventory[obj_name] >= amount:
+            if obj_name in self.inventory and self.inventory.get(obj_name, 0) >= amount:
                 with self.lock:
                     self.queue = []
                 break
-            if self.inventory['food'] < 4 and obj_name != 'food':
+            if self.inventory.get('food', 0) < 4 and obj_name != 'food':
                 self.get_object('food', 7)
 
             tile_nb, obj_nb = self.search_object(obj_name)
@@ -288,7 +289,7 @@ class AI:
                         self.queue = []
                         self.command("Forward", "")
                     curr_fwd += 1
-            if self.inventory[obj_name] >= amount:
+            if self.inventory.get(obj_name, 0)  >= amount:
                 with self.lock:
                     self.queue = []
                 break
@@ -298,14 +299,13 @@ class AI:
             
     
     def incantate(self):
-        # self.command("Look", "")
         old_lvl = self.level
         while not self.grace.is_set():
             if self.level != old_lvl:
                 break
             if self.level + 1 == 2 and self.proposed_incantation == False:
                 conditions_dict = incantation_levels[self.level + 1]
-                if self.inventory['linemate'] >= 1:
+                if self.inventory.get('linemate', 0) >= 1:
                     self.command("Set", "linemate")
                     self.command("Incantation", "")
                     self.proposed_incantation = True
@@ -340,12 +340,12 @@ class AI:
             # self.command("Look", "")
             if self.grace.is_set():
                 break
-            if "Look" not in self.sent_queue:
+            if "Look" not in self.sent_queue and not self.grace.is_set():
                 self.sent_queue.insert(0, "Look")
                 send_message(self.socket, "Look")
             if self.grace.is_set():
                 break
-            if "Inventory" not in self.sent_queue:
+            if "Inventory" not in self.sent_queue and not self.grace.is_set():
                 self.sent_queue.insert(0, "Inventory")
                 send_message(self.socket, "Inventory")
             self.grace.wait(0.1)
@@ -362,10 +362,10 @@ class AI:
                 break
     
     def launch_loop(self):
+        self.naming()
         t_send = threading.Thread(target=self.send_management, args=())
         t_receive = threading.Thread(target=self.receive_management, args=())
         t_look = threading.Thread(target=self.look_management, args=())
-        # t_inv = threading.Thread(target=self.inv_management, args=())
 
         t_receive.start()
         t_send.start()
@@ -379,26 +379,24 @@ class AI:
             print("Interrupted by user. Stopping threads...")
             
         
-        # self.stop()
-        # self.stop()
-        # self.stop()
+        print(self.name)
         self.stop()
-        # t_inv.join()
         t_look.join()
         t_send.join()
-        t_receive.join()
-        # self.stop()
-        
+        t_receive.join()        
+    
+    def naming(self):
+        self.command("Connect_nbr", "")
+        self.name = self.names[self.connect_nbr_tmp]
     
     def lvl2(self):
         while not self.look:
             self.command("Look", "")
-        time.sleep(7)
         self.get_object("linemate", 1)
         with self.lock:
             self.queue = []
     
         self.incantate()
-        return
+
 
 

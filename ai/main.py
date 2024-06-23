@@ -65,6 +65,8 @@ def main():
             # Receive the number of available slots
             try:
                 response = receive_response(s)
+                if response == "ko":
+                    exit(84)
                 slots = int(response)
                 print(f'Received slots: {slots}')
             except ValueError:
@@ -85,10 +87,6 @@ def main():
                     print(f'Unexpected response for map size from server: {response}')
 
             ai = AI(name, s, slots, int(x), int(y))
-            # ai.name_choosing()
-            # ai.i_love_food()
-            # ai.lvl2()
-            # ai.lvl3()
             ai.launch_loop()
             
 
