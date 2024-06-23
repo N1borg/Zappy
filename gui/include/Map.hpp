@@ -81,6 +81,10 @@ public:
     std::vector<Team> getTeams() const;
     Color getTeamColor(std::string team) const;
     Team getTeamByPlayerId(int id) const;
+    std::vector<Player> getPlayers() const;
+    Player getPlayerById(int id) const;
+    std::vector<Egg> getEggs() const;
+    Egg getEggById(int id) const;
     void addPlayer(int id, int x, int y, Orientation orientation, int level, std::string team);
     void movePlayer(int id, int x, int y, Orientation orientation);
     void delPlayer(int id);

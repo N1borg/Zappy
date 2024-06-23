@@ -190,6 +190,47 @@ Team Map::getTeamByPlayerId(int id) const
     return _teams[0];
 }
 
+std::vector<Player> Map::getPlayers() const
+{
+    return _players;
+}
+
+Player Map::getPlayerById(int id) const
+{
+    for (Player p : _players) {
+        if (p.getId() == id)
+            return p;
+    }
+    return _players[0];
+}
+
+std::vector<Egg> Map::getEggs() const
+{
+    std::vector<Egg> eggs;
+
+    for (std::vector<Tile_t> row : _tiles) {
+        for (Tile_t tile : row) {
+            for (Egg egg : tile.eggs) {
+                eggs.push_back(egg);
+            }
+        }
+    }
+    return eggs;
+}
+
+Egg Map::getEggById(int id) const
+{
+    for (std::vector<Tile_t> row : _tiles) {
+        for (Tile_t tile : row) {
+            for (Egg egg : tile.eggs) {
+                if (egg.getId() == id)
+                    return egg;
+            }
+        }
+    }
+    return _tiles[0][0].eggs[0];
+}
+
 void Map::addPlayer(int id, int x, int y, Orientation orientation, int level, std::string team)
 {
     for (Player p : _tiles[x][y].players) {
