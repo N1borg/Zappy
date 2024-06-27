@@ -92,40 +92,68 @@ int main(int argc, char *argv[])
     window.setCameraPosition({0.0f, 20.0f, 0.0f});
     window.setCameraTarget({(mapWidth / 2.0f) * 10.0f, 0.0f, (mapHeight / 2.0f) * 10.0f});
 
-    map.addPlayer(0, 0, 0, Orientation::North, 1, "team1");
-    map.addPlayer(1, 1, 1, Orientation::East, 1, "team2");
-    map.addPlayer(2, 2, 2, Orientation::South, 1, "team3");
-    map.addPlayer(3, 5, 3, Orientation::West, 1, "team4");
-    map.addPlayer(4, 4, 4, Orientation::North, 1, "team5");
-    map.addPlayer(5, 6, 5, Orientation::East, 1, "team6");
-    map.addPlayer(6, 2, 6, Orientation::South, 1, "team7");
-    map.addPlayer(7, 4, 7, Orientation::West, 1, "team8");
-    map.addEgg(0, 0, 0, 0, "team1");
-    map.addEgg(1, 0, 1, 1, "team2");
-    map.addEgg(2, 0, 2, 2, "team3");
-    map.addEgg(3, 0, 3, 3, "team4");
-    map.addEgg(4, 0, 4, 4, "team5");
-    map.addEgg(5, 0, 5, 5, "team6");
-    map.addEgg(6, 0, 6, 6, "team7");
-    map.addEgg(7, 0, 7, 7, "team8");
-    map.addFood(2, 3);
-    map.addFood(1, 5);
-    map.addFood(4, 2);
-    map.addFood(5, 1);
-    map.addLinemate(1, 1);
-    map.addDeraumere(2, 2);
-    map.addSibur(3, 3);
-    map.addMendiane(4, 4);
-    map.addPhiras(5, 5);
-    map.addThystame(6, 6);
+    // Generate resources
+    for (int i = 0; i < mapWidth; i++) {
+        for (int j = 0; j < mapHeight; j++) {
+            int randomResource = rand() % 6; // Generate a random resource type
+            switch (randomResource) {
+                case 0:
+                    map.addFood(i, j);
+                    break;
+                case 1:
+                    map.addLinemate(i, j);
+                    break;
+                case 2:
+                    map.addDeraumere(i, j);
+                    break;
+                case 3:
+                    map.addSibur(i, j);
+                    break;
+                case 4:
+                    map.addMendiane(i, j);
+                    break;
+                case 5:
+                    map.addPhiras(i, j);
+                    break;
+                case 6:
+                    map.addThystame(i, j);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
 
-    map.addFood(0, 0);
-    map.addLinemate(0, 0);
-    map.addDeraumere(0, 0);
-    map.addSibur(0, 0);
-    map.addMendiane(0, 0);
-    map.addPhiras(0, 0);
-    map.addThystame(0, 0);
+    // Generate players
+    for (std::size_t i = 0; i < map.getTeams().size(); i++) {
+        int randomX = rand() % mapWidth;
+        int randomY = rand() % mapHeight;
+        int randomOrientation = rand() % 4;
+        std::string teamName = "team" + std::to_string(i + 1);
+        map.addPlayer(i, randomX, randomY, static_cast<Orientation>(randomOrientation), 1, teamName);
+    }
+
+    // Generate eggs
+    for (std::size_t i = 0; i < map.getTeams().size() * 2; i++) {
+        int randomX = rand() % mapWidth;
+        int randomY = rand() % mapHeight;
+        int randomTeam = rand() % map.getTeams().size();
+        std::string teamName = "team" + std::to_string(randomTeam + 1);
+        map.addEgg(i, randomX, randomY, randomTeam, teamName);
+    }
+
+    if (mapWidth > 1 || mapHeight > 1) {
+        map.addFood(0, 0);
+        map.addFood(0, 0);
+        map.addLinemate(0, 0);
+        map.addLinemate(0, 0);
+        map.addLinemate(0, 0);
+        map.addDeraumere(0, 0);
+        map.addSibur(0, 0);
+        map.addMendiane(0, 0);
+        map.addPhiras(0, 0);
+        map.addThystame(0, 0);
+    }
 
     bool isTileSelected = false;
 
