@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
+
 import socket
 import sys
 import argparse
-import re
-import time
 import traceback
 
 from ai import AI
 from outils import receive_response
 from outils import send_message
+
 
 def parse_arguments():
     """
@@ -24,6 +24,7 @@ def parse_arguments():
     parser.add_argument('-h', '--host', type=str, default='localhost')
     return parser.parse_args()
 
+
 def parse_slots_and_map(str):
     parts = str.split('\n')
 
@@ -34,6 +35,7 @@ def parse_slots_and_map(str):
     integers = [int(num) for num in numbers]
     # print(str, integers)
     return integers
+
 
 def main():
     args = parse_arguments()
@@ -97,7 +99,6 @@ def main():
     except Exception as e:
         print(f'{host}:{port} - {e}')
         print(traceback.format_exc())
-
 
 
 if __name__ == "__main__":

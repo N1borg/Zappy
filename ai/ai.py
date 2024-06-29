@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-import socket
-import sys
-import argparse
+# -*- coding: UTF-8 -*-*
+
 import re
 import time
-import outils
 import threading
 
 from outils import receive_response
