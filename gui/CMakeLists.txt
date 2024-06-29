@@ -35,26 +35,16 @@ set(SHARED_SRC
     src/Commands/Commands.cpp
 )
 
-# Function to fetch Raylib 5.0
-function(fetch_raylib)
-    message(STATUS "Downloading and building Raylib 5.0 from source.")
+find_package(raylib 5.0 QUIET)
+if (NOT raylib_FOUND)
+    message(STATUS "Raylib 5.0 not found, downloading and building Raylib 5.0 from source.")
     include(FetchContent)
     FetchContent_Declare(
         raylib
         GIT_REPOSITORY https://github.com/raysan5/raylib.git
         GIT_TAG 5.0
     )
-    FetchContent_GetProperties(raylib)
-    if(NOT raylib_POPULATED)
-        FetchContent_Populate(raylib)
-        add_subdirectory(${raylib_SOURCE_DIR} ${raylib_BINARY_DIR})
-    endif()
-endfunction()
-
-# Find or fetch Raylib 5.0
-find_package(raylib 5.0 QUIET)
-if (NOT raylib_FOUND)
-    fetch_raylib()
+    FetchContent_MakeAvailable(raylib)
     set(raylib_LIBRARIES raylib)
 endif()
 
