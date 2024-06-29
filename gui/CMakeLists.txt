@@ -3,6 +3,7 @@ project(zappy_gui)
 
 # Set C++ standard and compile flags
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_FLAGS "-W -Wall -Wextra -Wshadow -Wformat=2 -Wformat-security")
 
 # Add include directories
 include_directories(
@@ -59,6 +60,3 @@ target_link_libraries(zappy_gui ${raylib_LIBRARIES} GL m pthread dl rt X11)
 if (NOT raylib_FOUND)
     add_dependencies(zappy_gui raylib)
 endif()
-
-# Set compile options for your source files only
-target_compile_options(zappy_gui PRIVATE -W -Wall -Wextra -Wpedantic -Wshadow -Wformat=2 -Wformat-security)
