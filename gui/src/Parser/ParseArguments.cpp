@@ -7,11 +7,14 @@
 
 #include "Parser/ParseArguments.hpp"
 
-ParseArguments::ParseArguments(int argc, char *argv[]) : _argc(argc), _argv(argv) {}
+ParseArguments::ParseArguments(int argc, char *argv[]) : _argc(argc), _argv(argv), _port(0), _machine(""), _isHelp(false) {}
 
 void ParseArguments::parse()
 {
-    if (_argc != 5)
+    if (_argc >= 2 && (std::string(_argv[1]) == "-help" || std::string(_argv[1]) == "--help")) {
+        _isHelp = true;
+        return;
+    } else if (_argc != 5)
         throw std::runtime_error("Error: Invalid arguments");
 
     try {
@@ -26,29 +29,4 @@ void ParseArguments::parse()
     } catch (const std::exception &e) {
         throw std::runtime_error("Error: Invalid arguments");
     }
-}
-
-bool ParseArguments::validateConnection(std::string msg)
-{
-    return msg == "WELCOME\n";
-}
-
-void ParseArguments::setPort(int port)
-{
-    _port = port;
-}
-
-int ParseArguments::getPort() const
-{
-    return _port;
-}
-
-void ParseArguments::setMachine(std::string machine)
-{
-    _machine = machine;
-}
-
-std::string ParseArguments::getMachine() const
-{
-    return _machine;
 }

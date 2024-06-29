@@ -320,10 +320,9 @@ void Window::drawConnection(bool isConnected, std::string ip, bool isReconnectin
     endDrawing();
 }
 
-int Window::drawWaitingScreen(Socket &socket, ParseArguments &argsParser, bool isReconnecting = false)
+int Window::drawWaitingScreen(Socket &socket, std::string ip, bool isReconnecting = false)
 {
     std::thread connectionThread(&Socket::attemptConnection, &socket);
-    std::string ip = argsParser.getMachine();
     float elapsedTime = 0.0f;
 
     // Wait for connection
@@ -340,7 +339,7 @@ int Window::drawWaitingScreen(Socket &socket, ParseArguments &argsParser, bool i
     drawConnection(true, ip, isReconnecting, elapsedTime);
 
     // Validate connection
-    if (argsParser.validateConnection(socket.receiveMessage()))
+    if ("WELCOME\n" == socket.receiveMessage())
         socket.sendMessage("GRAPHIC\n");
     else {
         std::cerr << "Error: Connection failed" << std::endl;

@@ -21,6 +21,12 @@ int main(int argc, char *argv[])
     */
     try {
         argsParser.parse();
+        if (argsParser.isHelp()) {
+            std::cout << "USAGE: " << argsParser.getArgv()[0] << " -p port -h machine" << std::endl;
+            std::cout << "\tport\t\tis the port number (1 - 65535)" << std::endl;
+            std::cout << "\tmachine\t\tis the name of the machine; localhost by default" << std::endl;
+            return 0;
+        }
         if (argsParser.getMachine().empty() || argsParser.getPort() <= 0 || argsParser.getPort() > 65535)
             throw std::runtime_error("Error: Invalid arguments");
     } catch (const std::exception &e) {
@@ -35,7 +41,7 @@ int main(int argc, char *argv[])
     Window window(1280, 720, "Zappy GUI");
     window.init();
 
-    if (!window.drawWaitingScreen(socket, argsParser, false))
+    if (!window.drawWaitingScreen(socket, argsParser.getMachine(), false))
         return 84;
 
     socket.sendMessage("msz\n");
@@ -168,7 +174,7 @@ int main(int argc, char *argv[])
         // Check socket disconnection
         if (!socket.isConnected()) {
             window.log(LOG_ERROR, "Connection lost");
-            if (!window.drawWaitingScreen(socket, argsParser, true))
+            if (!window.drawWaitingScreen(socket, argsParser.getMachine(), true))
                 break;
         }
 

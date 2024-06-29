@@ -68,7 +68,7 @@ class Window {
         void drawTileInfo(Tile_t tile);
 
         std::string animateTextDots(const std::string &string, float elapsedTime);
-        int drawWaitingScreen(Socket &socket, ParseArguments &argsParser, bool isReconnecting);
+        int drawWaitingScreen(Socket &socket, std::string ip, bool isReconnecting);
         void drawConnection(bool isConnected, std::string ip, bool isReconnecting, int elapsedTime);
 
         void log(int level, const std::string &msg, ...);

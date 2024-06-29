@@ -1,4 +1,4 @@
-name: Build and Test for GUI
+name: Build and Test GUI
 
 on:
   push:

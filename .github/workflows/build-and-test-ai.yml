@@ -1,4 +1,4 @@
-name: Build and Test for AI
+name: Build and Test AI
 
 on:
   push:
