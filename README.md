@@ -22,7 +22,7 @@ Zappy is a multiplayer game where players compete in a virtual world. The projec
 2. **GUI (C++)**: Provides a graphical interface for players to interact with the game.
 3. **AI Clients (Python)**: Autonomous agents that play the game.
 
-[!Example of GUI game](https://github.com/N1borg/Zappy/tree/main/images/Zappy_GUI_screenshot.png)
+![Example of GUI game](https://github.com/N1borg/Zappy/tree/main/images/Zappy_GUI_screenshot.png)
 
 ## Features
 
