@@ -35,9 +35,9 @@ set(SHARED_SRC
     src/Commands/Commands.cpp
 )
 
-find_package(raylib 5.0 QUIET)
+find_package(raylib QUIET)
 if (NOT raylib_FOUND)
-    message(STATUS "Raylib 5.0 not found, downloading and building Raylib 5.0 from source.")
+    message(STATUS "Raylib not found, downloading and building Raylib from source.")
     include(ExternalProject)
     ExternalProject_Add(raylib
         GIT_REPOSITORY https://github.com/raysan5/raylib.git
