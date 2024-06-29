@@ -28,7 +28,9 @@ jobs:
 
       - name: Build and Test with Makefile
         run: |
-          make re
+          make fclean
+          make zappy_server
+          make zappy_ai
 
       - name: Install Python dependencies
         run: |
@@ -37,15 +39,15 @@ jobs:
 
       - name: Test zappy_server
         run: |
-          ./zappy_server --version  # Example command to test if zappy_server runs
+          ./zappy_server --version
 
       - name: Test zappy_gui
         run: |
-          ./zappy_gui --version  # Example command to test if zappy_gui runs
+          ./zappy_gui --help
 
       - name: Test zappy_ai
         run: |
-          python zappy_ai --help  # Example command to test if zappy_ai runs
+          python zappy_ai
 
       - name: Run C/C++ tests
         run: |
