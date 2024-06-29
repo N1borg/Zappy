@@ -41,7 +41,6 @@ if (NOT raylib_FOUND)
     include(ExternalProject)
     ExternalProject_Add(raylib
         GIT_REPOSITORY https://github.com/raysan5/raylib.git
-        GIT_TAG 5.0
         PREFIX ${CMAKE_BINARY_DIR}/raylib
         CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/raylib/install
         BUILD_COMMAND ${CMAKE_COMMAND} --build . > /dev/null 2>&1
