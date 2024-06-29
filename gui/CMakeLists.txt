@@ -35,17 +35,22 @@ set(SHARED_SRC
     src/Commands/Commands.cpp
 )
 
-find_package(raylib QUIET)
+find_package(raylib 5.0 QUIET)
 if (NOT raylib_FOUND)
-    message(STATUS "Raylib not found, downloading and building Raylib from source.")
-    include(FetchContent)
-    FetchContent_Declare(
-        raylib
+    message(STATUS "Raylib 5.0 not found, downloading and building Raylib 5.0 from source.")
+    include(ExternalProject)
+    ExternalProject_Add(raylib
         GIT_REPOSITORY https://github.com/raysan5/raylib.git
-        GIT_TAG master
+        GIT_TAG 5.0
+        PREFIX ${CMAKE_BINARY_DIR}/raylib
+        CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/raylib/install
+        BUILD_COMMAND ${CMAKE_COMMAND} --build . > /dev/null 2>&1
+        INSTALL_COMMAND ${CMAKE_COMMAND} --install . > /dev/null 2>&1
+        LOG_DOWNLOAD ON
     )
-    FetchContent_MakeAvailable(raylib)
-    set(raylib_LIBRARIES raylib)
+    set(raylib_LIBRARIES ${CMAKE_BINARY_DIR}/raylib/install/lib/libraylib.a)
+    include_directories(${CMAKE_BINARY_DIR}/raylib/install/include)
+    link_directories(${CMAKE_BINARY_DIR}/raylib/install/lib)
 endif()
 
 # Add the executable and link libraries
