@@ -1,5 +1,7 @@
 # Zappy
 
+[![Build and Test](https://github.com/N1borg/Zappy/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/N1borg/Zappy/actions/workflows/build-and-test.yml)
+
 Welcome to **Zappy**, the 2nd end-year Epitech project! Zappy is a networked game featuring a server coded in C, a GUI client in C++, and AI clients written in Python. This project showcases a comprehensive blend of network programming, game development, and artificial intelligence.
 
 Click [here](https://github.com/N1borg/Zappy/tree/main/docs) for the technical subjects.
@@ -19,6 +21,8 @@ Zappy is a multiplayer game where players compete in a virtual world. The projec
 1. **Server (C)**: Handles game logic, player interactions, and networking.
 2. **GUI (C++)**: Provides a graphical interface for players to interact with the game.
 3. **AI Clients (Python)**: Autonomous agents that play the game.
+
+[!Example of GUI game](https://github.com/N1borg/Zappy/tree/main/images/Zappy_GUI_screenshot.png)
 
 ## Features
 
