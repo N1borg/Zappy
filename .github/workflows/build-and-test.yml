@@ -39,7 +39,7 @@ jobs:
 
       - name: Test zappy_server
         run: |
-          ./zappy_server --version
+          ./zappy_server --help
 
       - name: Test zappy_gui
         run: |

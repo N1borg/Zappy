@@ -17,7 +17,8 @@ int main(int argc, char *argv[])
 
     signal(SIGPIPE, handle_sigpipe);
     srand(time(NULL));
-    if (argc == 2 && strcmp(argv[1], "-help") == 0)
+    if (argc == 2 && (strcmp(argv[1], "-help") == 0 ||
+        strcmp(argv[1], "--help") == 0))
         return help(argv[0], 0, &serv);
     if (!serv.teams || serv.port <= 0 || serv.port > 65535 ||
     serv.width <= 0 || serv.width > 50 || serv.height <= 0 ||
