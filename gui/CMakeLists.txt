@@ -35,16 +35,16 @@ set(SHARED_SRC
     src/Commands/Commands.cpp
 )
 
-find_package(raylib QUIET)
+find_package(raylib 5.0 QUIET)
 if (NOT raylib_FOUND)
-    message(STATUS "Raylib not found, downloading and building Raylib from source.")
+    message(STATUS "Raylib 5.0 not found, downloading and building Raylib 5.0 from source.")
     include(FetchContent)
     FetchContent_Declare(
         raylib
         GIT_REPOSITORY https://github.com/raysan5/raylib.git
-        GIT_TAG master
+        GIT_TAG 5.0
     )
-    FetchContent_MakeAvailable(raylib)
+    FetchContent_MakeAvailable(raylib QUIET)
     set(raylib_LIBRARIES raylib)
 endif()
 
