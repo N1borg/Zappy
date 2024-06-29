@@ -1,4 +1,4 @@
-name: Build and Test
+name: Build and Test for AI
 
 on:
   push:
@@ -21,42 +21,18 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential cmake libx11-dev libxi-dev libgl-dev libwayland-dev libxkbcommon-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev
-
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      - name: Build server
-        run: |
-          make zappy_server
-      
-      - name: Build GUI
-        run: |
-          make zappy_gui
-      
       - name: Build AI
         run: |
           make zappy_ai
 
-      - name: Test zappy_server
-        run: |
-          ./zappy_server --help
-
       - name: Test zappy_ai
         run: |
           python zappy_ai
-
-      - name: Run C/C++ tests
-        run: |
-          cd server
-          ctest
-          cd ../gui
-          ctest
 
       - name: Clean up
         run: |

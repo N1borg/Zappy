@@ -1,0 +1,39 @@
+name: Build and Test for GUI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake libx11-dev libxi-dev libgl-dev libwayland-dev libxkbcommon-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev
+
+      - name: Build GUI
+        run: |
+          make zappy_gui
+
+      - name: Test zappy_gui
+        run: |
+          ./zappy_gui --help
+
+      - name: Run C/C++ tests
+        run: |
+          cd gui
+          ctest
+
+      - name: Clean up
+        run: |
+          make fclean

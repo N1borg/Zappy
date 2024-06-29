@@ -3,7 +3,7 @@ project(zappy_gui)
 
 # Set C++ standard and compile flags
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_FLAGS "-W -Wall -Wextra -Wshadow -Wformat=2 -Wformat-security")
+set(CMAKE_CXX_FLAGS "-W -Wall -Wextra -Wpedantic -Wshadow -Wformat=2 -Wformat-security")
 
 # Add include directories
 include_directories(
