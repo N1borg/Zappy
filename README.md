@@ -66,8 +66,8 @@ To install raylib on Fedora, follow these steps:
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/EpitechPromo2027/B-YEP-400-LIL-4-1-zappy-romaric.loevenbruck.git zappy
-cd zappy
+git clone https://github.com/EpitechPromo2027/Zappy.git Zappy
+cd Zappy
 ```
 
 ### Build all

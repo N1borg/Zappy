@@ -1,16 +1,14 @@
 /*
 ** EPITECH PROJECT, 2024
-** B-YEP-400-LIL-4-1-zappy-romaric.loevenbruck
+** Zappy
 ** File description:
 ** main
 */
 
-#include "Gui.hpp"
 #include "Parser/ParseArguments.hpp"
 #include "Socket.hpp"
 #include "Window.hpp"
 #include "Map.hpp"
-#include "Orientation.hpp"
 
 int main(int argc, char *argv[])
 {

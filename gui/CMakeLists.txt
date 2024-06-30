@@ -13,25 +13,24 @@ include_directories(
 # Source files
 set(SHARED_SRC
     src/Main.cpp
-    src/Help.cpp
     src/Socket.cpp
     src/Window.cpp
     src/Map.cpp
-    src/AModel.cpp
-    src/Player.cpp
-    src/Island.cpp
-    src/Grass.cpp
     src/Team.cpp
+    src/Models/AModel.cpp
+    src/Models/Player.cpp
+    src/Models/Island.cpp
+    src/Models/Grass.cpp
+    src/Models/Collectables/Egg.cpp
+    src/Models/Collectables/Food.cpp
+    src/Models/Collectables/Linemate.cpp
+    src/Models/Collectables/Deraumere.cpp
+    src/Models/Collectables/Sibur.cpp
+    src/Models/Collectables/Mendiane.cpp
+    src/Models/Collectables/Phiras.cpp
+    src/Models/Collectables/Thystame.cpp
     src/Parser/ParseArguments.cpp
     src/Parser/ParseCommands.cpp
-    src/Collectables/Egg.cpp
-    src/Collectables/Food.cpp
-    src/Collectables/Linemate.cpp
-    src/Collectables/Deraumere.cpp
-    src/Collectables/Sibur.cpp
-    src/Collectables/Mendiane.cpp
-    src/Collectables/Phiras.cpp
-    src/Collectables/Thystame.cpp
     src/Commands/Commands.cpp
 )
 

@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2023
-** B-YEP-400-LIL-4-1-zappy-romaric.loevenbruck
+** Zappy
 ** File description:
 ** ticks.c
 */

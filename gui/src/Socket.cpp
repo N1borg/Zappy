@@ -1,44 +1,11 @@
 /*
 ** EPITECH PROJECT, 2024
-** B-YEP-400-LIL-4-1-zappy-romaric.loevenbruck
+** Zappy
 ** File description:
 ** Socket
 */
 
 #include "Socket.hpp"
-
-Socket::Socket(int port, std::string machine) : _port(port), _machine(machine), _clientSocket(-1), _connected(false), _threadRunning(false) {}
-
-Socket::~Socket()
-{
-    if (_clientSocket != -1)
-        close(_clientSocket);
-}
-
-void Socket::setPort(int port)
-{
-    _port = port;
-}
-
-int Socket::getPort() const
-{
-    return _port;
-}
-
-void Socket::setMachine(std::string machine)
-{
-    _machine = machine;
-}
-
-std::string Socket::getMachine() const
-{
-    return _machine;
-}
-
-bool Socket::isConnected() const
-{
-    return _connected.load();
-}
 
 bool Socket::connectSocket()
 {
