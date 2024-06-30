@@ -3,9 +3,12 @@ project(zappy_server)
 
 set(CMAKE_C_STANDARD 17)
 
-set(CMAKE_C_FLAGS "-W -Wall -Wextra -Wpedantic -Wshadow -Wformat=2 -I ./include/")
+set(CMAKE_C_FLAGS "-W -Wall -Wextra -Wpedantic -Wshadow -Wformat=2 -Wformat-security -Wunused-function -g")
 
-include_directories(include)
+# Add include directories
+include_directories(
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
 
 set(SHARED_SRC
     src/main.c
@@ -25,7 +28,6 @@ set(SHARED_SRC
     src/add_egg.c
     src/remove_egg.c
     src/command_queue.c
-    src/manage_food.c
     src/game_end.c
     src/ticks.c
     src/player_commands/success_response.c

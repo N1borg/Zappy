@@ -44,23 +44,9 @@ void disconnect_client(server_t *serv, client_t *client)
             serv->map[client->y][client->x].players[get_player_id_on_map(
                 &serv->map[client->y][client->x], client)] = NULL;
         }
-        serv->teams[get_team_id(serv, client->team)]->free_slots++;
     }
     close(client->fd);
     set_client(client);
-}
-
-// Initialize the client and send the map size and free slots
-void init_player(server_t *serv, client_t *player)
-{
-    static int temp_id = 0;
-    int team_id = get_team_id(serv, player->team);
-
-    temp_id++;
-    player->id = temp_id;
-    dprintf(player->fd, "%d\n", serv->teams[team_id]->free_slots);
-    dprintf(player->fd, "%d %d\n", serv->width, serv->height);
-    event_pnw(serv, player);
 }
 
 // Get a random egg from a team
@@ -72,6 +58,8 @@ static egg_t *get_random_egg(team_t *team)
 
     for (; current != NULL; count++)
         current = current->next_team;
+    if (count <= 0)
+        return NULL;
     random_index = rand() % count;
     current = team->eggs;
     for (int i = 0; i < random_index; i++)
@@ -79,39 +67,47 @@ static egg_t *get_random_egg(team_t *team)
     return current;
 }
 
-// Set the position of a client based on the position of an egg
-static void set_client_pos(server_t *s, client_t *client)
+// Initialize the client and send the map size and free slots
+void init_player(server_t *serv, client_t *player)
 {
-    team_t *team = (*s).teams[get_team_id(s, (*client).team)];
+    static int temp_id = 0;
+    int team_id = get_team_id(serv, player->team);
+    team_t *team = serv->teams[team_id];
     egg_t *egg = get_random_egg(team);
 
-    client->orientation = (rand() % 4) + 1;
-    client->x = egg->tile->x;
-    client->y = egg->tile->y;
+    if (egg == NULL) {
+        disconnect_client(serv, player);
+        return;
+    }
+    player->orientation = (rand() % 4) + 1;
+    player->x = egg->tile->x;
+    player->y = egg->tile->y;
     remove_egg(egg);
+    temp_id++;
+    player->id = temp_id;
+    event_pnw(serv, player);
+    dprintf(player->fd, "%d\n", serv->teams[team_id]->free_slots);
+    dprintf(player->fd, "%d %d\n", serv->width, serv->height);
 }
 
 // Initialize a client
-int init_client(server_t *s, client_t *client, char *team_name)
+int init_client(server_t *serv, client_t *client, char *team_name)
 {
     int i = 0;
 
     if (client->team != NULL)
         return 1;
-    if (strcmp(team_name, "GRAPHIC") == 0 && add_graphic_to_team(s, client))
+    if (strcmp(team_name, "GRAPHIC") == 0 && add_graphic_to_team(serv, client))
             return 1;
     if (strcmp(team_name, "GRAPHIC") != 0) {
-        if (add_player_to_team(s, client, team_name))
+        if (add_player_to_team(serv, client, team_name))
             return 1;
         for (; i < MAX_CLIENTS &&
-            s->map[client->y][client->x].players[i]; i++);
+            serv->map[client->y][client->x].players[i]; i++);
         if (i == MAX_CLIENTS)
             return 1;
-        set_client_pos(s, client);
-        s->map[client->y][client->x].players[i] = client;
-        dprintf(client->fd, "%d\n",
-            s->teams[get_team_id(s, client->team)]->free_slots);
-        dprintf(client->fd, "%d %d\n", s->width, s->height);
+        init_player(serv, client);
+        serv->map[client->y][client->x].players[i] = client;
     }
     return 0;
 }

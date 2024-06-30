@@ -15,7 +15,7 @@ int help(char *binary_name, int ret, server_t *serv)
     printf("\tport\t\tis the port number (1 - 65535)\n");
     printf("\twidth\t\tis the width of the world (1 - 50)\n");
     printf("\theight\t\tis the height of the world (1 - 50)\n");
-    printf("\tnameX\t\tis the name of the team X\n");
+    printf("\tnameX\t\tis the name of the team\n");
     printf("\tclientsNb\tis the number of authorized clients ");
     printf("per team (1 - 50)\n");
     printf("\tfreq\t\tis the reciprocal of time unit for execution ");

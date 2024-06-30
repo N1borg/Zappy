@@ -49,8 +49,7 @@ int add_graphic_to_team(server_t *serv, client_t *graphic)
     if (graphic == NULL)
         return 1;
     for (; serv->teams[i] && strcmp("GRAPHIC", serv->teams[i]->name); i++);
-    if (serv->teams[i] && serv->teams[i]->free_slots >= 1
-        && strcmp("GRAPHIC", serv->teams[i]->name) == 0) {
+    if (serv->teams[i] && strcmp("GRAPHIC", serv->teams[i]->name) == 0) {
         for (; j < MAX_CLIENTS && serv->teams[i]->players[j]; j++);
         if (j < MAX_CLIENTS) {
             serv->teams[i]->players[j] = graphic;
