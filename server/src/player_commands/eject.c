@@ -13,16 +13,16 @@ void calculate_new_coordinates(server_t *serv, client_t *player,
 {
     switch (player->orientation) {
         case NORTH:
-            *y = y_to_map_y(serv, *y - 1);
+            (*y) = y_to_map_y(serv, (*y) - 1);
             break;
         case SOUTH:
-            *y = y_to_map_y(serv, *y + 1);
+            (*y) = y_to_map_y(serv, (*y) + 1);
             break;
         case EAST:
-            *x = x_to_map_x(serv, *x + 1);
+            (*x) = x_to_map_x(serv, (*x) + 1);
             break;
         case WEST:
-            *x = x_to_map_x(serv, *x - 1);
+            (*x) = x_to_map_x(serv, (*x) - 1);
             break;
         default:
             break;
@@ -37,8 +37,11 @@ int eject_players(server_t *serv, client_t *player, int x, int y)
     int has_ejected = 0;
 
     calculate_new_coordinates(serv, player, &x2, &y2);
-    for (int i = 0; i < MAX_CLIENTS && serv->map[y][x].players[i]; i++)
+    for (int i = 0; i < MAX_CLIENTS && serv->map[y][x].players[i]; i++) {
+        if (serv->map[y][x].players[i] == player)
+            continue;
         has_ejected += move_player(serv, serv->map[y][x].players[i], x2, y2);
+    }
     if (has_ejected > 0)
         event_pex(serv, player);
     return has_ejected;

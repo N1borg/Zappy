@@ -17,22 +17,36 @@ void init_team(team_t *teams, char *name)
 }
 
 // Get the team names from the arguments
-void get_team_names(char **argv, team_t **teams)
+void get_team_names(server_t *serv, int argc, char **argv, int start_index)
 {
-    int i = 0;
+    int num_teams = argc - start_index + 1;
     char *graphic_team = "GRAPHIC";
+    int i = 0;
 
-    for (i = 1; argv[i] && argv[i][0] != '-'; i++) {
-        teams[i - 1] = malloc(sizeof(team_t));
-        init_team(teams[i - 1], argv[i]);
+    serv->teams = malloc(sizeof(team_t *) * (num_teams + 1));
+    if (!serv->teams) {
+        perror("malloc");
+        exit(EXIT_FAILURE);
     }
-    teams[i - 1] = malloc(sizeof(team_t));
-    init_team(teams[i - 1], graphic_team);
-    teams[i] = NULL;
+    for (i = 0; i < num_teams - 1; i++) {
+        serv->teams[i] = malloc(sizeof(team_t));
+        if (!serv->teams[i]) {
+            perror("malloc");
+            exit(EXIT_FAILURE);
+        }
+        init_team(serv->teams[i], argv[start_index + i]);
+    }
+    serv->teams[i] = malloc(sizeof(team_t));
+    if (!serv->teams[i]) {
+        perror("malloc");
+        exit(EXIT_FAILURE);
+    }
+    init_team(serv->teams[i], graphic_team);
+    serv->teams[i + 1] = NULL;
 }
 
 // Get the parameters from the arguments
-void get_param(server_t *serv, int argc, char *argv[])
+static void get_param(server_t *serv, int argc, char *argv[])
 {
     for (int i = 0; argv[i]; i++) {
         if (strcmp(argv[i], "-p") == 0 && argv[i + 1] != NULL)
@@ -45,10 +59,8 @@ void get_param(server_t *serv, int argc, char *argv[])
             serv->freq = atoi(argv[i + 1]);
         if (strcmp(argv[i], "-c") == 0 && argv[i + 1] != NULL)
             serv->max_client_team = atoi(argv[i + 1]);
-        if (strcmp(argv[i], "-n") == 0 && argv[i + 1] != NULL) {
-            serv->teams = malloc(sizeof(team_t *) * (argc - i));
-            get_team_names(&argv[i], serv->teams);
-        }
+        if (strcmp(argv[i], "-n") == 0 && argv[i + 1] != NULL)
+            get_team_names(serv, argc, argv, i + 1);
     }
 }
 

@@ -34,6 +34,7 @@ int check_player_death(server_t *serv, client_t *player)
         if (player->life >= 0)
             return 1;
         if (player->inv.food == 0) {
+            dprintf(player->fd, "dead\n");
             disconnect_client(serv, player);
             return 0;
         }
@@ -56,12 +57,12 @@ void check_resource_event(server_t *serv)
 void elapse_time(server_t *serv, int *sd, struct timespec *start)
 {
     struct timespec current;
-    int elapsed_time;
+    int elapsed_time = 0;
 
     clock_gettime(CLOCK_REALTIME, &current);
     elapsed_time = (current.tv_sec - start->tv_sec) *
         1000000000 + (current.tv_nsec - start->tv_nsec);
-    if (elapsed_time < 1000000000 / serv->freq)
+    if (serv->freq <= 0 || elapsed_time < 1000000000 / serv->freq)
         return;
     check_resource_event(serv);
     for (int i = 0; i < MAX_CLIENTS; i++) {

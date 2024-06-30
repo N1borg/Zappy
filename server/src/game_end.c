@@ -42,10 +42,10 @@ int check_team_levels(server_t *server, team_t *team)
 // Check if a team is still alive
 int is_team_alive(team_t *team)
 {
+    if (get_nbr_eggs_on_team(team) > 0)
+        return 1;
     for (int j = 0; j < MAX_CLIENTS; j++) {
         if (team->players[j] != NULL)
-            return 1;
-        if (get_nbr_eggs_on_team(team) > 0)
             return 1;
     }
     return 0;
