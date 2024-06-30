@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2024
-** B-YEP-400-LIL-4-1-zappy-romaric.loevenbruck
+** Zappy
 ** File description:
 ** Socket
 */
@@ -18,14 +18,14 @@
 
 class Socket {
 public:
-    Socket(int port, std::string machine);
-    ~Socket();
+    Socket(int port, std::string machine) : _port(port), _machine(machine), _clientSocket(-1), _connected(false), _threadRunning(false) {}
+    ~Socket() { if (_clientSocket != -1) { close(_clientSocket); } }
 
-    void setPort(int port);
-    int getPort() const;
-    void setMachine(std::string machine);
-    std::string getMachine() const;
-    bool isConnected() const;
+    int getPort() const { return _port; }
+    void setPort(int port) { _port = port; }
+    std::string getMachine() const { return _machine; }
+    void setMachine(std::string machine) { _machine = machine; }
+    bool isConnected() const { return _connected.load(); }
 
     // Socket
     bool connectSocket();

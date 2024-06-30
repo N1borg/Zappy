@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2024
-** zappy
+** Zappy
 ** File description:
 ** IParser
 */
@@ -10,6 +10,6 @@
 #include <iostream>
 
 class IParser {
-    public:
-        virtual ~IParser() = default;
+public:
+    virtual ~IParser() = default;
 };

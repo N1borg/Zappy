@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2024
-** zappy
+** Zappy
 ** File description:
 ** Commands
 */

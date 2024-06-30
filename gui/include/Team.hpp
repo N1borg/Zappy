@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2024
-** B-YEP-400-LIL-4-1-zappy-romaric.loevenbruck
+** Zappy
 ** File description:
 ** Team
 */
@@ -10,19 +10,18 @@
 #include <raylib.h>
 #include <string>
 
-class Team
-{
+class Team {
 public:
-    Team(std::string name);
+    Team(std::string name) : _name(name), _teamColor(WHITE), _numberPlayers(0), _numberEggs(0) {}
     ~Team() = default;
 
-    std::string getTeamName() const;
-    void setNumberPlayers(int numberPlayers);
-    int getNumberPlayers() const;
-    void setNumberEggs(int numberEggs);
-    int getNumberEggs() const;
-    void setTeamColor(Color color);
-    Color getTeamColor() const;
+    std::string getTeamName() const { return _name; }
+    void setNumberPlayers(int numberPlayers) { _numberPlayers = numberPlayers; }
+    int getNumberPlayers() const { return _numberPlayers; }
+    void setNumberEggs(int numberEggs) { _numberEggs = numberEggs; }
+    int getNumberEggs() const { return _numberEggs; }
+    void setTeamColor(Color color) { _teamColor = color; }
+    Color getTeamColor() const { return _teamColor; }
 private:
     std::string _name;
     Color _teamColor = WHITE;

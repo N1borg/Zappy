@@ -1,23 +1,23 @@
 /*
 ** EPITECH PROJECT, 2024
-** B-YEP-400-LIL-4-1-zappy-romaric.loevenbruck
+** Zappy
 ** File description:
 ** Map
 */
 
 #pragma once
 
-#include "Player.hpp"
-#include "Collectables/Egg.hpp"
-#include "Collectables/Food.hpp"
-#include "Collectables/Linemate.hpp"
-#include "Collectables/Deraumere.hpp"
-#include "Collectables/Sibur.hpp"
-#include "Collectables/Mendiane.hpp"
-#include "Collectables/Phiras.hpp"
-#include "Collectables/Thystame.hpp"
-#include "Island.hpp"
-#include "Grass.hpp"
+#include "Models/Player.hpp"
+#include "Models/Collectables/Egg.hpp"
+#include "Models/Collectables/Food.hpp"
+#include "Models/Collectables/Linemate.hpp"
+#include "Models/Collectables/Deraumere.hpp"
+#include "Models/Collectables/Sibur.hpp"
+#include "Models/Collectables/Mendiane.hpp"
+#include "Models/Collectables/Phiras.hpp"
+#include "Models/Collectables/Thystame.hpp"
+#include "Models/Island.hpp"
+#include "Models/Grass.hpp"
 
 #include <math.h>
 #include <time.h>
@@ -59,29 +59,29 @@ public:
     Map(int width, int height, int frequency, std::vector<Team> teams);
     ~Map() = default;
 
-    int getWidth() const;
-    int getHeight() const;
-    void setFrequency(int frequency);
-    int getFrequency() const;
-    bool isGameRunning() const;
-    void setGameRunning(bool isGameRunning);
-    int getNbPlayers() const;
-    int getNbTeams() const;
-    int getNbEggs() const;
-    int getNbFood() const;
-    int getNbLinemate() const;
-    int getNbDeraumere() const;
-    int getNbSibur() const;
-    int getNbMendiane() const;
-    int getNbPhiras() const;
-    int getNbThystame() const;
+    int getWidth() const { return _width; }
+    int getHeight() const { return _height; }
+    void setFrequency(int frequency) { _frequency = frequency; }
+    int getFrequency() const { return _frequency; }
+    void setGameRunning(bool isGameRunning) { _isGameRunning = isGameRunning; }
+    bool isGameRunning() const { return _isGameRunning; }
+    int getNbPlayers() const { return _nbPlayer; }
+    int getNbTeams() const { return _nbTeam; }
+    int getNbEggs() const { return _nbEgg; }
+    int getNbFood() const { return _nbFood; }
+    int getNbLinemate() const { return _nbLinemate; }
+    int getNbDeraumere() const { return _nbDeraumere; }
+    int getNbSibur() const { return _nbSibur; }
+    int getNbMendiane() const { return _nbMendiane; }
+    int getNbPhiras() const { return _nbPhiras; }
+    int getNbThystame() const { return _nbThystame; }
 
-    std::vector<std::vector<Tile_t>> getTiles() const;
-    Tile_t getTile(int x, int y) const;
-    std::vector<Team> getTeams() const;
+    std::vector<std::vector<Tile_t>> getTiles() const { return _tiles; }
+    Tile_t getTile(int x, int y) const { return _tiles[x][y]; }
+    std::vector<Team> getTeams() const { return _teams; }
     Color getTeamColor(std::string team) const;
     Team getTeamByPlayerId(int id) const;
-    std::vector<Player> getPlayers() const;
+    std::vector<Player> getPlayers() const { return _players; }
     Player getPlayerById(int id) const;
     std::vector<Egg> getEggs() const;
     Egg getEggById(int id) const;
@@ -118,9 +118,9 @@ private:
     int _frequency;
     bool _isGameRunning;
 
-    int _nbPlayers;
-    int _nbTeams;
-    int _nbEggs;
+    int _nbPlayer;
+    int _nbTeam;
+    int _nbEgg;
     int _nbFood;
     int _nbLinemate;
     int _nbDeraumere;

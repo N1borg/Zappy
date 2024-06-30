@@ -1,38 +1,19 @@
 /*
 ** EPITECH PROJECT, 2024
-** B-YEP-400-LIL-4-1-zappy-romaric.loevenbruck
+** Zappy
 ** File description:
 ** Map
 */
 
 #include "Map.hpp"
 
-Map::Map(int width, int height, int frequency, std::vector<Team> teams) : _width(width), _height(height), _frequency(frequency), _teams(teams)
+Map::Map(int width, int height, int frequency, std::vector<Team> teams) : _width(width), _height(height), _frequency(frequency), _isGameRunning(true),
+    _nbPlayer(0), _nbTeam(teams.size()), _nbEgg(0), _nbFood(0), _nbLinemate(0), _nbDeraumere(0), _nbSibur(0), _nbMendiane(0), _nbPhiras(0), _nbThystame(0),
+    _teams(teams), _modelPlayer(LoadModel("gui/resources/player.glb")), _modelEgg(LoadModel("gui/resources/egg.glb")),
+    _modelFood(LoadModel("gui/resources/food.glb")), _modelLinemate(LoadModel("gui/resources/linemate.glb")), _modelDeraumere(LoadModel("gui/resources/deraumere.glb")),
+    _modelSibur(LoadModel("gui/resources/sibur.glb")), _modelMendiane(LoadModel("gui/resources/mendiane.glb")), _modelPhiras(LoadModel("gui/resources/phiras.glb")),
+    _modelThystame(LoadModel("gui/resources/thystame.glb")), _modelIsland(LoadModel("gui/resources/island.glb")), _modelGrass(LoadModel("gui/resources/grass.glb"))
 {
-    _isGameRunning = true;
-    _nbPlayers = 0;
-    _nbTeams = teams.size();
-    _nbEggs = 0;
-    _nbFood = 0;
-    _nbLinemate = 0;
-    _nbDeraumere = 0;
-    _nbSibur = 0;
-    _nbMendiane = 0;
-    _nbPhiras = 0;
-    _nbThystame = 0;
-
-    _modelPlayer = LoadModel("gui/resources/player.glb");
-    _modelEgg = LoadModel("gui/resources/egg.glb");
-    _modelFood = LoadModel("gui/resources/food.glb");
-    _modelLinemate = LoadModel("gui/resources/linemate.glb");
-    _modelDeraumere = LoadModel("gui/resources/deraumere.glb");
-    _modelSibur = LoadModel("gui/resources/sibur.glb");
-    _modelMendiane = LoadModel("gui/resources/mendiane.glb");
-    _modelPhiras = LoadModel("gui/resources/phiras.glb");
-    _modelThystame = LoadModel("gui/resources/thystame.glb");
-    _modelIsland = LoadModel("gui/resources/island.glb");
-    _modelGrass = LoadModel("gui/resources/grass.glb");
-
     srand(time(NULL));
 
     for (int i = 0; i < width; i++) {
@@ -43,6 +24,7 @@ Map::Map(int width, int height, int frequency, std::vector<Team> teams) : _width
                         _modelThystame, _modelIsland, _modelGrass);
             int shift = GetRandomValue(1, 6);
 
+            // Set the orientation on the island
             tile.island.first.setRotationY(GetRandomValue(0, 360) * DEG2RAD);
             tile.grass.first.setRotationY(GetRandomValue(0, 360) * DEG2RAD);
             tile.food.first.setRotationY(GetRandomValue(0, 360) * DEG2RAD);
@@ -53,6 +35,7 @@ Map::Map(int width, int height, int frequency, std::vector<Team> teams) : _width
             tile.phiras.first.setRotationY(GetRandomValue(0, 360) * DEG2RAD);
             tile.thystame.first.setRotationY(GetRandomValue(0, 360) * DEG2RAD);
 
+            // Set the position on the island
             tile.food.first.setIslandPosition(GetRandomValue(0, 3));
             tile.linemate.first.setIslandPosition((1 + shift) % 6);
             tile.deraumere.first.setIslandPosition((2 + shift) % 6);
@@ -77,101 +60,6 @@ Map::Map(int width, int height, int frequency, std::vector<Team> teams) : _width
     }
 }
 
-int Map::getWidth() const
-{
-    return _width;
-}
-
-int Map::getHeight() const
-{
-    return _height;
-}
-
-void Map::setFrequency(int frequency)
-{
-    _frequency = frequency;
-}
-
-int Map::getFrequency() const
-{
-    return _frequency;
-}
-
-bool Map::isGameRunning() const
-{
-    return _isGameRunning;
-}
-
-void Map::setGameRunning(bool isGameRunning)
-{
-    _isGameRunning = isGameRunning;
-}
-
-int Map::getNbPlayers() const
-{
-    return _nbPlayers;
-}
-
-int Map::getNbTeams() const
-{
-    return _nbTeams;
-}
-
-int Map::getNbEggs() const
-{
-    return _nbEggs;
-}
-
-int Map::getNbFood() const
-{
-    return _nbFood;
-}
-
-int Map::getNbLinemate() const
-{
-    return _nbLinemate;
-}
-
-int Map::getNbDeraumere() const
-{
-    return _nbDeraumere;
-}
-
-int Map::getNbSibur() const
-{
-    return _nbSibur;
-}
-
-int Map::getNbMendiane() const
-{
-    return _nbMendiane;
-}
-
-int Map::getNbPhiras() const
-{
-    return _nbPhiras;
-}
-
-int Map::getNbThystame() const
-{
-    return _nbThystame;
-}
-
-std::vector<std::vector<Tile_t>> Map::getTiles() const
-{
-    return _tiles;
-}
-
-Tile_t Map::getTile(int x, int y) const
-{
-    return _tiles[x][y];
-}
-
-std::vector<Team> Map::getTeams() const
-{
-    return _teams;
-}
-
 Color Map::getTeamColor(std::string team) const
 {
     for (Team t : _teams) {
@@ -188,11 +76,6 @@ Team Map::getTeamByPlayerId(int id) const
             return p.getTeam();
     }
     return _teams[0];
-}
-
-std::vector<Player> Map::getPlayers() const
-{
-    return _players;
 }
 
 Player Map::getPlayerById(int id) const
@@ -242,7 +125,7 @@ void Map::addPlayer(int id, int x, int y, Orientation orientation, int level, st
             Player player(_modelPlayer, id, x, y, orientation, _teams[i]);
             player.setLevel(level);
             _tiles[x][y].players.push_back(player);
-            _nbPlayers += 1;
+            _nbPlayer += 1;
             _players.push_back(player);
             _teams[i].setNumberPlayers(_teams[i].getNumberPlayers() + 1);
         }
@@ -273,7 +156,7 @@ void Map::delPlayer(int id)
             for (std::size_t j = 0; j < _tiles[_players[i].getX()][_players[i].getY()].players.size(); j++) {
                 if (_tiles[_players[i].getX()][_players[i].getY()].players[j].getId() == id) {
                     _tiles[_players[i].getX()][_players[i].getY()].players.erase(_tiles[_players[i].getX()][_players[i].getY()].players.begin() + j);
-                    _nbPlayers -= 1;
+                    _nbPlayer -= 1;
                     _players[i].getTeam().setNumberPlayers(_players[i].getTeam().getNumberPlayers() - 1);
                 }
             }
@@ -292,7 +175,7 @@ void Map::addEgg(int id, int playerId, int x, int y, std::string team)
         if (_teams[i].getTeamName() == team) {
             Egg egg(_modelEgg, id, playerId, x, y, _teams[i]);
             _tiles[x][y].eggs.push_back(egg);
-            _nbEggs += 1;
+            _nbEgg += 1;
             _teams[i].setNumberEggs(_teams[i].getNumberEggs() + 1);
         }
     }
@@ -319,7 +202,7 @@ void Map::delEgg(int id)
             for (std::size_t k = 0; k < _tiles[i][j].eggs.size(); k++) {
                 if (_tiles[i][j].eggs[k].getId() == id) {
                     _tiles[i][j].eggs.erase(_tiles[i][j].eggs.begin() + k);
-                    _nbEggs -= 1;
+                    _nbEgg -= 1;
                     _tiles[i][j].eggs[k].getTeam().setNumberEggs(_tiles[i][j].eggs[k].getTeam().getNumberEggs() - 1);
                 }
             }
@@ -428,8 +311,8 @@ void Map::draw()
                 tile.island.first.drawWires({x * 10.0f, scatter, z * 10.0f}, 12.0f, BLACK);
             }
             for (Player player : tile.players) {
-                player.draw({x * 10.0f, 9.0f + scatter, z * 10.0f}, 0.1f, player.getTeam().getTeamColor());
-                player.drawWires({x * 10.0f, 9.0f + scatter, z * 10.0f}, 0.1f, BLACK);
+                player.draw({x * 10.0f, 8.94f + scatter, z * 10.0f}, 0.1f, player.getTeam().getTeamColor());
+                player.drawWires({x * 10.0f, 8.94f + scatter, z * 10.0f}, 0.1f, BLACK);
             }
             if (tile.food.second) {
                 tile.food.first.draw({x * 10.0f + tile.food.first.getIslandPositionX(), 8.91f + scatter, z * 10.0f + tile.food.first.getIslandPositionZ()}, 0.1f, WHITE);
@@ -473,7 +356,7 @@ void Map::drawTransparent()
                 tile.island.first.drawWires({x * 10.0f, scatter, z * 10.0f}, 12.0f, { 0, 0, 0, (unsigned char)alpha });
             for (Player player : tile.players) {
                 if (isSelected)
-                    player.drawWires({x * 10.0f, 9.0f + scatter, z * 10.0f}, 0.1f, { 0, 0, 0, (unsigned char)alpha });
+                    player.drawWires({x * 10.0f, 8.94f + scatter, z * 10.0f}, 0.1f, { 0, 0, 0, (unsigned char)alpha });
             }
             if (tile.food.second && isSelected)
                 tile.food.first.drawWires({x * 10.0f + tile.food.first.getIslandPositionX(), 8.91f + scatter, z * 10.0f + tile.food.first.getIslandPositionZ()}, 0.1f, { 0, 0, 0, (unsigned char)alpha });

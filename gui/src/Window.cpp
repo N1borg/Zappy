@@ -1,17 +1,14 @@
 /*
 ** EPITECH PROJECT, 2024
-** zappy
+** Zappy
 ** File description:
 ** Window
 */
 
 #include "Window.hpp"
 
-Window::Window(int width, int height, std::string title)
+Window::Window(int width, int height, std::string title) : _width(width), _height(height), _title(title)
 {
-    _width = width;
-    _height = height;
-    _title = title;
     setCameraPosition({0.0f, 10.0f, 10.0f});
     setCameraTarget({0.0f, 10.0f, 0.0f});
     setCameraUp({0.0f, 1.0f, 0.0f});
@@ -35,131 +32,11 @@ void Window::close()
     CloseWindow();
 }
 
-bool Window::shouldClose()
-{
-    return WindowShouldClose();
-}
-
-void Window::setTargetFPS(int fps)
-{
-    SetTargetFPS(fps);
-}
-
-int Window::getScreenWidth() const
-{
-    return GetScreenWidth();
-}
-
-int Window::getScreenHeight() const
-{
-    return GetScreenHeight();
-}
-
-void Window::enableCursor()
-{
-    EnableCursor();
-}
-
-void Window::disableCursor()
-{
-    DisableCursor();
-}
-
-bool Window::isCursorHidden()
-{
-    return IsCursorHidden();
-}
-
-bool Window::isKeyPressed(int key)
-{
-    return IsKeyPressed(key);
-}
-
-bool Window::isKeyReleased(int key)
-{
-    return IsKeyReleased(key);
-}
-
-bool Window::isKeyDown(int key)
-{
-    return IsKeyDown(key);
-}
-
-bool Window::isKeyUp(int key)
-{
-    return IsKeyUp(key);
-}
-
-bool Window::isMouseButtonPressed(int button)
-{
-    return IsMouseButtonPressed(button);
-}
-
-bool Window::isMouseButtonReleased(int button)
-{
-    return IsMouseButtonReleased(button);
-}
-
-bool Window::isMouseButtonDown(int button)
-{
-    return IsMouseButtonDown(button);
-}
-
-bool Window::isMouseButtonUp(int button)
-{
-    return IsMouseButtonUp(button);
-}
-
 void Window::playMusic(const std::string &path)
 {
     _music = LoadMusicStream(path.c_str());
     _music.looping = true;
     PlayMusicStream(_music);
-}
-
-Camera3D Window::getCamera() const
-{
-    return _camera;
-}
-
-int Window::getCameraMode() const
-{
-    return _cameraMode;
-}
-
-void Window::setCameraMode(int mode)
-{
-    _cameraMode = mode;
-}
-
-void Window::setCameraPosition(Vector3 position)
-{
-    _camera.position = position;
-}
-
-void Window::setCameraTarget(Vector3 target)
-{
-    _camera.target = target;
-}
-
-void Window::setCameraUp(Vector3 up)
-{
-    _camera.up = up;
-}
-
-void Window::setCameraFovy(float fovy)
-{
-    _camera.fovy = fovy;
-}
-
-void Window::setCameraProjection(int projection)
-{
-    _camera.projection = projection;
-}
-
-void Window::updateCamera()
-{
-    UpdateCamera(&_camera, getCameraMode());
 }
 
 void Window::parseCameraInputs()
@@ -186,31 +63,6 @@ void Window::parseCameraInputs()
     }
 }
 
-void Window::beginDrawing()
-{
-    BeginDrawing();
-}
-
-void Window::endDrawing()
-{
-    EndDrawing();
-}
-
-void Window::beginMode3D()
-{
-    BeginMode3D(_camera);
-}
-
-void Window::endMode3D()
-{
-    EndMode3D();
-}
-
-void Window::clearBackground(Color color)
-{
-    ClearBackground(color);
-}
-
 void Window::drawCrosshair()
 {
 
@@ -223,26 +75,6 @@ void Window::drawCrosshair()
     DrawRectangle(centerX - crosshairSize, centerY - crosshairThickness / 2, 2 * crosshairSize, crosshairThickness, {0, 0, 0, 127});
     // Vertical line
     DrawRectangle(centerX - crosshairThickness / 2, centerY - crosshairSize, crosshairThickness, 2 * crosshairSize, {0, 0, 0, 127});
-}
-
-void Window::drawPlane(Vector3 position, Vector2 size, Color color)
-{
-    DrawPlane(position, size, color);
-}
-
-void Window::drawGrid(int slices, float spacing)
-{
-    DrawGrid(slices, spacing);
-}
-
-void Window::drawText(const char *text, int posX, int posY, int fontSize, Color color)
-{
-    DrawText(text, posX, posY, fontSize, color);
-}
-
-void Window::drawFPS(int posX, int posY)
-{
-    DrawFPS(posX, posY);
 }
 
 void Window::drawGeneralInfo(Map map)
